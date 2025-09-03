@@ -3,39 +3,39 @@ import { Calendar, Sun, LogOut, MessageSquare } from "lucide-react";
 
 const Navbar = () => {
   return (
-    <nav className="flex items-center justify-between px-6 py-3 bg-green-500 shadow-md">
-      {/* Left section: Logo + Title */}
+    <nav className="flex items-center justify-between px-8 py-4 bg-gradient-to-r from-green-700 to-green-600 shadow-lg">
+      
       <div className="flex items-center gap-3">
         <img
-          src="/logo.png" // replace with your logo path
+          src="/logo.png" 
           alt="Logo"
-          className="w-10 h-10 rounded-full"
+          className="w-10 h-10 rounded-full border-2 border-white shadow"
         />
-        <h1 className="text-white text-2xl font-semibold">
-          Welcome to AgriTech
+        <h1 className="text-white text-xl font-semibold tracking-wide">
+          AgriTech
         </h1>
       </div>
 
-      {/* Right section: Buttons */}
-      <div className="flex items-center gap-4">
-        <button className="flex items-center gap-2 px-4 py-2 rounded-full bg-lime-300 hover:bg-lime-400 transition">
+    
+      <div className="flex items-center gap-3">
+        <button className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-white transition">
           <Calendar className="w-5 h-5" />
           <span className="font-medium">Calendar</span>
         </button>
 
-        <button className="flex items-center gap-2 px-4 py-2 rounded-full bg-yellow-300 hover:bg-yellow-400 transition">
+        <button className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-white transition">
           <MessageSquare className="w-5 h-5" />
           <span className="font-medium">Feedback</span>
         </button>
 
-        <button className="flex items-center gap-2 px-4 py-2 rounded-full bg-red-500 hover:bg-red-600 text-white transition">
+        <button className="flex items-center gap-2 px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white transition">
           <LogOut className="w-5 h-5" />
           <span className="font-medium">Logout</span>
         </button>
 
-        <button className="flex items-center gap-2 px-4 py-2 rounded-full bg-white hover:bg-gray-100 shadow transition">
-          <Sun className="w-5 h-5 text-gray-700" />
-          <span className="font-medium text-gray-700">Light</span>
+        <button className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white text-green-700 hover:bg-gray-100 shadow transition">
+          <Sun className="w-5 h-5" />
+          <span className="font-medium">Light</span>
         </button>
       </div>
     </nav>

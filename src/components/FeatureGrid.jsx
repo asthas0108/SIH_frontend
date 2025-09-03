@@ -29,7 +29,7 @@ const features = [
 
 const FeatureGrid = () => {
   return (
-    <div className="w-full flex flex-wrap justify-center gap-4 p-6 bg-gradient-to-b from-green-50 to-white">
+    <div className="w-full mb-15 flex flex-wrap justify-center gap-4 p-6 bg-gradient-to-b from-green-50 to-white shadow-[0_12px_20px_-1px_rgba(0,0,0,0.25)] relative z-10">
       {features.map((feature, index) => (
         <button
           key={index}
