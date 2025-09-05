@@ -1,30 +1,36 @@
 import React from "react";
 import { ArrowRight } from "lucide-react";
 
-const Card = ({ image, title, description, tag }) => {
+const Card = ({ image, title, description, tag, onClick }) => {
   return (
-    <div className="bg-white rounded-2xl shadow-md overflow-hidden flex flex-col hover:shadow-xl hover:scale-[1.02] transition-all duration-300">
-    
-      <div className="relative">
-        <img src={image} alt={title} className="h-48 w-full object-cover" />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
+    <div className="relative group bg-white/70 backdrop-blur-lg border border-gray-200 rounded-3xl shadow-lg overflow-hidden flex flex-col transition-transform duration-500 hover:-translate-y-2 hover:shadow-2xl">
+      
+     
+      <div className="relative h-56 w-full overflow-hidden">
+        <img
+          src={image}
+          alt={title}
+          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent"></div>
       </div>
 
-      
-      <div className="p-5 flex flex-col flex-grow">
-        <h3 className="text-green-800 font-semibold text-xl mb-2 tracking-wide">
+     
+      <div className="p-6 flex flex-col flex-grow">
+        <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-3 tracking-tight">
           {title}
         </h3>
-        <p className="text-gray-600 leading-relaxed text-sm flex-grow">
+        <p className="text-gray-600 text-sm leading-relaxed flex-grow">
           {description}
         </p>
-  
-        <div className="flex items-center justify-between mt-5">
-          <span className="px-3 py-1 rounded-full text-xs bg-gradient-to-r from-green-100 to-green-200 text-green-800 font-medium shadow-sm">
+
+        
+        <div className="flex items-center justify-between mt-6">
+          <span className="px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800 shadow-sm">
             {tag}
           </span>
-          <button className="p-2 rounded-full bg-green-100 hover:bg-green-200 text-green-700 transition">
-            <ArrowRight className="w-5 h-5" />
+          <button className="p-3 rounded-full bg-green-600 text-white shadow-md hover:bg-green-700 hover:shadow-lg transition">
+            <ArrowRight className="w-5 h-5" onClick={onClick}/>
           </button>
         </div>
       </div>

@@ -19,7 +19,6 @@ export default function PlantDiseaseDetection() {
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col items-center p-6">
-      {/* Header */}
       <div className="w-full max-w-6xl bg-green-600 text-white rounded-2xl p-6 flex justify-between items-center shadow-md">
         <button className="flex items-center gap-2 bg-white text-green-700 px-4 py-2 rounded-lg shadow hover:bg-gray-100">
           <ArrowLeft className="w-4 h-4" /> Back to Main
@@ -32,7 +31,7 @@ export default function PlantDiseaseDetection() {
         </button>
       </div>
 
-      {/* AI Disease Analysis */}
+
       <div className="w-full max-w-6xl bg-white shadow-lg rounded-2xl p-6 mt-6">
         <h2 className="text-xl font-semibold flex items-center gap-2 mb-4">
           🤖 AI Disease Analysis
@@ -43,7 +42,7 @@ export default function PlantDiseaseDetection() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Upload Section */}
+         
           <label
             htmlFor="fileUpload"
             className="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-xl p-8 cursor-pointer hover:border-green-500 transition bg-gray-50"
@@ -68,7 +67,7 @@ export default function PlantDiseaseDetection() {
             />
           </label>
 
-          {/* Preview Section */}
+      
           <div className="flex items-center justify-center border-2 border-dashed border-gray-200 rounded-xl bg-gray-50">
             {selectedFile ? (
               <img
@@ -82,7 +81,6 @@ export default function PlantDiseaseDetection() {
           </div>
         </div>
 
-        {/* Analyze Button */}
         <button
           onClick={handleAnalyze}
           disabled={!selectedFile}
@@ -97,7 +95,7 @@ export default function PlantDiseaseDetection() {
         </button>
       </div>
 
-      {/* Key Features */}
+    
       <div className="w-full max-w-6xl bg-white shadow-lg rounded-2xl p-6 mt-8">
         <h2 className="text-xl font-semibold flex items-center gap-2 mb-6">
           ✨ Key Features
