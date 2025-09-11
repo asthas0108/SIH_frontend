@@ -166,6 +166,7 @@ const FarmerChatbot = () => {
                 </div>
               </div>
 
+
               <div className="flex items-center p-3 border-t border-green-200">
                 <input
                   type="text"
