@@ -1,5 +1,5 @@
 import React from "react";
-import { ArrowRight } from "lucide-react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 
 const Card = ({ image, title, description, tag, onClick }) => {
   return (
@@ -29,7 +29,7 @@ const Card = ({ image, title, description, tag, onClick }) => {
           <span className="px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800 shadow-sm">
             {tag}
           </span>
-          <button className="p-3 rounded-full bg-green-600 text-white shadow-md hover:bg-green-700 hover:shadow-lg transition">
+          <button className="p-3 rounded-full bg-green-600 text-white shadow-md hover:bg-green-700 hover:shadow-lg transition cursor-pointer">
             <ArrowRight className="w-5 h-5" onClick={onClick}/>
           </button>
         </div>
