@@ -18,7 +18,7 @@ export default function YieldPrediction({ crop = "Wheat", params = {} }) {
   };
 
   return (
-    <div className="min-h-screen bg-teal-100 flex justify-center items-center p-6">
+    <div className="min-h-scree flex justify-center items-center p-6">
       <div className="bg-white shadow-2xl rounded-2xl p-8 w-full max-w-2xl text-center">
         {/* Success Icon */}
         <div className="flex justify-center mb-4">

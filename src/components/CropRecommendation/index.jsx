@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { Info } from "lucide-react";
 
 export default function CropRecommendationForm() {
   const [formData, setFormData] = useState({
@@ -31,7 +30,7 @@ export default function CropRecommendationForm() {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Nitrogen */}
-          <div className="relative">
+          <div className="relative group">
             <input
               type="number"
               name="nitrogen"
@@ -41,16 +40,13 @@ export default function CropRecommendationForm() {
               className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
               required
             />
-            <div className="absolute right-3 top-3 group">
-              <Info className="w-5 h-5 text-gray-400 cursor-pointer" />
-              <span className="absolute hidden group-hover:block bg-black text-white text-xs px-2 py-1 rounded-md -top-8 right-0 whitespace-nowrap">
-                Nitrogen content in soil (0–140 kg/ha)
-              </span>
-            </div>
+            <span className="absolute hidden group-hover:block bg-black text-white text-xs px-2 py-1 rounded-md -top-8 right-0 whitespace-nowrap">
+              Nitrogen content in soil (0–140 kg/ha)
+            </span>
           </div>
 
           {/* Phosphorus */}
-          <div className="relative">
+          <div className="relative group">
             <input
               type="number"
               name="phosphorus"
@@ -60,16 +56,13 @@ export default function CropRecommendationForm() {
               className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
               required
             />
-            <div className="absolute right-3 top-3 group">
-              <Info className="w-5 h-5 text-gray-400 cursor-pointer" />
-              <span className="absolute hidden group-hover:block bg-black text-white text-xs px-2 py-1 rounded-md -top-8 right-0 whitespace-nowrap">
-                Phosphorus content in soil (5–205 kg/ha)
-              </span>
-            </div>
+            <span className="absolute hidden group-hover:block bg-black text-white text-xs px-2 py-1 rounded-md -top-8 right-0 whitespace-nowrap">
+              Phosphorus content in soil (5–205 kg/ha)
+            </span>
           </div>
 
           {/* Potassium */}
-          <div className="relative">
+          <div className="relative group">
             <input
               type="number"
               name="potassium"
@@ -79,16 +72,13 @@ export default function CropRecommendationForm() {
               className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
               required
             />
-            <div className="absolute right-3 top-3 group">
-              <Info className="w-5 h-5 text-gray-400 cursor-pointer" />
-              <span className="absolute hidden group-hover:block bg-black text-white text-xs px-2 py-1 rounded-md -top-8 right-0 whitespace-nowrap">
-                Potassium content in soil (5–205 kg/ha)
-              </span>
-            </div>
+            <span className="absolute hidden group-hover:block bg-black text-white text-xs px-2 py-1 rounded-md -top-8 right-0 whitespace-nowrap">
+              Potassium content in soil (5–205 kg/ha)
+            </span>
           </div>
 
           {/* Temperature */}
-          <div className="relative">
+          <div className="relative group">
             <input
               type="number"
               name="temperature"
@@ -98,16 +88,13 @@ export default function CropRecommendationForm() {
               className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
               required
             />
-            <div className="absolute right-3 top-3 group">
-              <Info className="w-5 h-5 text-gray-400 cursor-pointer" />
-              <span className="absolute hidden group-hover:block bg-black text-white text-xs px-2 py-1 rounded-md -top-8 right-0 whitespace-nowrap">
-                Recommended range: 8°C – 45°C
-              </span>
-            </div>
+            <span className="absolute hidden group-hover:block bg-black text-white text-xs px-2 py-1 rounded-md -top-8 right-0 whitespace-nowrap">
+              Recommended range: 8°C – 45°C
+            </span>
           </div>
 
           {/* Humidity */}
-          <div className="relative">
+          <div className="relative group">
             <input
               type="number"
               name="humidity"
@@ -117,16 +104,13 @@ export default function CropRecommendationForm() {
               className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
               required
             />
-            <div className="absolute right-3 top-3 group">
-              <Info className="w-5 h-5 text-gray-400 cursor-pointer" />
-              <span className="absolute hidden group-hover:block bg-black text-white text-xs px-2 py-1 rounded-md -top-8 right-0 whitespace-nowrap">
-                Humidity percentage in air (14% – 100%)
-              </span>
-            </div>
+            <span className="absolute hidden group-hover:block bg-black text-white text-xs px-2 py-1 rounded-md -top-8 right-0 whitespace-nowrap">
+              Humidity percentage in air (14% – 100%)
+            </span>
           </div>
 
           {/* pH */}
-          <div className="relative">
+          <div className="relative group">
             <input
               type="number"
               step="0.1"
@@ -137,16 +121,13 @@ export default function CropRecommendationForm() {
               className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
               required
             />
-            <div className="absolute right-3 top-3 group">
-              <Info className="w-5 h-5 text-gray-400 cursor-pointer" />
-              <span className="absolute hidden group-hover:block bg-black text-white text-xs px-2 py-1 rounded-md -top-8 right-0 whitespace-nowrap">
-                Soil pH range: 3.5 – 9.5
-              </span>
-            </div>
+            <span className="absolute hidden group-hover:block bg-black text-white text-xs px-2 py-1 rounded-md -top-8 right-0 whitespace-nowrap">
+              Soil pH range: 3.5 – 9.5
+            </span>
           </div>
 
           {/* Rainfall */}
-          <div className="relative">
+          <div className="relative group">
             <input
               type="number"
               name="rainfall"
@@ -156,12 +137,9 @@ export default function CropRecommendationForm() {
               className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
               required
             />
-            <div className="absolute right-3 top-3 group">
-              <Info className="w-5 h-5 text-gray-400 cursor-pointer" />
-              <span className="absolute hidden group-hover:block bg-black text-white text-xs px-2 py-1 rounded-md -top-8 right-0 whitespace-nowrap">
-                Rainfall range: 20 – 300 mm
-              </span>
-            </div>
+            <span className="absolute hidden group-hover:block bg-black text-white text-xs px-2 py-1 rounded-md -top-8 right-0 whitespace-nowrap">
+              Rainfall range: 20 – 300 mm
+            </span>
           </div>
 
           {/* Buttons */}
