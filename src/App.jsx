@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 import FeatureGrid from "./components/FeatureGrid";
 import Footer from "./components/Footer";
 import Navbar from "./components/Navbar";
@@ -8,6 +8,7 @@ import YieldPrediction from "./components/YieldPrediction";
 import WeatherCheck from "./components/WeatherCheck";
 import OrganicFarming from "./components/OrganicFarming/index";
 import PlantDiseaseDetection from "./components/PlantDisease";
+import ChatBot from "./components/ChatBot";
 
 function Home() {
   return (
@@ -16,6 +17,16 @@ function Home() {
       <SolutionsSection />
     </>
   );
+}
+
+function FooterConditional() {
+  const location = useLocation();
+  
+  if (location.pathname === "/chatbot") {
+    return null;
+  }
+  
+  return <Footer />;
 }
 
 function App() {
@@ -31,10 +42,11 @@ function App() {
             <Route path="/diseasePrediction" element={<PlantDiseaseDetection />} />
             <Route path="/organicFarming" element={<OrganicFarming />} />
             <Route path="/weatherCheck" element={<WeatherCheck />} />
+            <Route path="/chatbot" element={<ChatBot />} />
           </Routes>
         </main>
 
-        <Footer />
+        <FooterConditional />
       </div>
     </Router>
   );
