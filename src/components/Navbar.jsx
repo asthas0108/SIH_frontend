@@ -166,7 +166,7 @@ const Navbar = () => {
       >
         <div className="relative">
           <div className="w-10 h-10 md:w-10 md:h-10 rounded-full bg-green-800 flex items-center justify-center shadow-sm">
-            <img src="/src/assets/logo-no-background.png" alt="" />
+            <img src="/logo-no-background.png" alt="" />
           </div>
           {/* <motion.div 
             className="absolute -bottom-1 -right-1 bg-amber-500 rounded-full p-1"

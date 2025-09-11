@@ -10,7 +10,7 @@ export default function Footer() {
           <div className="flex flex-col items-center md:flex-row md:items-end mb-5">
             <div className="relative mb-4 md:mb-0 md:mr-6">
               <img
-                src="/src/assets/logo-no-background.png"
+                src="/logo-no-background.png"
                 width={120}
                 className="drop-shadow-lg"
                 alt="KisanMitra Logo"

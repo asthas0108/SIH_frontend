@@ -18,7 +18,7 @@ const SolutionsSection = () => {
 
   const cards = [
     {
-      image: "/src/assets/recommendations.webp",
+      image: "/recommendations.webp",
       title: "Crop Recommendation",
       description:
         "Leverage our advanced AI algorithms to determine the optimal crops for your specific soil composition, climate conditions, and regional market demands.",
@@ -31,7 +31,7 @@ const SolutionsSection = () => {
       },
     },
     {
-      image: "/src/assets/yeild.jpg",
+      image: "/yeild.jpg",
       title: "Yield Prediction",
       description:
         "Accurately forecast your harvest yields using machine learning models trained on thousands of farming datasets and local agricultural patterns.",
@@ -44,7 +44,7 @@ const SolutionsSection = () => {
       },
     },
     {
-      image: "/src/assets/health.jpg",
+      image: "/health.jpg",
       title: "Crop Health Monitoring",
       description:
         "Early detection system for plant diseases, nutrient deficiencies, and pest infestations with preventive measures and treatment advice.",
@@ -57,7 +57,7 @@ const SolutionsSection = () => {
       },
     },
     {
-      image: "src/assets/organic.jpg",
+      image: "/organic.jpg",
       title: "Organic Farming Guide",
       description:
         "Complete resource for transitioning to and maintaining organic farming practices with step-by-step guidance.",
@@ -70,7 +70,7 @@ const SolutionsSection = () => {
       },
     },
     {
-      image: "/src/assets/weather.jpg",
+      image: "/weather.jpg",
       title: "Precision Weather Analytics",
       description:
         "Hyper-local weather forecasting specifically tailored for agricultural needs with actionable insights.",
@@ -83,7 +83,7 @@ const SolutionsSection = () => {
       },
     },
     {
-      image: "/src/assets/soil_health.jpg",
+      image: "/soil_health.jpg",
       title: "Soil Health Analysis",
       description:
         "Comprehensive soil testing and improvement recommendations to maximize fertility and sustainable practices.",
@@ -96,7 +96,7 @@ const SolutionsSection = () => {
       },
     },
     {
-      image: "/src/assets/smart.jpg",
+      image: "/smart.jpg",
       title: "Smart Irrigation Planning",
       description:
         "Optimize water usage with AI-powered irrigation scheduling based on crop needs and weather conditions.",
@@ -109,7 +109,7 @@ const SolutionsSection = () => {
       },
     },
     {
-      image: "/src/assets/market.webp",
+      image: "/market.webp",
       title: "Market Price Tracker",
       description:
         "Real-time agricultural commodity prices, trend analysis, and optimal selling time recommendations.",
@@ -215,7 +215,7 @@ const SolutionsSection = () => {
               <div className="relative">
                 <div className="absolute -inset-3 bg-gradient-to-r from-green-400 to-emerald-500 rounded-2xl opacity-20 blur-lg"></div>
                 <img
-                  src="/src/assets/bot.png"
+                  src="/bot.png"
                   alt="AI Assistant for Farmers"
                   className={`relative rounded-2xl shadow-2xl w-full h-auto transform transition-all duration-700 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
                     }`}
