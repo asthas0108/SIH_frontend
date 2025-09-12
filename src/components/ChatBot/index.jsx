@@ -2,6 +2,8 @@ import React, { useState, useRef, useMemo, useEffect } from "react";
 import { FaRegPlusSquare } from "react-icons/fa";
 import { PiTextAlignJustify } from "react-icons/pi";
 import axios from "axios";
+import { marked } from "marked";
+import DOMPurify from "dompurify";
 
 const farmer_questions = [
     "इस मौसम में उगाने के लिए सबसे अच्छी फसलें",
@@ -170,25 +172,13 @@ const ChatBot = () => {
         }
     };
 
+    // Replace your formatMarkdown function with this:
     function formatMarkdown(text) {
         if (!text) return "";
-
-        let formatted = text;
-
-        formatted = formatted.replace(/^### (.*)$/gm, "<h3 class='font-semibold text-lg mt-2'>$1</h3>");
-
-        formatted = formatted.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
-
-        formatted = formatted.replace(/(?:^- .*(?:\n|$))+?/gm, (match) => {
-            const items = match
-                .trim()
-                .split('\n')
-                .map(line => line.replace(/^- (.*)$/, "<li class='ml-6 list-disc'>$1</li>"))
-                .join('');
-            return `<ul>${items}</ul>`;
-        });
-
-        return formatted;
+        // Convert markdown to HTML
+        const rawHtml = marked.parse(text, { breaks: true });
+        // Sanitize HTML to prevent XSS
+        return DOMPurify.sanitize(rawHtml);
     }
 
     const conversation_of_current_session = async (session_id) => {
@@ -431,7 +421,7 @@ const ChatBot = () => {
                         </div>
                     </div>
                     <p className="text-xs sm:text-sm text-center text-emerald-700/80 mt-3 sm:mt-4 font-medium px-2">
-                        कृपया ध्यान दें: यह चैटबॉट केवल कृषि संबंधित मार्गदर्शन देता है। कृपया अपने क्षेत्रीय कृषि विशेषज्ञ से भी सलाह लें।
+                        कृपया ध्यान दें: यह चैटबॉट केवल कृषि संबंधित मार्गदर्शन देता है। कृपया अपने क्षेत्रीय कृषि विशेषज्ञ से भी सलाह लें。
                     </p>
                 </div>
             </div>
