@@ -9,6 +9,7 @@ import WeatherCheck from "./components/WeatherCheck";
 import OrganicFarming from "./components/OrganicFarming/index";
 import PlantDiseaseDetection from "./components/PlantDisease";
 import ChatBot from "./components/ChatBot";
+import EnhancedFarmerProfile from "./components/Profile";
 
 function Home() {
   return (
@@ -43,6 +44,7 @@ function App() {
             <Route path="/organicFarming" element={<OrganicFarming />} />
             <Route path="/weatherCheck" element={<WeatherCheck />} />
             <Route path="/chatbot" element={<ChatBot />} />
+            <Route path="/profile" element={<EnhancedFarmerProfile />} />
           </Routes>
         </main>
 
