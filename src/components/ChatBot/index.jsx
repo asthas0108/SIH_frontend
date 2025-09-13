@@ -1,6 +1,8 @@
 import React, { useState, useRef, useMemo, useEffect } from "react";
 import { FaRegPlusSquare } from "react-icons/fa";
 import { PiTextAlignJustify } from "react-icons/pi";
+import { useLocation } from "react-router-dom";
+
 import axios from "axios";
 import { marked } from "marked";
 import DOMPurify from "dompurify";
@@ -47,6 +49,8 @@ const ChatBot = () => {
     const [listening, setListening] = useState(false);
     const recognitionRef = useRef(null);
     const messagesEndRef = useRef(null);
+
+    
 
     const randomQuestions = useMemo(() => {
         const shuffled = [...farmer_questions].sort(() => 0.5 - Math.random());

@@ -10,12 +10,37 @@ import {
   Sparkles,
   CheckCircle
 } from "lucide-react";
+import { useNavigate } from 'react-router-dom';
+
 
 const SolutionsSection = () => {
   const [activeFilter, setActiveFilter] = useState("all");
   const [hoveredCard, setHoveredCard] = useState(null);
   const [isVisible, setIsVisible] = useState(false);
+  const navigate = useNavigate();
 
+  // This is your helper function that creates the button
+  const renderChatbotButton = () => {
+    
+    // 2. Define the click handler inside the function
+    const handleStartChat = () => {
+      // 3. Use the navigate function (available from the parent component's scope)
+      //    to go to the chatbot route and pass the 'startNewChat' state.
+      navigate('/chatbot', { state: { startNewChat: true } });
+    };
+
+    // 4. Return a <button> instead of an <a> tag
+    return (
+      <button
+        onClick={handleStartChat}
+        className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-green-600 to-emerald-600 text-white font-semibold rounded-xl hover:from-green-700 hover:to-emerald-700 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+      >
+        <MessageCircle className="w-5 h-5" />
+        <span>Start Chatting Now</span>
+        <ArrowRight className="w-5 h-5" />
+      </button>
+    );
+  };
   const cards = [
     {
       image: "/recommendations.webp",
@@ -139,6 +164,7 @@ const SolutionsSection = () => {
   const filteredCards = activeFilter === "all"
     ? cards
     : cards.filter(card => card.category === activeFilter);
+  
 
   return (
     <section className="bg-[#f5f5dc] relative overflow-hidden">
@@ -273,15 +299,7 @@ const SolutionsSection = () => {
                   </div>
                 </div>
 
-                <a
-                  href="/chatbot"
-                  className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-green-600 to-emerald-600 text-white font-semibold rounded-xl hover:from-green-700 hover:to-emerald-700 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
-                >
-                  <MessageCircle className="w-5 h-5" />
-                  <span>Start Chatting Now</span>
-                  <ArrowRight className="w-5 h-5" />
-                </a>
-
+                {renderChatbotButton()}
                 <div className="mt-2 flex items-center gap-1 text-sm text-green-700">
                   <CheckCircle className="w-4 h-4" />
                   <span>Completely free for farmers</span>
