@@ -196,7 +196,7 @@ const ChatBot = () => {
 
   const conversation_of_current_session = async (session_id) => {
     try {
-      const res = await axios.get(`http://127.0.0.1:8000/farmer_query/session/${user_id}/${session_id}/history`);
+      const res = await axios.get(`https://kisan-mitra-chatbot-2.onrender.com/farmer_query/session/${user_id}/${session_id}/history`);
       return res.data;
     } catch {
       return [];
@@ -205,7 +205,7 @@ const ChatBot = () => {
 
   const all_session_of_user = async (user_id) => {
     try {
-      const res = await axios.get(`http://127.0.0.1:8000/farmer_query/allSession_user/${user_id}`);
+      const res = await axios.get(`https://kisan-mitra-chatbot-2.onrender.com/farmer_query/allSession_user/${user_id}`);
       return res.data;
     } catch {
       return [];
@@ -228,7 +228,7 @@ const ChatBot = () => {
     const currentSession = sessions.find(s => s.id === activeSessionId);
     const isNewSession = currentSession.title === "नया_सत्र";
     try {
-      const response = await axios.post("http://127.0.0.1:8000/farmer_query/chat", {
+      const response = await axios.post("https://kisan-mitra-chatbot-2.onrender.com/farmer_query/chat", {
         user_id: user_id,
         message: messageToSend,
         session_id: isNewSession ? `${messageToSend}` : currentSession.id
@@ -362,7 +362,7 @@ const ChatBot = () => {
                   <div key={index} className="flex items-start gap-2 sm:gap-3 md:gap-4">
                     <div className="flex-shrink-0">
                       <div className="w-8 h-8 sm:w-10 sm:h-10 bg-emerald-100 rounded-full flex items-center justify-center border border-emerald-200 shadow">
-                        <img src="gemini_icon.png" alt="bot" className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" />
+                        <img src="public/gemini_icon.png" alt="bot" className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" />
                       </div>
                     </div>
                     <div className="bg-emerald-50 text-emerald-900 px-4 py-3 sm:px-5 sm:py-4 rounded-xl sm:rounded-2xl shadow max-w-[85%] sm:max-w-[80%] border border-emerald-200">
@@ -375,7 +375,7 @@ const ChatBot = () => {
                 <div className="flex items-start gap-2 sm:gap-3 md:gap-4">
                   <div className="flex-shrink-0">
                     <div className="w-8 h-8 sm:w-10 sm:h-10 bg-emerald-100 rounded-full flex items-center justify-center border border-emerald-200 shadow">
-                      <img src="gemini_icon.png" alt="bot" className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" />
+                      <img src="public/gemini_icon.png" alt="bot" className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" />
                     </div>
                   </div>
                   <div className="bg-emerald-50 text-emerald-900 px-4 py-3 sm:px-5 sm:py-4 rounded-xl sm:rounded-2xl shadow max-w-[85%] sm:max-w-[80%] border border-emerald-200">
@@ -412,7 +412,7 @@ const ChatBot = () => {
                 onClick={startListening}
                 className={`p-2 sm:p-3 rounded-full cursor-pointer transition ${listening ? "bg-emerald-300/50" : "hover:bg-amber-100/50"}`}
               >
-                <img src="mic_icon.png" alt="आवाज" className="w-5 sm:w-6 md:w-6 h-5 sm:h-6 md:h-6" />
+                <img src="public/mic_icon.png" alt="आवाज" className="w-5 sm:w-6 md:w-6 h-5 sm:h-6 md:h-6" />
               </div>
               <button
                 onClick={handleSend}
