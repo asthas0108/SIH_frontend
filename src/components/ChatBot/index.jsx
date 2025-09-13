@@ -27,17 +27,18 @@ const farmer_questions = [
     "जैविक कीट नियंत्रण के प्रभावी तरीके",
     "फसल के लिए उपयुक्त उर्वरक का चुनाव",
     "अनाज की भंडारण और सुरक्षा के तरीके",
-    "सूखा या बाढ़ के समय फसल सुरक्षा उपाय",
+    "सूखा या बाढ़ के समय फसल सुरक्षा उपाय",
     "मौसमी फसल विविधता बढ़ाने के सुझाव",
     "कृषि बीमा लेने की प्रक्रिया और लाभ"
 ];
+
 
 const ChatBot = () => {
     const user_id = "random_user1";
     const [sidebarOpen, setSidebarOpen] = useState(true);
     const [sessions, setSessions] = useState([]);
     const [activeSessionId, setActiveSessionId] = useState(null);
-    const [val, setValue] = useState("0")
+    const [val, setValue] = useState(0); // Changed to number for simplicity
 
     const [input, setInput] = useState("");
     const [conversations, setConversations] = useState([]);
@@ -67,7 +68,6 @@ const ChatBot = () => {
 
                 if (sessionIds.length > 0) {
 
-                    console.log(sessionIds.length)
                     const formattedSessions = sessionIds.map((sessionId, index) => ({
                         id: sessionId,
                         title: sessionId.replace(`${user_id}_`, ""),
@@ -98,23 +98,30 @@ const ChatBot = () => {
         };
 
         fetchSessions();
-    }, [setValue, val]);
+    }, [val]);
 
     useEffect(() => {
         const fetchConversationHistory = async () => {
-            if (activeSessionId) {
+            const currentSession = sessions.find(s => s.id === activeSessionId);
+            
+            if (currentSession && currentSession.title !== "नया_सत्र") {
                 try {
-                    const history = await conversation_of_current_session(user_id + "_" + sessions.find(s => s.active)?.title);
+                    // Use the full session ID for the API call
+                    const history = await conversation_of_current_session(currentSession.id);
                     setConversations(history);
                 } catch (error) {
                     console.error("Error fetching conversation history:", error);
                     setConversations([]);
                 }
+            } else {
+                setConversations([]);
             }
         };
 
-        fetchConversationHistory();
-    }, [activeSessionId]);
+        if (activeSessionId) {
+            fetchConversationHistory();
+        }
+    }, [activeSessionId, sessions]);
 
     const startListening = () => {
         if (!("webkitSpeechRecognition" in window || "SpeechRecognition" in window)) {
@@ -128,61 +135,42 @@ const ChatBot = () => {
         recognitionRef.current.interimResults = true;
         recognitionRef.current.maxAlternatives = 1;
 
-        recognitionRef.current.onstart = () => {
-            setListening(true);
-        };
-
-        recognitionRef.current.onresult = (event) => {
-            const transcript = event.results[0][0].transcript;
-            setInput(transcript);
-        };
-
-        recognitionRef.current.onend = () => {
-            setListening(false);
-        };
-
+        recognitionRef.current.onstart = () => setListening(true);
+        recognitionRef.current.onresult = (event) => setInput(event.results[0][0].transcript);
+        recognitionRef.current.onend = () => setListening(false);
         recognitionRef.current.start();
     };
 
     const selectSession = (id) => {
         setActiveSessionId(id);
         setSessions(prevSessions =>
-            prevSessions.map(session => ({
-                ...session,
-                active: session.id === id
-            }))
+            prevSessions.map(session => ({ ...session, active: session.id === id }))
         );
     };
 
-    const createNewSession = async () => {
-        try {
-            const newSessionId = `${user_id}_session_${Date.now()}`;
-            const newSession = {
-                id: newSessionId,
-                title: "नया_सत्र",
-                active: true
-            };
+    const createNewSession = () => {
+        const newSessionId = `${user_id}_session_${Date.now()}`;
+        const newSession = {
+            id: newSessionId,
+            title: "नया_सत्र",
+            active: true,
+        };
 
-            setSessions(prev => [newSession, ...prev]);
-            setActiveSessionId(newSessionId);
-            setConversations([]);
-
-        } catch (error) {
-            console.error("Error creating new session:", error);
-        }
+        setSessions(prevSessions => [
+            newSession,
+            ...prevSessions.map(session => ({ ...session, active: false })),
+        ]);
+        setActiveSessionId(newSessionId);
+        setConversations([]);
     };
 
-    // Replace your formatMarkdown function with this:
     function formatMarkdown(text) {
         if (!text) return "";
-        // Convert markdown to HTML
         const rawHtml = marked.parse(text, { breaks: true });
-        // Sanitize HTML to prevent XSS
         return DOMPurify.sanitize(rawHtml);
     }
 
     const conversation_of_current_session = async (session_id) => {
-        console.log(session_id)
         try {
             const res = await axios.get(`https://kisan-mitra-chatbot-2.onrender.com/farmer_query/session/${session_id}/history`);
             return res.data;
@@ -211,21 +199,35 @@ const ChatBot = () => {
             timestamp: new Date().toISOString()
         };
 
+        const messageToSend = input;
         setConversations(prev => [...prev, userMessage]);
+        setInput("");
         setLoading(true);
 
-        let req = sessions.find(s => s.active)?.title
+        const currentSession = sessions.find(s => s.id === activeSessionId);
+        const isNewSession = currentSession.title === "नया_सत्र";
 
         try {
             const response = await axios.post("https://kisan-mitra-chatbot-2.onrender.com/farmer_query/chat", {
                 user_id: user_id,
-                message: input,
-                session_id: req !== "नया_सत्र"
-                    ? `${user_id}_${req}`
-                    : `${user_id}_${input}`
+                message: messageToSend,
+                session_id: isNewSession ? `${user_id}_${messageToSend}` : currentSession.id
             });
 
-            setValue(val + 1);
+            // **FIX APPLIED HERE**
+            if (isNewSession) {
+                // Instead of refetching all sessions, just update the title of the new session.
+                const newSessionIdFromServer = `${user_id}_${messageToSend}`;
+                setSessions(prevSessions =>
+                    prevSessions.map(session =>
+                        session.id === activeSessionId
+                            ? { ...session, title: messageToSend, id: newSessionIdFromServer }
+                            : session
+                    )
+                );
+                // Also update the active session ID to match the permanent ID from the server
+                setActiveSessionId(newSessionIdFromServer);
+            }
 
             const botMessage = {
                 type: "bot",
@@ -236,98 +238,70 @@ const ChatBot = () => {
             setConversations(prev => [...prev, botMessage]);
         } catch (error) {
             console.error("Error calling backend API:", error);
-
             const errorMessage = {
                 type: "bot",
                 content: "सर्वर से उत्तर प्राप्त नहीं हो सका।",
                 timestamp: new Date().toISOString()
             };
-
             setConversations(prev => [...prev, errorMessage]);
         } finally {
             setLoading(false);
-            setInput("");
         }
     };
-
+    
     return (
-        <div className="flex min-h-screen bg-gradient-to-b from-amber-50 to-emerald-50">
-            <div className={`${sidebarOpen ? "w-64" : "w-0"} transition-all duration-300 bg-gradient-to-b from-emerald-800 to-emerald-900 text-white overflow-hidden flex flex-col`}>
-                <div className="p-4 flex items-center justify-between border-b border-emerald-700">
-                    <h2 className="text-xl font-bold">सत्र</h2>
-                    <button onClick={() => setSidebarOpen(false)} className="p-1 rounded hover:bg-emerald-700">
-                        ✕
+        <div className="flex h-screen bg-gray-100">
+            <div className={`${sidebarOpen ? "w-64" : "w-0"} transition-all duration-300 bg-gray-800 text-white overflow-hidden flex flex-col`}>
+                <div className="p-4 flex items-center justify-between border-b border-gray-700">
+                    <h2 className="text-xl font-semibold">Sessions</h2>
+                    <button onClick={() => setSidebarOpen(false)} className="p-1 rounded-full hover:bg-gray-700">
+                        &#10005;
                     </button>
                 </div>
                 <div className="flex-1 overflow-y-auto p-2">
                     <button
                         onClick={createNewSession}
-                        className="flex items-center justify-center gap-2 w-full mt-4 p-3 rounded-lg border border-emerald-500 hover:bg-emerald-700 transition text-white mb-5"
+                        className="flex items-center justify-center gap-2 w-full mt-4 p-3 rounded-lg border border-gray-600 hover:bg-gray-700 transition text-white mb-5"
                     >
-                        <FaRegPlusSquare /> <span>नया सत्र</span>
+                        <FaRegPlusSquare /> <span>New Session</span>
                     </button>
                     {sessions.map(session => (
                         <div
                             key={session.id}
                             onClick={() => selectSession(session.id)}
-                            className={`p-3 rounded-lg mb-2 cursor-pointer transition ${session.active ? "bg-emerald-600" : "hover:bg-emerald-700"}`}
+                            className={`p-3 rounded-lg mb-2 cursor-pointer transition ${session.active ? "bg-gray-600" : "hover:bg-gray-700"}`}
                         >
-                            <p className="text-sm">{session.title}</p>
+                            <p className="text-sm truncate">{session.title}</p>
                         </div>
                     ))}
                 </div>
             </div>
 
-            <div className="flex-1 min-h-screen flex flex-col">
-                <div className="flex items-center justify-between px-4 py-3 sm:px-6 bg-gradient-to-r from-emerald-800 to-amber-800 text-white shadow-md">
-                    <div className="flex items-center">
-                        {!sidebarOpen && (
-                            <button onClick={() => setSidebarOpen(true)} className="mr-3 p-1 rounded hover:bg-emerald-700">
-                                <PiTextAlignJustify size={30} />
-                            </button>
-                        )}
-                        <div className="hidden sm:block">
-                            <p className="text-xl sm:text-2xl font-bold tracking-wide font-sans">KisanMitra</p>
-                            <p className="text-xs sm:text-sm text-amber-100 mt-1 font-medium">आपका कृषि सहयोगी</p>
-                        </div>
-                        <div className="sm:hidden">
-                            <p className="text-xl font-bold font-sans">KisanMitra</p>
-                        </div>
-                    </div>
-
-                    <div className="flex items-center gap-2 sm:gap-4">
-                        <img
-                            src="/user.jpg"
-                            alt="user"
-                            className="w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-amber-200 shadow-md"
-                        />
-                    </div>
-                </div>
-
-                <div className="flex-1 w-full max-w-4xl mx-auto px-3 py-4 sm:px-4 sm:py-6 md:py-8 no-scrollbar">
-                    {conversations.length === 0 ? (
+            <div className="flex-1 flex flex-col">
+                <div className="flex-1 w-full max-w-4xl mx-auto px-4 py-8 overflow-y-auto no-scrollbar">
+                    {conversations.length === 0 && !loading ? (
                         <>
-                            <div className="my-6 sm:my-8 text-center">
-                                <p className="text-2xl sm:text-3xl md:text-5xl font-bold text-emerald-900 leading-snug font-['Merriweather']">
+                            <div className="my-8 text-center">
+                                <p className="text-4xl font-bold text-gray-800">
                                     नमस्ते किसान भाई
                                 </p>
-                                <p className="text-base sm:text-lg text-emerald-700 mt-2 sm:mt-3 font-medium">
+                                <p className="text-lg text-gray-600 mt-2">
                                     मैं आपकी खेती के लिए मार्गदर्शन प्रदान कर सकता हूं
                                 </p>
                             </div>
 
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5 md:gap-6 mt-8 sm:mt-10 md:mt-12">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-12">
                                 {randomQuestions.map((question, index) => (
                                     <div
                                         key={index}
                                         onClick={() => setInput(question)}
-                                        className="bg-gradient-to-br from-amber-50 to-emerald-50 rounded-xl sm:rounded-2xl shadow-lg p-4 sm:p-5 md:p-6 hover:shadow-xl transition-all cursor-pointer border border-amber-200 hover:-translate-y-1"
+                                        className="bg-white rounded-lg shadow p-5 hover:shadow-lg transition-all cursor-pointer border border-gray-200 hover:-translate-y-1"
                                     >
                                         <div className="flex items-start">
-                                            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-amber-100 rounded-lg sm:rounded-xl flex items-center justify-center p-2 mr-3 sm:mr-4">
-                                                <img src="/compass_icon.png" alt="question" className="w-5 h-5 sm:w-6 sm:h-6" />
+                                            <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center mr-4">
+                                                <img src="/compass_icon.png" alt="question" className="w-6 h-6" />
                                             </div>
-                                            <p className="text-emerald-900 font-medium text-base sm:text-lg leading-tight">
+                                            <p className="text-gray-800 font-medium text-base">
                                                 {question}
                                             </p>
                                         </div>
@@ -336,49 +310,37 @@ const ChatBot = () => {
                             </div>
                         </>
                     ) : (
-                        <div className="mt-6 sm:mt-8 max-h-[60vh] sm:max-h-[65vh] overflow-y-auto space-y-6 sm:space-y-8 no-scrollbar">
+                        <div className="space-y-6">
                             {conversations.map((message, index) => (
                                 message.type === "human" || message.role === "human" ? (
-                                    <div key={index} className="flex justify-end">
-                                        <div className="bg-amber-100 text-emerald-900 px-4 py-3 sm:px-5 sm:py-4 rounded-xl sm:rounded-2xl shadow max-w-[85%] sm:max-w-[80%] border border-amber-200">
-                                            <p className="text-emerald-900 font-medium text-sm sm:text-base">{message.content}</p>
+                                    <div key={index} className="flex justify-end items-end gap-3">
+                                        <div className="bg-blue-500 text-white px-4 py-3 rounded-2xl shadow max-w-[80%]">
+                                            <p className="text-base">{message.content}</p>
                                         </div>
-                                        <div className="ml-2 sm:ml-3 flex-shrink-0">
-                                            <img src="/user.jpg" alt="user" className="w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-amber-300 shadow" />
-                                        </div>
+                                        <img src="/user.jpg" alt="user" className="w-10 h-10 rounded-full border-2 border-gray-300" />
                                     </div>
                                 ) : (
-                                    <div key={index} className="flex items-start gap-2 sm:gap-3 md:gap-4">
-                                        <div className="flex-shrink-0">
-                                            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-emerald-100 rounded-full flex items-center justify-center border border-emerald-200 shadow">
-                                                <img src="/gemini_icon.png" alt="bot" className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" />
-                                            </div>
+                                    <div key={index} className="flex items-start gap-3">
+                                        <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center border border-gray-300 shadow">
+                                            <img src="/gemini_icon.png" alt="bot" className="w-6 h-6" />
                                         </div>
-                                        <div className="bg-emerald-50 text-emerald-900 px-4 py-3 sm:px-5 sm:py-4 rounded-xl sm:rounded-2xl shadow max-w-[85%] sm:max-w-[80%] border border-emerald-200">
-                                            <div className="text-sm sm:text-base leading-relaxed">
-                                                {message.content && message.content.startsWith('<') ? (
-                                                    <div dangerouslySetInnerHTML={{ __html: message.content }} />
-                                                ) : (
-                                                    <p>{message.content}</p>
-                                                )}
-                                            </div>
+                                        <div className="bg-white text-gray-800 px-4 py-3 rounded-2xl shadow max-w-[80%] border border-gray-200">
+                                            <div className="text-base leading-relaxed prose" dangerouslySetInnerHTML={{ __html: formatMarkdown(message.content) }} />
                                         </div>
                                     </div>
                                 )
                             ))}
 
                             {loading && (
-                                <div className="flex items-start gap-2 sm:gap-3 md:gap-4">
-                                    <div className="flex-shrink-0">
-                                        <div className="w-8 h-8 sm:w-10 sm:h-10 bg-emerald-100 rounded-full flex items-center justify-center border border-emerald-200 shadow">
-                                            <img src="/gemini_icon.png" alt="bot" className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" />
-                                        </div>
+                                <div className="flex items-start gap-3">
+                                    <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center border border-gray-300 shadow">
+                                        <img src="/gemini_icon.png" alt="bot" className="w-6 h-6" />
                                     </div>
-                                    <div className="bg-emerald-50 text-emerald-900 px-4 py-3 sm:px-5 sm:py-4 rounded-xl sm:rounded-2xl shadow max-w-[85%] sm:max-w-[80%] border border-emerald-200">
-                                        <div className="space-y-2 sm:space-y-3">
-                                            <div className="h-3 sm:h-4 bg-emerald-200/50 rounded-full animate-pulse"></div>
-                                            <div className="h-3 sm:h-4 bg-emerald-200/50 rounded-full animate-pulse w-5/6"></div>
-                                            <div className="h-3 sm:h-4 bg-emerald-200/50 rounded-full animate-pulse w-4/6"></div>
+                                    <div className="bg-white text-gray-800 px-4 py-3 rounded-2xl shadow max-w-[80%] border border-gray-200">
+                                        <div className="space-y-2">
+                                            <div className="h-4 bg-gray-200 rounded-full animate-pulse w-full"></div>
+                                            <div className="h-4 bg-gray-200 rounded-full animate-pulse w-5/6"></div>
+                                            <div className="h-4 bg-gray-200 rounded-full animate-pulse w-4/6"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -389,14 +351,22 @@ const ChatBot = () => {
                     )}
                 </div>
 
-                <div className="w-full max-w-4xl mx-auto px-3 sm:px-4 mb-6 sm:mb-8 mt-4">
-                    <div className="flex items-center justify-between gap-3 sm:gap-4 bg-white shadow-lg rounded-xl sm:rounded-2xl px-4 py-3 sm:px-5 sm:py-4 border border-amber-300">
+                <div className="w-full max-w-4xl mx-auto px-4 mb-6">
+                    {!sidebarOpen && (
+                        <button 
+                            onClick={() => setSidebarOpen(true)} 
+                            className="absolute top-4 left-4 p-2 rounded-full bg-white shadow-md hover:bg-gray-200"
+                        >
+                            <PiTextAlignJustify size={24} />
+                        </button>
+                    )}
+                    <div className="flex items-center gap-4 bg-white shadow-lg rounded-2xl p-4 border border-gray-200">
                         <input
                             onChange={(e) => setInput(e.target.value)}
                             value={input}
                             type="text"
                             placeholder="अपना प्रश्न यहाँ लिखें..."
-                            className="flex-1 bg-transparent border-none outline-none text-emerald-900 text-base sm:text-lg placeholder-emerald-600/70 font-medium font-sans"
+                            className="flex-1 bg-transparent border-none outline-none text-gray-800 text-lg placeholder-gray-500"
                             onKeyPress={(e) => {
                                 if (e.key === 'Enter' && !e.shiftKey) {
                                     e.preventDefault();
@@ -404,24 +374,24 @@ const ChatBot = () => {
                                 }
                             }}
                         />
-                        <div className="flex items-center gap-2 sm:gap-3 md:gap-4">
-                            <div
+                        <div className="flex items-center gap-3">
+                            <button
                                 onClick={startListening}
-                                className={`p-2 sm:p-3 rounded-full cursor-pointer transition ${listening ? "bg-emerald-300/50" : "hover:bg-amber-100/50"}`}
+                                className={`p-3 rounded-full transition ${listening ? "bg-gray-300" : "hover:bg-gray-100"}`}
                             >
-                                <img src="/mic_icon.png" alt="आवाज" className="w-5 sm:w-6 md:w-6 h-5 sm:h-6 md:h-6" />
-                            </div>
+                                <img src="/mic_icon.png" alt="आवाज" className="w-6 h-6" />
+                            </button>
                             <button
                                 onClick={handleSend}
                                 disabled={loading || !input.trim()}
-                                className="bg-emerald-700 hover:bg-emerald-800 p-2 sm:p-3 rounded-lg sm:rounded-xl transition shadow-md hover:shadow-lg disabled:opacity-70"
+                                className="bg-blue-500 hover:bg-blue-600 p-3 rounded-xl transition shadow-md hover:shadow-lg disabled:opacity-70"
                             >
-                                <img src="/send_icon.png" alt="भेजें" className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 invert" />
+                                <img src="/send_icon.png" alt="भेजें" className="w-6 h-6 invert" />
                             </button>
                         </div>
                     </div>
-                    <p className="text-xs sm:text-sm text-center text-emerald-700/80 mt-3 sm:mt-4 font-medium px-2">
-                        कृपया ध्यान दें: यह चैटबॉट केवल कृषि संबंधित मार्गदर्शन देता है। कृपया अपने क्षेत्रीय कृषि विशेषज्ञ से भी सलाह लें。
+                    <p className="text-sm text-center text-gray-500 mt-4">
+                        कृपया ध्यान दें: यह चैटबॉट केवल कृषि संबंधित मार्गदर्शन देता है। कृपया अपने क्षेत्रीय कृषि विशेषज्ञ से भी सलाह लें।
                     </p>
                 </div>
             </div>
