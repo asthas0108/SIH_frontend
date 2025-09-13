@@ -267,7 +267,7 @@ const Navbar = () => {
                   ))}
                 </div>
                 <div className="px-4 py-2 border-t border-green-200">
-                  <button className="text-sm text-green-600 font-medium w-full text-center hover:text-green-800 transition">
+                  <button onClick={() => window.location.href = "/notifications"} className="text-sm text-green-600 font-medium w-full text-center hover:text-green-800 transition">
                     View All Notifications
                   </button>
                 </div>
@@ -283,6 +283,7 @@ const Navbar = () => {
             } transition text-sm lg:text-base`}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
+          onClick={() => window.location.href = "/feedback"}
         >
           <MessageSquare className="w-4 h-4 lg:w-5 lg:h-5" />
           <span className="font-medium">Feedback</span>
