@@ -2,542 +2,557 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Calendar,
-  Search,
   Filter,
-  Download,
-  ChevronDown,
   Sprout,
-  Wheat,
-  Leaf,
+  Scissors,
+  Info,
+  ChevronDown,
   Sun,
-  Droplets,
-  ArrowLeft,
+  CloudRain,
+  Thermometer,
 } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import "./CropCalendar.css";
+
+// Enhanced crop data with additional metadata
+const cropsData = [
+  {
+    crop: "Wheat",
+    sowing: 11,
+    harvesting: 3,
+    type: "Cereal",
+    duration: "120-150 days",
+    season: "Rabi",
+    color: "#FFA726",
+    icon: "🌾",
+  },
+  {
+    crop: "Rice",
+    sowing: 6,
+    harvesting: 10,
+    type: "Cereal",
+    duration: "90-120 days",
+    season: "Kharif",
+    color: "#66BB6A",
+    icon: "🌾",
+  },
+  {
+    crop: "Maize",
+    sowing: 5,
+    harvesting: 9,
+    type: "Cereal",
+    duration: "90-110 days",
+    season: "Kharif",
+    color: "#FFEE58",
+    icon: "🌽",
+  },
+  {
+    crop: "Barley",
+    sowing: 11,
+    harvesting: 4,
+    type: "Cereal",
+    duration: "110-140 days",
+    season: "Rabi",
+    color: "#D4AF37",
+    icon: "🌾",
+  },
+  {
+    crop: "Sugarcane",
+    sowing: 2,
+    harvesting: 12,
+    type: "Cash Crop",
+    duration: "300-365 days",
+    season: "Year Round",
+    color: "#8BC34A",
+    icon: "🎋",
+  },
+  {
+    crop: "Cotton",
+    sowing: 6,
+    harvesting: 11,
+    type: "Cash Crop",
+    duration: "150-180 days",
+    season: "Kharif",
+    color: "#E1F5FE",
+    icon: "🤍",
+  },
+  {
+    crop: "Groundnut",
+    sowing: 6,
+    harvesting: 10,
+    type: "Oilseed",
+    duration: "90-120 days",
+    season: "Kharif",
+    color: "#8D6E63",
+    icon: "🥜",
+  },
+  {
+    crop: "Soybean",
+    sowing: 6,
+    harvesting: 9,
+    type: "Oilseed",
+    duration: "90-110 days",
+    season: "Kharif",
+    color: "#9CCC65",
+    icon: "🫘",
+  },
+  {
+    crop: "Pulses",
+    sowing: 10,
+    harvesting: 3,
+    type: "Legume",
+    duration: "90-120 days",
+    season: "Rabi",
+    color: "#FF8A65",
+    icon: "🫛",
+  },
+  {
+    crop: "Mustard",
+    sowing: 10,
+    harvesting: 2,
+    type: "Oilseed",
+    duration: "90-120 days",
+    season: "Rabi",
+    color: "#FFD54F",
+    icon: "🌻",
+  },
+  {
+    crop: "Sunflower",
+    sowing: 1,
+    harvesting: 4,
+    type: "Oilseed",
+    duration: "90-110 days",
+    season: "Summer",
+    color: "#FFC107",
+    icon: "🌻",
+  },
+  {
+    crop: "Jute",
+    sowing: 3,
+    harvesting: 7,
+    type: "Fiber",
+    duration: "120-150 days",
+    season: "Summer",
+    color: "#A1887F",
+    icon: "🌿",
+  },
+];
+
+const months = [
+  "Crop",
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+];
+
+const cropTypes = ["All", "Cereal", "Cash Crop", "Oilseed", "Legume", "Fiber"];
+const seasons = ["All", "Kharif", "Rabi", "Summer", "Year Round"];
 
 const CropCalendar = () => {
-  const [selectedCrop, setSelectedCrop] = useState("all");
-  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedFilter, setSelectedFilter] = useState("All");
+  const [selectedSeason, setSelectedSeason] = useState("All");
+  const [selectedCrop, setSelectedCrop] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [selectedSeason, setSelectedSeason] = useState("all");
-  const navigate = useNavigate();
-
-  // Comprehensive crop data with more details
-  const crops = [
-    {
-      crop: "Wheat",
-      sowing: 11,
-      harvesting: 3,
-      category: "cereal",
-      season: "rabi",
-      color: "#F59E0B",
-      description: "Major winter crop, best sown in November",
-    },
-    {
-      crop: "Rice",
-      sowing: 6,
-      harvesting: 10,
-      category: "cereal",
-      season: "kharif",
-      color: "#10B981",
-      description: "Main monsoon crop, requires adequate water",
-    },
-    {
-      crop: "Maize",
-      sowing: 5,
-      harvesting: 9,
-      category: "cereal",
-      season: "kharif",
-      color: "#F97316",
-      description: "Versatile crop, can be grown in multiple seasons",
-    },
-    {
-      crop: "Barley",
-      sowing: 11,
-      harvesting: 4,
-      category: "cereal",
-      season: "rabi",
-      color: "#8B5CF6",
-      description: "Hardy winter crop, drought resistant",
-    },
-    {
-      crop: "Sugarcane",
-      sowing: 2,
-      harvesting: 12,
-      category: "cash",
-      season: "perennial",
-      color: "#06B6D4",
-      description: "Long duration crop, requires 12-18 months",
-    },
-    {
-      crop: "Cotton",
-      sowing: 6,
-      harvesting: 11,
-      category: "fiber",
-      season: "kharif",
-      color: "#EC4899",
-      description: "Important cash crop, needs warm climate",
-    },
-    {
-      crop: "Groundnut",
-      sowing: 6,
-      harvesting: 10,
-      category: "oilseed",
-      season: "kharif",
-      color: "#84CC16",
-      description: "Oil-rich legume, improves soil fertility",
-    },
-    {
-      crop: "Soybean",
-      sowing: 6,
-      harvesting: 9,
-      category: "oilseed",
-      season: "kharif",
-      color: "#14B8A6",
-      description: "Protein-rich crop, good for monsoon season",
-    },
-    {
-      crop: "Pulses",
-      sowing: 10,
-      harvesting: 3,
-      category: "legume",
-      season: "rabi",
-      color: "#F43F5E",
-      description: "Essential protein crops, nitrogen fixers",
-    },
-    {
-      crop: "Mustard",
-      sowing: 10,
-      harvesting: 2,
-      category: "oilseed",
-      season: "rabi",
-      color: "#EAB308",
-      description: "Winter oilseed crop, yellow flowers",
-    },
-    {
-      crop: "Sunflower",
-      sowing: 1,
-      harvesting: 4,
-      category: "oilseed",
-      season: "summer",
-      color: "#F59E0B",
-      description: "Summer crop, follows the sun",
-    },
-    {
-      crop: "Jute",
-      sowing: 3,
-      harvesting: 7,
-      category: "fiber",
-      season: "summer",
-      color: "#059669",
-      description: "Fiber crop, requires humid climate",
-    },
-  ];
-
-  const months = [
-    "Crop",
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
-  ];
-
-  const seasons = [
-    { value: "all", label: "All Seasons", icon: Calendar },
-    { value: "kharif", label: "Kharif (Monsoon)", icon: Droplets },
-    { value: "rabi", label: "Rabi (Winter)", icon: Leaf },
-    { value: "summer", label: "Summer", icon: Sun },
-  ];
-
-  // Filter crops based on selection and search
-  const filteredCrops = crops.filter((crop) => {
-    const matchesCrop = selectedCrop === "all" || crop.crop === selectedCrop;
-    const matchesSearch = crop.crop
-      .toLowerCase()
-      .includes(searchTerm.toLowerCase());
-    const matchesSeason =
-      selectedSeason === "all" || crop.season === selectedSeason;
-    return matchesCrop && matchesSearch && matchesSeason;
-  });
-
-  // Get unique crop names for dropdown
-  const cropOptions = ["all", ...new Set(crops.map((crop) => crop.crop))];
+  const [hoveredCell, setHoveredCell] = useState(null);
 
   useEffect(() => {
     // Simulate loading
-    const timer = setTimeout(() => setIsLoading(false), 800);
-    return () => clearTimeout(timer);
+    setTimeout(() => setIsLoading(false), 800);
   }, []);
 
-  const getCellContent = (crop, monthIndex) => {
+  const getFilteredCrops = () => {
+    return cropsData.filter((crop) => {
+      const typeMatch =
+        selectedFilter === "All" || crop.type === selectedFilter;
+      const seasonMatch =
+        selectedSeason === "All" || crop.season === selectedSeason;
+      return typeMatch && seasonMatch;
+    });
+  };
+
+  const getCropPhase = (crop, monthIndex) => {
     const start = crop.sowing;
     const end =
       crop.harvesting < start ? crop.harvesting + 12 : crop.harvesting;
 
     for (let i = start; i <= end; i++) {
-      const month = i > 12 ? i - 12 : i;
-      if (month === monthIndex) {
-        if (i === start) return "sow";
-        if (i === end) return "harvest";
-        return "grow";
+      const currentMonth = i > 12 ? i - 12 : i;
+      if (currentMonth === monthIndex) {
+        if (i === start) return "sowing";
+        if (i === end) return "harvesting";
+        return "growing";
       }
     }
-    return "";
+    return null;
   };
 
-  const getCellIcon = (type) => {
-    switch (type) {
-      case "sow":
+  const getPhaseIcon = (phase) => {
+    switch (phase) {
+      case "sowing":
         return <Sprout className="w-4 h-4" />;
-      case "harvest":
-        return <Wheat className="w-4 h-4" />;
-      case "grow":
-        return <div className="w-3 h-3 rounded-full bg-current opacity-60" />;
+      case "harvesting":
+        return <Scissors className="w-4 h-4" />;
+      case "growing":
+        return <div className="w-3 h-3 bg-green-400 rounded-full" />;
       default:
         return null;
     }
   };
 
-  const getCellTooltip = (crop, type) => {
-    switch (type) {
-      case "sow":
-        return `Sowing season for ${crop.crop}`;
-      case "harvest":
-        return `Harvesting season for ${crop.crop}`;
-      case "grow":
-        return `Growing period for ${crop.crop}`;
+  const getPhaseColor = (phase, crop) => {
+    switch (phase) {
+      case "sowing":
+        return "bg-green-100 border-green-300 text-green-700";
+      case "harvesting":
+        return "bg-amber-100 border-amber-300 text-amber-700";
+      case "growing":
+        return `bg-green-50 border-green-200 text-green-600`;
       default:
-        return "";
+        return "bg-gray-50 border-gray-200";
     }
   };
 
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-green-50 via-blue-50 to-purple-50 flex items-center justify-center">
-        <motion.div
-          className="text-center"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-        >
-          <motion.div
-            className="w-16 h-16 border-4 border-green-200 border-t-green-600 rounded-full mx-auto mb-4"
-            animate={{ rotate: 360 }}
-            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-          />
-          <h2 className="text-xl font-semibold text-gray-700 mb-2">
-            Loading Crop Calendar
-          </h2>
-          <p className="text-gray-500">
-            Preparing your agricultural insights...
-          </p>
-        </motion.div>
-      </div>
-    );
-  }
+  const LoadingState = () => (
+    <div className="loading-container">
+      <div className="loading-spinner" />
+      <motion.p
+        className="text-green-600 font-medium text-lg"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.2 }}
+      >
+        Loading crop calendar...
+      </motion.p>
+    </div>
+  );
+
+  if (isLoading) return <LoadingState />;
+
+  const filteredCrops = getFilteredCrops();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-blue-50 to-purple-50">
-      {/* Header */}
-      <motion.div
-        className="bg-white shadow-lg border-b border-green-200"
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <motion.button
-                onClick={() => navigate("/")}
-                className="flex items-center gap-2 px-4 py-2 bg-green-100 hover:bg-green-200 text-green-700 rounded-lg transition-colors"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <ArrowLeft className="w-4 h-4" />
-                <span className="font-medium">Back to Home</span>
-              </motion.button>
-              <div>
-                <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
-                  <div className="p-2 bg-green-600 rounded-lg">
-                    <Calendar className="w-8 h-8 text-white" />
-                  </div>
-                  Crop Calendar
-                </h1>
-                <p className="text-gray-600 mt-1">
-                  Plan your farming activities with our comprehensive crop
-                  calendar
-                </p>
-              </div>
+    <div className="crop-calendar min-h-screen bg-gradient-to-br from-green-50 via-white to-blue-50 p-4 md:p-6">
+      <div className="max-w-7xl mx-auto">
+        {/* Header */}
+        <motion.div
+          className="text-center mb-8"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+        >
+          <div className="flex items-center justify-center gap-3 mb-4">
+            <div className="p-3 bg-green-100 rounded-full">
+              <Calendar className="w-8 h-8 text-green-600" />
             </div>
-            <motion.button
-              className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <Download className="w-4 h-4" />
-              <span className="font-medium">Export Calendar</span>
-            </motion.button>
+            <h1 className="text-4xl font-bold text-gray-800">Crop Calendar</h1>
           </div>
-        </div>
-      </motion.div>
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            Plan your farming activities with our interactive crop calendar.
+            Track sowing and harvesting seasons for optimal yields.
+          </p>
+        </motion.div>
 
-      {/* Controls */}
-      <motion.div
-        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.3 }}
-      >
-        <div className="bg-white rounded-xl shadow-lg p-6 border border-green-100">
-          <div className="flex flex-col gap-4">
-            {/* Search and Crop Filter Row */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {/* Search */}
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                <input
-                  type="text"
-                  placeholder="Search crops..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                />
-              </div>
+        {/* Filters */}
+        <motion.div
+          className="bg-white rounded-xl shadow-lg p-6 mb-8"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+        >
+          <div className="flex flex-wrap gap-4 items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Filter className="w-5 h-5 text-green-600" />
+              <span className="font-semibold text-gray-700">Filter by:</span>
+            </div>
 
-              {/* Crop Filter */}
+            <div className="flex flex-wrap gap-4">
               <div className="relative">
-                <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                 <select
-                  value={selectedCrop}
-                  onChange={(e) => setSelectedCrop(e.target.value)}
-                  className="w-full pl-10 pr-10 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent appearance-none cursor-pointer"
+                  value={selectedFilter}
+                  onChange={(e) => setSelectedFilter(e.target.value)}
+                  className="filter-dropdown"
                 >
-                  <option value="all">All Crops</option>
-                  {crops.map((crop) => (
-                    <option key={crop.crop} value={crop.crop}>
-                      {crop.crop}
+                  {cropTypes.map((type) => (
+                    <option key={type} value={type}>
+                      {type}
                     </option>
                   ))}
                 </select>
-                <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-blue-600 pointer-events-none" />
+              </div>
+
+              <div className="relative">
+                <select
+                  value={selectedSeason}
+                  onChange={(e) => setSelectedSeason(e.target.value)}
+                  className="filter-dropdown"
+                  style={{
+                    background:
+                      "linear-gradient(135deg, #fef3c7 0%, #fed7aa 100%)",
+                    borderColor: "#f59e0b",
+                    color: "#92400e",
+                  }}
+                >
+                  {seasons.map((season) => (
+                    <option key={season} value={season}>
+                      {season}
+                    </option>
+                  ))}
+                </select>
+                <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-amber-600 pointer-events-none" />
               </div>
             </div>
+          </div>
+        </motion.div>
 
-            {/* Season Filter Row */}
-            <div className="flex flex-wrap gap-2 justify-center sm:justify-start">
-              {seasons.map((season) => {
-                const Icon = season.icon;
-                return (
-                  <motion.button
-                    key={season.value}
-                    onClick={() => setSelectedSeason(season.value)}
-                    className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-colors flex-shrink-0 ${
-                      selectedSeason === season.value
-                        ? "bg-green-600 text-white"
-                        : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                    }`}
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    <Icon className="w-4 h-4" />
-                    <span className="text-sm font-medium">{season.label}</span>
-                  </motion.button>
-                );
-              })}
+        {/* Legend */}
+        <motion.div
+          className="bg-white rounded-xl shadow-lg p-6 mb-8"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.3 }}
+        >
+          <div className="flex items-center gap-2 mb-4">
+            <Info className="w-5 h-5 text-blue-600" />
+            <span className="font-semibold text-gray-700">Legend</span>
+          </div>
+          <div className="flex flex-wrap gap-6">
+            <div className="legend-item">
+              <div className="legend-icon bg-green-100 border-2 border-green-300">
+                <Sprout className="w-4 h-4 text-green-700" />
+              </div>
+              <span className="text-sm font-medium text-gray-600">
+                Sowing Season
+              </span>
+            </div>
+            <div className="legend-item">
+              <div className="legend-icon bg-green-50 border-2 border-green-200">
+                <div className="growing-indicator" />
+              </div>
+              <span className="text-sm font-medium text-gray-600">
+                Growing Period
+              </span>
+            </div>
+            <div className="legend-item">
+              <div className="legend-icon bg-amber-100 border-2 border-amber-300">
+                <Scissors className="w-4 h-4 text-amber-700" />
+              </div>
+              <span className="text-sm font-medium text-gray-600">
+                Harvesting Season
+              </span>
             </div>
           </div>
-        </div>
-      </motion.div>
+        </motion.div>
 
-      {/* Calendar */}
-      <motion.div
-        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8"
-        initial={{ opacity: 0, y: 40 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.5 }}
-      >
-        <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-green-100">
-          <div
-            className="calendar-grid"
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(13, 1fr)",
-              gap: "1px",
-              backgroundColor: "#e5e7eb",
-            }}
-          >
-            {/* Header Row */}
-            {months.map((month, index) => (
-              <motion.div
-                key={month}
-                className={`p-4 font-bold text-center ${
-                  index === 0
-                    ? "bg-green-600 text-white"
-                    : "bg-green-100 text-green-800"
-                }`}
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.05 }}
-              >
-                {month}
-              </motion.div>
-            ))}
+        {/* Calendar Grid */}
+        <motion.div
+          className="bg-white rounded-xl shadow-lg overflow-hidden"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+        >
+          <div className="overflow-x-auto">
+            <div className="calendar-grid">
+              {/* Header Row */}
+              {months.map((month, index) => (
+                <motion.div
+                  key={month}
+                  className={`month-header ${
+                    index === 0 ? "crop-name-cell" : ""
+                  }`}
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: index * 0.05 }}
+                >
+                  {month}
+                </motion.div>
+              ))}
 
-            {/* Crop Rows */}
-            <AnimatePresence mode="wait">
+              {/* Crop Rows */}
               {filteredCrops.map((crop, cropIndex) => (
                 <React.Fragment key={crop.crop}>
-                  {/* Crop Name */}
+                  {/* Crop Name Cell */}
                   <motion.div
-                    className="p-4 bg-white font-semibold text-gray-800 flex items-center gap-3 border-r border-gray-200"
+                    className="crop-name-cell"
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -20 }}
-                    transition={{ delay: cropIndex * 0.1 }}
+                    transition={{ duration: 0.3, delay: cropIndex * 0.1 }}
                   >
-                    <div
-                      className="w-4 h-4 rounded-full"
-                      style={{ backgroundColor: crop.color }}
-                    />
-                    <div>
-                      <div className="font-semibold">{crop.crop}</div>
-                      <div className="text-xs text-gray-500 capitalize">
-                        {crop.season}
+                    <div className="flex items-center gap-3">
+                      <div
+                        className="crop-icon"
+                        style={{ backgroundColor: crop.color + "40" }}
+                      >
+                        {crop.icon}
+                      </div>
+                      <div>
+                        <div className="font-semibold text-gray-800 text-sm">
+                          {crop.crop}
+                        </div>
+                        <div className="text-xs text-gray-500">{crop.type}</div>
+                        <div className="text-xs text-blue-600 font-medium">
+                          {crop.season}
+                        </div>
                       </div>
                     </div>
                   </motion.div>
 
                   {/* Month Cells */}
                   {Array.from({ length: 12 }, (_, monthIndex) => {
-                    const cellType = getCellContent(crop, monthIndex + 1);
+                    const month = monthIndex + 1;
+                    const phase = getCropPhase(crop, month);
+                    const cellKey = `${crop.crop}-${month}`;
+
                     return (
                       <motion.div
-                        key={`${crop.crop}-${monthIndex}`}
-                        className={`p-4 bg-white flex items-center justify-center relative group cursor-pointer transition-all duration-200 ${
-                          cellType
-                            ? "hover:scale-110 hover:z-10 hover:shadow-lg"
+                        key={cellKey}
+                        className={`calendar-cell ${
+                          phase
+                            ? `phase-${phase}`
+                            : "bg-gray-50 hover:bg-gray-100"
+                        } ${
+                          hoveredCell === cellKey
+                            ? "transform scale-105 shadow-lg z-20"
                             : ""
                         }`}
-                        style={{
-                          backgroundColor: cellType
-                            ? `${crop.color}20`
-                            : "white",
-                          color: cellType ? crop.color : "transparent",
-                        }}
-                        initial={{ opacity: 0, scale: 0.8 }}
+                        initial={{ opacity: 0, scale: 0.9 }}
                         animate={{ opacity: 1, scale: 1 }}
-                        exit={{ opacity: 0, scale: 0.8 }}
                         transition={{
+                          duration: 0.3,
                           delay: cropIndex * 0.1 + monthIndex * 0.02,
                         }}
-                        whileHover={cellType ? { scale: 1.1 } : {}}
+                        onMouseEnter={() => setHoveredCell(cellKey)}
+                        onMouseLeave={() => setHoveredCell(null)}
+                        onClick={() =>
+                          setSelectedCrop(
+                            phase
+                              ? { ...crop, phase, month: months[month] }
+                              : null
+                          )
+                        }
                       >
-                        {getCellIcon(cellType)}
+                        <div className="phase-icon">
+                          {phase === "sowing" && <Sprout className="w-5 h-5" />}
+                          {phase === "harvesting" && (
+                            <Scissors className="w-5 h-5" />
+                          )}
+                          {phase === "growing" && (
+                            <div className="growing-indicator" />
+                          )}
+                          {phase && (
+                            <span className="text-xs font-medium capitalize mt-1">
+                              {phase === "growing" ? "Growing" : phase}
+                            </span>
+                          )}
+                        </div>
 
                         {/* Tooltip */}
-                        {cellType && (
-                          <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-20">
-                            {getCellTooltip(crop, cellType)}
-                            <div className="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-gray-900" />
-                          </div>
-                        )}
+                        <AnimatePresence>
+                          {hoveredCell === cellKey && phase && (
+                            <motion.div
+                              className="calendar-tooltip"
+                              initial={{ opacity: 0, y: 10 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              exit={{ opacity: 0, y: 10 }}
+                            >
+                              <div className="text-center">
+                                <div className="font-semibold flex items-center gap-2">
+                                  <span>{crop.icon}</span>
+                                  {crop.crop}
+                                </div>
+                                <div className="text-sm">
+                                  {phase === "sowing" && "🌱 Sowing season"}
+                                  {phase === "growing" && "🌿 Growing period"}
+                                  {phase === "harvesting" &&
+                                    "✂️ Harvesting season"}
+                                </div>
+                                <div className="text-xs text-gray-300 mt-1">
+                                  Duration: {crop.duration}
+                                </div>
+                              </div>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
                       </motion.div>
                     );
                   })}
                 </React.Fragment>
               ))}
-            </AnimatePresence>
-          </div>
-        </div>
-
-        {/* Legend */}
-        <motion.div
-          className="mt-6 bg-white rounded-xl shadow-lg p-6 border border-green-100"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.8 }}
-        >
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Legend</h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="flex items-center gap-3">
-              <div className="flex items-center justify-center w-10 h-10 bg-green-100 text-green-600 rounded-lg">
-                <Sprout className="w-5 h-5" />
-              </div>
-              <div>
-                <div className="font-medium text-gray-900">Sowing</div>
-                <div className="text-sm text-gray-500">
-                  Best time to plant seeds
-                </div>
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
-              <div className="flex items-center justify-center w-10 h-10 bg-blue-100 text-blue-600 rounded-lg">
-                <div className="w-4 h-4 rounded-full bg-current opacity-60" />
-              </div>
-              <div>
-                <div className="font-medium text-gray-900">Growing</div>
-                <div className="text-sm text-gray-500">
-                  Crop development period
-                </div>
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
-              <div className="flex items-center justify-center w-10 h-10 bg-amber-100 text-amber-600 rounded-lg">
-                <Wheat className="w-5 h-5" />
-              </div>
-              <div>
-                <div className="font-medium text-gray-900">Harvesting</div>
-                <div className="text-sm text-gray-500">
-                  Ready for collection
-                </div>
-              </div>
             </div>
           </div>
         </motion.div>
 
-        {/* Statistics */}
-        {filteredCrops.length > 0 && (
-          <motion.div
-            className="mt-6 grid grid-cols-1 md:grid-cols-4 gap-4"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1 }}
-          >
-            <div className="bg-white rounded-xl shadow-lg p-6 border border-green-100">
-              <div className="text-3xl font-bold text-green-600">
-                {filteredCrops.length}
-              </div>
-              <div className="text-gray-600">Total Crops</div>
-            </div>
-            <div className="bg-white rounded-xl shadow-lg p-6 border border-blue-100">
-              <div className="text-3xl font-bold text-blue-600">
-                {filteredCrops.filter((c) => c.season === "kharif").length}
-              </div>
-              <div className="text-gray-600">Kharif Crops</div>
-            </div>
-            <div className="bg-white rounded-xl shadow-lg p-6 border border-purple-100">
-              <div className="text-3xl font-bold text-purple-600">
-                {filteredCrops.filter((c) => c.season === "rabi").length}
-              </div>
-              <div className="text-gray-600">Rabi Crops</div>
-            </div>
-            <div className="bg-white rounded-xl shadow-lg p-6 border border-orange-100">
-              <div className="text-3xl font-bold text-orange-600">
-                {filteredCrops.filter((c) => c.season === "summer").length}
-              </div>
-              <div className="text-gray-600">Summer Crops</div>
-            </div>
-          </motion.div>
-        )}
-      </motion.div>
+        {/* Crop Details Modal */}
+        <AnimatePresence>
+          {selectedCrop && (
+            <motion.div
+              className="modal-backdrop fixed inset-0 flex items-center justify-center p-4 z-50"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setSelectedCrop(null)}
+            >
+              <motion.div
+                className="modal-content rounded-xl shadow-2xl p-8 max-w-md w-full"
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.9, opacity: 0 }}
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="flex items-center gap-4 mb-6">
+                  <div
+                    className="crop-detail-icon w-16 h-16 rounded-full flex items-center justify-center text-3xl"
+                    style={{ backgroundColor: selectedCrop.color + "40" }}
+                  >
+                    {selectedCrop.icon}
+                  </div>
+                  <div>
+                    <h3 className="text-2xl font-bold text-gray-800">
+                      {selectedCrop.crop}
+                    </h3>
+                    <p className="text-gray-600 font-medium">
+                      {selectedCrop.type} • {selectedCrop.season}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2">
+                    <Calendar className="w-4 h-4 text-blue-600" />
+                    <span className="font-medium">Current Phase:</span>
+                    <span className="capitalize text-green-600 font-semibold">
+                      {selectedCrop.phase} in {selectedCrop.month}
+                    </span>
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <Thermometer className="w-4 h-4 text-orange-600" />
+                    <span className="font-medium">Duration:</span>
+                    <span>{selectedCrop.duration}</span>
+                  </div>
+
+                  <div className="pt-4 border-t border-gray-200">
+                    <button
+                      onClick={() => setSelectedCrop(null)}
+                      className="w-full bg-green-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-green-700 transition-colors"
+                    >
+                      Close
+                    </button>
+                  </div>
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
     </div>
   );
 };

@@ -1,4 +1,9 @@
-import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useLocation,
+} from "react-router-dom";
 import FeatureGrid from "./components/FeatureGrid";
 import MandiPrice from "./components/MandiPrice";
 import Footer from "./components/Footer";
@@ -13,6 +18,7 @@ import ChatBot from "./components/ChatBot";
 import EnhancedFarmerProfile from "./components/Profile";
 import FeedbackForm from "./components/FeedbackForm";
 import Notification from "./components/Notification";
+import CropCalendar from "./components/CropCalendar";
 
 function Home() {
   return (
@@ -25,11 +31,11 @@ function Home() {
 
 function FooterConditional() {
   const location = useLocation();
-  
+
   if (location.pathname === "/chatbot") {
     return null;
   }
-  
+
   return <Footer />;
 }
 
@@ -41,15 +47,22 @@ function App() {
         <main className="flex-grow">
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/cropRecommendation" element={<CropRecommendationForm />} />
+            <Route
+              path="/cropRecommendation"
+              element={<CropRecommendationForm />}
+            />
             <Route path="/yieldPredict" element={<YieldPrediction />} />
-            <Route path="/diseasePrediction" element={<PlantDiseaseDetection />} />
+            <Route
+              path="/diseasePrediction"
+              element={<PlantDiseaseDetection />}
+            />
             <Route path="/organicFarming" element={<OrganicFarming />} />
             <Route path="/weatherCheck" element={<WeatherCheck />} />
             <Route path="/chatbot" element={<ChatBot />} />
             <Route path="/profile" element={<EnhancedFarmerProfile />} />
             <Route path="/feedback" element={<FeedbackForm />} />
             <Route path="/notifications" element={<Notification />} />
+            <Route path="/calendar" element={<CropCalendar />} />
           </Routes>
         </main>
 
