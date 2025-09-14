@@ -1,21 +1,21 @@
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { 
-  HelpCircle, 
-  MessageSquare, 
-  Phone, 
-  Mail, 
-  FileText, 
+import React, { useState } from "react";
+import { motion } from "framer-motion";
+import {
+  HelpCircle,
+  MessageSquare,
+  Phone,
+  Mail,
+  FileText,
   Video,
   Book,
   Users,
   Search,
   ChevronRight,
-  ExternalLink
-} from 'lucide-react';
+  ExternalLink,
+} from "lucide-react";
 
 const HelpSupportPage = () => {
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
 
   const helpCategories = [
     {
@@ -23,29 +23,29 @@ const HelpSupportPage = () => {
       title: "Getting Started",
       description: "Learn the basics of KisanMitra",
       articles: 12,
-      color: "blue"
+      color: "blue",
     },
     {
       icon: <Users className="w-6 h-6 text-green-600" />,
       title: "Crop Management",
       description: "Tips for better crop planning",
       articles: 18,
-      color: "green"
+      color: "green",
     },
     {
       icon: <Video className="w-6 h-6 text-purple-600" />,
       title: "Video Tutorials",
       description: "Watch step-by-step guides",
       articles: 8,
-      color: "purple"
+      color: "purple",
     },
     {
       icon: <FileText className="w-6 h-6 text-orange-600" />,
       title: "Documentation",
       description: "Detailed feature documentation",
       articles: 25,
-      color: "orange"
-    }
+      color: "orange",
+    },
   ];
 
   const contactOptions = [
@@ -54,41 +54,45 @@ const HelpSupportPage = () => {
       title: "Live Chat",
       description: "Chat with our support team",
       action: "Start Chat",
-      available: true
+      available: true,
     },
     {
       icon: <Mail className="w-6 h-6 text-green-600" />,
       title: "Email Support",
       description: "Get help via email",
       action: "Send Email",
-      available: true
+      available: true,
     },
     {
       icon: <Phone className="w-6 h-6 text-purple-600" />,
       title: "Phone Support",
       description: "Call our helpline",
       action: "Call Now",
-      available: true
-    }
+      available: true,
+    },
   ];
 
   const faqItems = [
     {
       question: "How do I get crop recommendations?",
-      answer: "Navigate to the Crop Recommendation section and fill in your soil details, location, and season preferences."
+      answer:
+        "Navigate to the Crop Recommendation section and fill in your soil details, location, and season preferences.",
     },
     {
       question: "How accurate are weather predictions?",
-      answer: "Our weather data is sourced from reliable meteorological services and is updated every 6 hours for maximum accuracy."
+      answer:
+        "Our weather data is sourced from reliable meteorological services and is updated every 6 hours for maximum accuracy.",
     },
     {
       question: "Can I export my farming data?",
-      answer: "Yes, you can export your data from the Settings page under Privacy & Security section."
+      answer:
+        "Yes, you can export your data from the Settings page under Privacy & Security section.",
     },
     {
       question: "How do I reset my password?",
-      answer: "Click on 'Forgot Password' on the login page or change it from your profile settings."
-    }
+      answer:
+        "Click on 'Forgot Password' on the login page or change it from your profile settings.",
+    },
   ];
 
   return (
@@ -108,7 +112,8 @@ const HelpSupportPage = () => {
             <h1 className="text-4xl font-bold text-gray-800">Help & Support</h1>
           </div>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Get the help you need to make the most of KisanMitra. Search our knowledge base or contact support.
+            Get the help you need to make the most of KisanMitra. Search our
+            knowledge base or contact support.
           </p>
         </motion.div>
 
@@ -138,7 +143,9 @@ const HelpSupportPage = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
         >
-          <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">Browse Help Topics</h2>
+          <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">
+            Browse Help Topics
+          </h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {helpCategories.map((category, index) => (
               <motion.div
@@ -147,13 +154,21 @@ const HelpSupportPage = () => {
                 whileHover={{ y: -5 }}
                 whileTap={{ scale: 0.98 }}
               >
-                <div className={`w-12 h-12 bg-${category.color}-100 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
+                <div
+                  className={`w-12 h-12 bg-${category.color}-100 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}
+                >
                   {category.icon}
                 </div>
-                <h3 className="text-lg font-semibold text-gray-800 mb-2">{category.title}</h3>
-                <p className="text-gray-600 text-sm mb-3">{category.description}</p>
+                <h3 className="text-lg font-semibold text-gray-800 mb-2">
+                  {category.title}
+                </h3>
+                <p className="text-gray-600 text-sm mb-3">
+                  {category.description}
+                </p>
                 <div className="flex items-center justify-between">
-                  <span className="text-xs text-gray-500">{category.articles} articles</span>
+                  <span className="text-xs text-gray-500">
+                    {category.articles} articles
+                  </span>
                   <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-gray-600 transition-colors" />
                 </div>
               </motion.div>
@@ -168,7 +183,9 @@ const HelpSupportPage = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.3 }}
         >
-          <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">Contact Support</h2>
+          <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">
+            Contact Support
+          </h2>
           <div className="grid md:grid-cols-3 gap-6">
             {contactOptions.map((option, index) => (
               <motion.div
@@ -179,15 +196,21 @@ const HelpSupportPage = () => {
                 <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
                   {option.icon}
                 </div>
-                <h3 className="text-lg font-semibold text-gray-800 mb-2">{option.title}</h3>
-                <p className="text-gray-600 text-sm mb-4">{option.description}</p>
+                <h3 className="text-lg font-semibold text-gray-800 mb-2">
+                  {option.title}
+                </h3>
+                <p className="text-gray-600 text-sm mb-4">
+                  {option.description}
+                </p>
                 <button className="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white py-2 px-4 rounded-lg font-medium hover:from-purple-700 hover:to-blue-700 transition-all duration-300">
                   {option.action}
                 </button>
                 {option.available && (
                   <div className="flex items-center justify-center gap-1 mt-2">
                     <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                    <span className="text-xs text-green-600">Available now</span>
+                    <span className="text-xs text-green-600">
+                      Available now
+                    </span>
                   </div>
                 )}
               </motion.div>
@@ -202,7 +225,9 @@ const HelpSupportPage = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.4 }}
         >
-          <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">Frequently Asked Questions</h2>
+          <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">
+            Frequently Asked Questions
+          </h2>
           <div className="space-y-4">
             {faqItems.map((faq, index) => (
               <motion.div
@@ -220,7 +245,7 @@ const HelpSupportPage = () => {
               </motion.div>
             ))}
           </div>
-          
+
           <div className="text-center mt-8">
             <button className="inline-flex items-center gap-2 text-purple-600 hover:text-purple-700 font-medium">
               View All FAQs

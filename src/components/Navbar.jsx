@@ -57,15 +57,15 @@ const Navbar = () => {
 
   const handleFeedback = () => {
     navigate("/feedback");
-  }
+  };
 
   const handleSettings = () => {
     navigate("/settings");
-  }
+  };
 
   const handleHelp = () => {
     navigate("/help");
-  }
+  };
 
   const handleLogout = () => {
     // Add logout logic here
@@ -390,8 +390,10 @@ const Navbar = () => {
                 animate="open"
                 exit="closed"
                 style={{
-                  background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
-                  boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)'
+                  background:
+                    "linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)",
+                  boxShadow:
+                    "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
                 }}
               >
                 {/* User Info Section */}
@@ -401,9 +403,15 @@ const Navbar = () => {
                       JD
                     </div>
                     <div>
-                      <p className="text-xs text-green-600 font-medium">Signed in as</p>
-                      <p className="font-semibold text-gray-800 text-sm">John Doe</p>
-                      <p className="text-xs text-gray-500">john.doe@example.com</p>
+                      <p className="text-xs text-green-600 font-medium">
+                        Signed in as
+                      </p>
+                      <p className="font-semibold text-gray-800 text-sm">
+                        John Doe
+                      </p>
+                      <p className="text-xs text-gray-500">
+                        john.doe@example.com
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -421,7 +429,9 @@ const Navbar = () => {
                     </div>
                     <div className="flex-1 text-left">
                       <span className="font-medium">Profile</span>
-                      <p className="text-xs text-gray-500">Manage your account</p>
+                      <p className="text-xs text-gray-500">
+                        Manage your account
+                      </p>
                     </div>
                   </motion.button>
 
@@ -436,7 +446,9 @@ const Navbar = () => {
                     </div>
                     <div className="flex-1 text-left">
                       <span className="font-medium">Settings</span>
-                      <p className="text-xs text-gray-500">Preferences & privacy</p>
+                      <p className="text-xs text-gray-500">
+                        Preferences & privacy
+                      </p>
                     </div>
                   </motion.button>
 
@@ -451,7 +463,9 @@ const Navbar = () => {
                     </div>
                     <div className="flex-1 text-left">
                       <span className="font-medium">Help & Support</span>
-                      <p className="text-xs text-gray-500">Get help & contact us</p>
+                      <p className="text-xs text-gray-500">
+                        Get help & contact us
+                      </p>
                     </div>
                   </motion.button>
                 </div>
@@ -472,7 +486,9 @@ const Navbar = () => {
                     </div>
                     <div className="flex-1 text-left">
                       <span className="font-medium">Logout</span>
-                      <p className="text-xs text-red-400">Sign out of your account</p>
+                      <p className="text-xs text-red-400">
+                        Sign out of your account
+                      </p>
                     </div>
                   </motion.button>
                 </div>
