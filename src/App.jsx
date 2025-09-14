@@ -10,6 +10,7 @@ import OrganicFarming from "./components/OrganicFarming/index";
 import PlantDiseaseDetection from "./components/PlantDisease";
 import ChatBot from "./components/ChatBot";
 import EnhancedFarmerProfile from "./components/Profile";
+import Smart from "./components/SmartFarming";
 import FeedbackForm from "./components/FeedbackForm";
 import Notification from "./components/Notification";
 
@@ -56,6 +57,7 @@ function App() {
             <Route path="/organicFarming" element={<OrganicFarming />} />
             <Route path="/weatherCheck" element={<WeatherCheck />} />
             <Route path="/chatbot" element={<ChatBot />} />
+            <Route path="/smartfarming" element={<Smart />} />
             <Route path="/profile" element={<EnhancedFarmerProfile />} />
             <Route path="/feedback" element={<FeedbackForm />} />
             <Route path="/notifications" element={<Notification />} />
