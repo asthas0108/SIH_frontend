@@ -51,6 +51,14 @@ const Navbar = () => {
     navigate("/calendar");
   };
 
+  const handleProfile = () => {
+    navigate("/profile");
+  };
+
+  const handleFeedback = () => {
+    navigate("/feedback");
+  };
+
   useEffect(() => {
     const date = new Date();
     const formattedDate = date.toLocaleDateString("en-US", {
@@ -303,7 +311,6 @@ const Navbar = () => {
             )}
           </AnimatePresence>
         </div>
-
         <motion.button
           className={`flex items-center gap-1 lg:gap-2 px-3 py-1.5 lg:px-4 lg:py-2 rounded-lg ${
             scrolled
@@ -312,11 +319,11 @@ const Navbar = () => {
           } transition text-sm lg:text-base`}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
+          onClick={handleFeedback}
         >
           <MessageSquare className="w-4 h-4 lg:w-5 lg:h-5" />
           <span className="font-medium">Feedback</span>
-        </motion.button>
-
+        </motion.button>{" "}
         <motion.button
           className={`flex items-center justify-center w-10 h-10 rounded-lg ${
             scrolled
@@ -334,7 +341,6 @@ const Navbar = () => {
             <Moon className="w-5 h-5" />
           )}
         </motion.button>
-
         <div className="relative" ref={profileRef}>
           <motion.button
             className={`flex items-center gap-2 px-3 py-1.5 rounded-lg ${
@@ -380,6 +386,7 @@ const Navbar = () => {
                 <motion.button
                   className="flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 hover:bg-green-50 transition"
                   whileHover={{ x: 5 }}
+                  onClick={handleProfile}
                 >
                   <User className="w-4 h-4" />
                   <span>Profile</span>
@@ -497,7 +504,10 @@ const Navbar = () => {
                 className="flex items-center gap-3 px-4 py-3 rounded-lg bg-green-50 hover:bg-green-100 text-green-800 transition"
                 whileHover={{ x: 5 }}
                 whileTap={{ scale: 0.98 }}
-                onClick={handleMobileMenuItemClick}
+                onClick={() => {
+                  handleFeedback();
+                  handleMobileMenuItemClick();
+                }}
               >
                 <MessageSquare className="w-5 h-5" />
                 <span className="font-medium">Feedback</span>
@@ -508,7 +518,7 @@ const Navbar = () => {
                 whileHover={{ x: 5 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={() => {
-                  toggleProfile();
+                  handleProfile();
                   handleMobileMenuItemClick();
                 }}
               >
