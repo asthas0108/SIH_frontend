@@ -213,7 +213,7 @@ const HelpSupportPage = () => {
                 <p className="text-gray-600 text-sm mb-4">
                   {option.description}
                 </p>
-                <button 
+                <button
                   onClick={() => {
                     if (option.isPhone) {
                       window.location.href = option.route;
