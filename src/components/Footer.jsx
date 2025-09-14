@@ -56,6 +56,7 @@ export default function Footer() {
         <div className="flex flex-col items-center md:items-start">
           <h3 className="text-xl font-semibold mb-5 border-b-2 border-amber-400 pb-2">Quick Links</h3>
           <ul className="space-y-3 text-green-100">
+            <li><a href="/about" className="hover:text-amber-300 transition flex items-center"><span className="w-2 h-2 bg-amber-400 rounded-full mr-2"></span>KisanMitra</a></li>
             <li><a href="#" className="hover:text-amber-300 transition flex items-center"><span className="w-2 h-2 bg-amber-400 rounded-full mr-2"></span>Home</a></li>
             <li><a href="/dashboard" className="hover:text-amber-300 transition flex items-center"><span className="w-2 h-2 bg-amber-400 rounded-full mr-2"></span>Dashboard</a></li>
             <li><a href="#" className="hover:text-amber-300 transition flex items-center"><span className="w-2 h-2 bg-amber-400 rounded-full mr-2"></span>Reports</a></li>

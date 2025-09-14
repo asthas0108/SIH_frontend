@@ -19,17 +19,12 @@ const SolutionsSection = () => {
   const [isVisible, setIsVisible] = useState(false);
   const navigate = useNavigate();
 
-  // This is your helper function that creates the button
   const renderChatbotButton = () => {
-    
-    // 2. Define the click handler inside the function
+
     const handleStartChat = () => {
-      // 3. Use the navigate function (available from the parent component's scope)
-      //    to go to the chatbot route and pass the 'startNewChat' state.
       navigate('/chatbot', { state: { startNewChat: true } });
     };
 
-    // 4. Return a <button> instead of an <a> tag
     return (
       <button
         onClick={handleStartChat}
@@ -72,7 +67,7 @@ const SolutionsSection = () => {
       image: "/health.jpg",
       title: "Crop Health Monitoring",
       description:
-        "Early detection system for plant diseases, nutrient deficiencies, and pest infestations with preventive measures and treatment advice.",
+        "Early detection system for plant diseases, nutrient deficiencies, and pest infestations with preventive measures and treatment advice. Use our IOT sensor for excellent results.",
       detailedDescription: "Upload images of your crops or use our mobile scanning feature to identify issues before they spread.",
       tag: "Early Detection",
       category: "health",
@@ -85,7 +80,7 @@ const SolutionsSection = () => {
       image: "/organic.jpg",
       title: "Organic Farming Guide",
       description:
-        "Complete resource for transitioning to and maintaining organic farming practices with step-by-step guidance.",
+        "Complete resource for transitioning to and maintaining organic farming practices with step-by-step guidance. A detailed information to increase your revenue.",
       detailedDescription: "Access comprehensive guides on soil preparation, natural pest management, organic certification processes, and sustainable farming techniques.",
       tag: "Sustainable",
       category: "resources",
@@ -98,7 +93,7 @@ const SolutionsSection = () => {
       image: "/weather.jpg",
       title: "Precision Weather Analytics",
       description:
-        "Hyper-local weather forecasting specifically tailored for agricultural needs with actionable insights.",
+        "Hyper-local Real-time weather forecasting specifically tailored for agricultural needs with actionable insights.",
       detailedDescription: "Get precise, field-level weather forecasts including rainfall probability, temperature fluctuations, and wind patterns.",
       tag: "Real-Time",
       category: "analytics",
@@ -109,7 +104,7 @@ const SolutionsSection = () => {
     },
     {
       image: "/soil_health.jpg",
-      title: "Soil Health Analysis",
+      title: "Soil Health Check and Analysis",
       description:
         "Comprehensive soil testing and improvement recommendations to maximize fertility and sustainable practices.",
       detailedDescription: "Understand your soil's nutrient profile, organic matter content, and texture characteristics.",
@@ -122,22 +117,22 @@ const SolutionsSection = () => {
     },
     {
       image: "/smart.jpg",
-      title: "Smart Irrigation Planning",
+      title: "Smart Agricultural Planning",
       description:
-        "Optimize water usage with AI-powered irrigation scheduling based on crop needs and weather conditions.",
+        "Optimize resource usage with AI-powered IOT sensors and Drons to get the most accurate information regarding your crop. ",
       detailedDescription: "Maximize water efficiency while ensuring your crops receive optimal moisture levels.",
       tag: "Water Efficiency",
       category: "ai",
       stats: "Reduce water usage by up to 30%",
       onClick: () => {
-        window.location.href = "/irrigation";
+        window.location.href = "/smartfarming";
       },
     },
     {
       image: "/market.webp",
       title: "Market Price Tracker",
       description:
-        "Real-time agricultural commodity prices, trend analysis, and optimal selling time recommendations.",
+        "Real-time agricultural commodity prices, trend analysis, and optimal selling time recommendations for getting the genuine price of goods in most resonable way.",
       detailedDescription: "Access current and historical price data for your crops across different markets and regions.",
       tag: "Market Intelligence",
       category: "resources",
@@ -164,7 +159,7 @@ const SolutionsSection = () => {
   const filteredCards = activeFilter === "all"
     ? cards
     : cards.filter(card => card.category === activeFilter);
-  
+
 
   return (
     <section className="bg-[#f5f5dc] relative overflow-hidden">
