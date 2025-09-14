@@ -87,42 +87,42 @@ const KisanMitraAbout = () => {
         {
             name: "Astha Singh",
             role: "Developer",
-            image: "public/astha.jpeg",
+            image: "/astha.jpeg",
             link1: "https://github.com/asthas0108",
             link2: "https://www.linkedin.com/in/astha-singh-001877294/"
         },
         {
             name: "Divyansh Garg",
             role: "AI Specialist",
-            image: "public/photo.jpg",
+            image: "/photo.jpg",
             link1: "https://github.com/gargdivyansh1",
             link2: "https://www.linkedin.com/in/divyansh-garg515/"
         },
         {
             name: "Ayush Singh",
             role: "ML Specialist",
-            image: "public/ayush.jpeg",
+            image: "/ayush.jpeg",
             link1: "https://github.com/ayusingh-54",
             link2: "https://www.linkedin.com/in/ayush-singh54/"
         },
         {
             name: "Udit Verma",
             role: "Developer",
-            image: "public/udit.jpeg",
+            image: "/udit.jpeg",
             link1: "https://github.com/Udit0104",
             link2: "https://www.linkedin.com/in/uditverma145/"
         },
         {
             name: "Vishal",
             role: "Data Scientist",
-            image: "public/vishal.jpeg",
+            image: "/vishal.jpeg",
             link1: "#",
             link2: "https://www.linkedin.com/in/vishal-gupta-615877292/"
         },
         {
             name: "Ashwani",
             role: "Data Scientist",
-            image: "public/ashwani.jpeg",
+            image: "/ashwani.jpeg",
             link1: "#",
             link2: "https://www.linkedin.com/in/ashwani-gupta-7aaabb293/"
         }

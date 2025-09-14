@@ -318,7 +318,7 @@ const ChatBot = () => {
             </div>
           </div>
           <div className="flex items-center gap-2 sm:gap-4">
-            <img src="public/user.jpg" alt="user" className="w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-amber-200 shadow-md" />
+            <img src="/user.jpg" alt="user" className="w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-amber-200 shadow-md" />
           </div>
         </div>
 
@@ -338,7 +338,7 @@ const ChatBot = () => {
                   >
                     <div className="flex items-start">
                       <div className="w-10 h-10 sm:w-12 sm:h-12 bg-amber-100 rounded-lg sm:rounded-xl flex items-center justify-center p-2 mr-3 sm:mr-4">
-                        <img src="public/compass_icon.png" alt="question" className="w-5 h-5 sm:w-6 sm:h-6" />
+                        <img src="/compass_icon.png" alt="question" className="w-5 h-5 sm:w-6 sm:h-6" />
                       </div>
                       <p className="text-emerald-900 font-medium text-base sm:text-lg leading-tight">{question}</p>
                     </div>
@@ -355,14 +355,14 @@ const ChatBot = () => {
                       <p className="text-emerald-900 font-medium text-sm sm:text-base">{message.content}</p>
                     </div>
                     <div className="ml-2 sm:ml-3 flex-shrink-0">
-                      <img src="public/user.jpg" alt="user" className="w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-amber-300 shadow" />
+                      <img src="/user.jpg" alt="user" className="w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-amber-300 shadow" />
                     </div>
                   </div>
                 ) : (
                   <div key={index} className="flex items-start gap-2 sm:gap-3 md:gap-4">
                     <div className="flex-shrink-0">
                       <div className="w-8 h-8 sm:w-10 sm:h-10 bg-emerald-100 rounded-full flex items-center justify-center border border-emerald-200 shadow">
-                        <img src="public/gemini_icon.png" alt="bot" className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" />
+                        <img src="/gemini_icon.png" alt="bot" className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" />
                       </div>
                     </div>
                     <div className="bg-emerald-50 text-emerald-900 px-4 py-3 sm:px-5 sm:py-4 rounded-xl sm:rounded-2xl shadow max-w-[85%] sm:max-w-[80%] border border-emerald-200">
@@ -375,7 +375,7 @@ const ChatBot = () => {
                 <div className="flex items-start gap-2 sm:gap-3 md:gap-4">
                   <div className="flex-shrink-0">
                     <div className="w-8 h-8 sm:w-10 sm:h-10 bg-emerald-100 rounded-full flex items-center justify-center border border-emerald-200 shadow">
-                      <img src="public/gemini_icon.png" alt="bot" className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" />
+                      <img src="/gemini_icon.png" alt="bot" className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" />
                     </div>
                   </div>
                   <div className="bg-emerald-50 text-emerald-900 px-4 py-3 sm:px-5 sm:py-4 rounded-xl sm:rounded-2xl shadow max-w-[85%] sm:max-w-[80%] border border-emerald-200">
@@ -412,14 +412,14 @@ const ChatBot = () => {
                 onClick={startListening}
                 className={`p-2 sm:p-3 rounded-full cursor-pointer transition ${listening ? "bg-emerald-300/50" : "hover:bg-amber-100/50"}`}
               >
-                <img src="public/mic_icon.png" alt="आवाज" className="w-5 sm:w-6 md:w-6 h-5 sm:h-6 md:h-6" />
+                <img src="/mic_icon.png" alt="आवाज" className="w-5 sm:w-6 md:w-6 h-5 sm:h-6 md:h-6" />
               </div>
               <button
                 onClick={handleSend}
                 disabled={loading || !input.trim()}
                 className="bg-emerald-700 hover:bg-emerald-800 p-2 sm:p-3 rounded-lg sm:rounded-xl transition shadow-md hover:shadow-lg disabled:opacity-70"
               >
-                <img src="public/send_icon.png" alt="भेजें" className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 invert" />
+                <img src="/send_icon.png" alt="भेजें" className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 invert" />
               </button>
             </div>
           </div>
