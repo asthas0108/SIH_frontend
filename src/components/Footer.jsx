@@ -1,5 +1,6 @@
 import { FaInstagram, FaHeart, FaGithub, FaLinkedin } from "react-icons/fa";
 import { FaH } from "react-icons/fa6";
+import { Link } from "react-router-dom";
 
 export default function Footer() {
   return (
@@ -20,7 +21,9 @@ export default function Footer() {
               </div>
             </div>
             <h2 className="text-5xl md:text-6xl font-bold text-white">
-              Kisan<span className="text-amber-300">Mitra</span>
+              <Link to="/about" className="hover:text-amber-300 transition-colors duration-300">
+                Kisan<span className="text-amber-300">Mitra</span>
+              </Link>
             </h2>
           </div>
 

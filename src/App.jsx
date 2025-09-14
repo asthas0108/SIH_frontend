@@ -21,6 +21,7 @@ import Notification from "./components/Notification";
 import CropCalendar from "./components/CropCalendar";
 import SettingsPage from "./components/Settings";
 import HelpSupportPage from "./components/HelpSupport";
+import AboutPage from "./components/About";
 
 function Home() {
   return (
@@ -67,6 +68,7 @@ function App() {
             <Route path="/calendar" element={<CropCalendar />} />
             <Route path="/settings" element={<SettingsPage />} />
             <Route path="/help" element={<HelpSupportPage />} />
+            <Route path="/about" element={<AboutPage />} />
           </Routes>
         </main>
 

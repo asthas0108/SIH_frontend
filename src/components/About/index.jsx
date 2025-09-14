@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     FaLeaf,
     FaSeedling,
@@ -10,11 +10,27 @@ import {
     FaUserFriends,
     FaBullseye,
     FaHandHoldingHeart,
-    FaMobileAlt
+    FaMobileAlt,
+    FaAward,
+    FaUsers,
+    FaGlobe,
+    FaLightbulb,
+    FaTractor,
+    FaDatabase,
+    FaHeartbeat,
+    FaRocket
 } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 
 const KisanMitraAbout = () => {
+    const [counters, setCounters] = useState({
+        farmers: 0,
+        villages: 0,
+        crops: 0,
+        revenue: 0
+    });
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         const observer = new IntersectionObserver((entries) => {
@@ -30,6 +46,35 @@ const KisanMitraAbout = () => {
         });
 
         return () => observer.disconnect();
+    }, []);
+
+    useEffect(() => {
+        const animateCounters = () => {
+            const targets = { farmers: 50000, villages: 2500, crops: 150, revenue: 30 };
+            const duration = 2000;
+            const steps = 60;
+            const increment = duration / steps;
+
+            let step = 0;
+            const timer = setInterval(() => {
+                step++;
+                const progress = step / steps;
+                
+                setCounters({
+                    farmers: Math.floor(targets.farmers * progress),
+                    villages: Math.floor(targets.villages * progress),
+                    crops: Math.floor(targets.crops * progress),
+                    revenue: Math.floor(targets.revenue * progress)
+                });
+
+                if (step >= steps) {
+                    clearInterval(timer);
+                    setCounters(targets);
+                }
+            }, increment);
+        };
+
+        animateCounters();
     }, []);
 
     const features = [
@@ -80,6 +125,51 @@ const KisanMitraAbout = () => {
             title: "KisanMitra Chatbot",
             description: "24/7 AI assistant to answer your farming queries in your local language.",
             color: "from-purple-500 to-purple-600"
+        },
+        {
+            icon: <FaTractor className="text-3xl" />,
+            title: "Smart Farming Equipment",
+            description: "Connect and optimize your farming equipment with IoT sensors and automation.",
+            color: "from-orange-500 to-orange-600"
+        },
+        {
+            icon: <FaDatabase className="text-3xl" />,
+            title: "Crop Calendar & Planning",
+            description: "Personalized crop calendars with optimal sowing and harvesting schedules.",
+            color: "from-indigo-500 to-indigo-600"
+        },
+        {
+            icon: <FaHeartbeat className="text-3xl" />,
+            title: "Plant Disease Detection",
+            description: "Early detection of plant diseases using AI-powered image analysis.",
+            color: "from-red-500 to-red-600"
+        },
+        {
+            icon: <FaAward className="text-3xl" />,
+            title: "Certification Support",
+            description: "Guidance for organic certification and sustainable farming practices.",
+            color: "from-yellow-500 to-yellow-600"
+        }
+    ];
+
+    const achievements = [
+        {
+            icon: <FaRocket className="text-4xl text-emerald-600" />,
+            title: "Innovation Leader",
+            description: "Recognized as one of India's top AgTech startups",
+            highlight: "Award Winner 2024"
+        },
+        {
+            icon: <FaLightbulb className="text-4xl text-amber-600" />,
+            title: "Technology Pioneer",
+            description: "First AI-powered farming assistant in regional languages",
+            highlight: "Patent Pending"
+        },
+        {
+            icon: <FaHandHoldingHeart className="text-4xl text-green-600" />,
+            title: "Social Impact",
+            description: "Improved livelihoods of thousands of farming families",
+            highlight: "Lives Changed"
         }
     ];
 
@@ -145,16 +235,69 @@ const KisanMitraAbout = () => {
                             Revolutionizing agriculture through technology-driven solutions for increased revenue and sustainable farming
                         </p>
                         <div className="mt-8 flex flex-col sm:flex-row justify-center gap-4">
-                            <button className="bg-white text-emerald-700 font-semibold py-3 px-8 rounded-full shadow-lg hover:bg-emerald-50 transition-all transform hover:-translate-y-1">
+                            <button 
+                                onClick={() => navigate('/')}
+                                className="bg-white text-emerald-700 font-semibold py-3 px-8 rounded-full shadow-lg hover:bg-emerald-50 transition-all transform hover:-translate-y-1"
+                            >
                                 Get Started
                             </button>
-                            <button className="bg-transparent border-2 border-white text-white font-semibold py-3 px-8 rounded-full hover:bg-white/10 transition-all">
-                                Learn More
+                            <button 
+                                onClick={() => navigate('/chatbot')}
+                                className="bg-transparent border-2 border-white text-white font-semibold py-3 px-8 rounded-full hover:bg-white/10 transition-all"
+                            >
+                                Try Our AI Assistant
                             </button>
                         </div>
                     </div>
                 </div>
             </header>
+
+            {/* Statistics Section */}
+            <section className="py-16 bg-white relative">
+                <div className="container mx-auto px-4">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+                        <div className="text-center group">
+                            <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-r from-emerald-500 to-emerald-600 flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300">
+                                <FaUsers className="text-white text-2xl" />
+                            </div>
+                            <div className="text-3xl md:text-4xl font-bold text-emerald-800 mb-2">
+                                {counters.farmers.toLocaleString()}+
+                            </div>
+                            <p className="text-emerald-600 font-medium">Farmers Helped</p>
+                        </div>
+                        
+                        <div className="text-center group">
+                            <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300">
+                                <FaGlobe className="text-white text-2xl" />
+                            </div>
+                            <div className="text-3xl md:text-4xl font-bold text-emerald-800 mb-2">
+                                {counters.villages.toLocaleString()}+
+                            </div>
+                            <p className="text-emerald-600 font-medium">Villages Reached</p>
+                        </div>
+                        
+                        <div className="text-center group">
+                            <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-r from-green-500 to-green-600 flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300">
+                                <FaSeedling className="text-white text-2xl" />
+                            </div>
+                            <div className="text-3xl md:text-4xl font-bold text-emerald-800 mb-2">
+                                {counters.crops}+
+                            </div>
+                            <p className="text-emerald-600 font-medium">Crop Varieties</p>
+                        </div>
+                        
+                        <div className="text-center group">
+                            <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-r from-blue-500 to-blue-600 flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300">
+                                <FaChartLine className="text-white text-2xl" />
+                            </div>
+                            <div className="text-3xl md:text-4xl font-bold text-emerald-800 mb-2">
+                                {counters.revenue}%
+                            </div>
+                            <p className="text-emerald-600 font-medium">Revenue Increase</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
             <section className="py-16 md:py-20 px-4 relative">
                 <div className="absolute top-0 left-0 w-full h-72 bg-emerald-900/5 -skew-y-2 transform origin-top-right"></div>
@@ -268,6 +411,44 @@ const KisanMitraAbout = () => {
                                 </div>
                                 <h3 className="text-xl font-semibold text-emerald-800 mb-3">{feature.title}</h3>
                                 <p className="text-emerald-700/90">{feature.description}</p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* Achievements Section */}
+            <section className="py-16 md:py-20 px-4 bg-gradient-to-r from-emerald-900 to-green-800 text-white relative overflow-hidden">
+                <div className="absolute inset-0 opacity-20">
+                    <div className="w-full h-full" style={{
+                        backgroundImage: "url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Ccircle cx='30' cy='30' r='4'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\")"
+                    }}></div>
+                </div>
+                <div className="container mx-auto relative z-10">
+                    <div className="text-center max-w-3xl mx-auto mb-16">
+                        <div className="inline-block mb-3 px-4 py-1 bg-white/10 backdrop-blur-sm rounded-full text-sm font-medium">
+                            Our Achievements
+                        </div>
+                        <h2 className="text-3xl md:text-4xl font-bold mb-4">Recognition & Impact</h2>
+                        <p className="text-xl text-emerald-100">
+                            Leading the agricultural transformation across India with cutting-edge technology
+                        </p>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        {achievements.map((achievement, index) => (
+                            <div 
+                                key={index}
+                                className="text-center p-8 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/15 transition-all duration-300 transform hover:-translate-y-2"
+                            >
+                                <div className="mb-6">
+                                    {achievement.icon}
+                                </div>
+                                <div className="inline-block px-3 py-1 bg-emerald-500 rounded-full text-sm font-medium mb-4">
+                                    {achievement.highlight}
+                                </div>
+                                <h3 className="text-xl font-semibold mb-3 text-white">{achievement.title}</h3>
+                                <p className="text-emerald-100">{achievement.description}</p>
                             </div>
                         ))}
                     </div>
@@ -388,11 +569,22 @@ const KisanMitraAbout = () => {
                             Start using KisanMitra today to maximize your farming revenue and embrace smart agriculture practices.
                         </p>
                         <div className="flex flex-col sm:flex-row justify-center gap-4">
-                            {/* for Mobile Application */}
-                            {/* <button className="bg-white text-emerald-700 font-semibold py-3 px-8 rounded-full shadow-lg hover:bg-emerald-50 transition-all transform hover:-translate-y-1">
-                Download App
-              </button> */}
-                            <button className="bg-transparent border-2 border-white text-white font-semibold py-3 px-8 rounded-full hover:bg-white/10 transition-all">
+                            <button 
+                                onClick={() => navigate('/')}
+                                className="bg-white text-emerald-700 font-semibold py-3 px-8 rounded-full shadow-lg hover:bg-emerald-50 transition-all transform hover:-translate-y-1"
+                            >
+                                Start Your Journey
+                            </button>
+                            <button 
+                                onClick={() => navigate('/chatbot')}
+                                className="bg-transparent border-2 border-white text-white font-semibold py-3 px-8 rounded-full hover:bg-white/10 transition-all"
+                            >
+                                Talk to AI Assistant
+                            </button>
+                            <button 
+                                onClick={() => navigate('/feedback')}
+                                className="bg-amber-500 text-emerald-900 font-semibold py-3 px-8 rounded-full hover:bg-amber-400 transition-all transform hover:-translate-y-1"
+                            >
                                 Request Demo
                             </button>
                         </div>
