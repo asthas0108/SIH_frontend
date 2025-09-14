@@ -101,7 +101,7 @@ export default function Footer() {
             </li>
             <li>
               <a
-                href="#"
+                href="/help"
                 className="hover:text-amber-300 transition flex items-center"
               >
                 <span className="w-2 h-2 bg-amber-400 rounded-full mr-2"></span>
