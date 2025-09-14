@@ -6,7 +6,6 @@ export default function Footer() {
   return (
     <footer className="bg-green-900 shadow-lg text-white">
       <div className="max-w-7xl mx-auto px-6 py-12 grid grid-cols-1 md:grid-cols-4 gap-10">
-
         <div className="md:col-span-2 flex flex-col items-center md:items-start">
           <div className="flex flex-col items-center md:flex-row md:items-end mb-5">
             <div className="relative mb-4 md:mb-0 md:mr-6">
@@ -21,7 +20,10 @@ export default function Footer() {
               </div>
             </div>
             <h2 className="text-5xl md:text-6xl font-bold text-white">
-              <Link to="/about" className="hover:text-amber-300 transition-colors duration-300">
+              <Link
+                to="/about"
+                className="hover:text-amber-300 transition-colors duration-300"
+              >
                 Kisan<span className="text-amber-300">Mitra</span>
               </Link>
             </h2>
@@ -57,23 +59,99 @@ export default function Footer() {
         </div>
 
         <div className="flex flex-col items-center md:items-start">
-          <h3 className="text-xl font-semibold mb-5 border-b-2 border-amber-400 pb-2">Quick Links</h3>
+          <h3 className="text-xl font-semibold mb-5 border-b-2 border-amber-400 pb-2">
+            Quick Links
+          </h3>
           <ul className="space-y-3 text-green-100">
-            <li><a href="/about" className="hover:text-amber-300 transition flex items-center"><span className="w-2 h-2 bg-amber-400 rounded-full mr-2"></span>KisanMitra</a></li>
-            <li><a href="#" className="hover:text-amber-300 transition flex items-center"><span className="w-2 h-2 bg-amber-400 rounded-full mr-2"></span>Home</a></li>
-            <li><a href="/dashboard" className="hover:text-amber-300 transition flex items-center"><span className="w-2 h-2 bg-amber-400 rounded-full mr-2"></span>Dashboard</a></li>
-            <li><a href="#" className="hover:text-amber-300 transition flex items-center"><span className="w-2 h-2 bg-amber-400 rounded-full mr-2"></span>Reports</a></li>
-            <li><a href="#" className="hover:text-amber-300 transition flex items-center"><span className="w-2 h-2 bg-amber-400 rounded-full mr-2"></span>Support</a></li>
+            <li>
+              <a
+                href="/about"
+                className="hover:text-amber-300 transition flex items-center"
+              >
+                <span className="w-2 h-2 bg-amber-400 rounded-full mr-2"></span>
+                KisanMitra
+              </a>
+            </li>
+            <li>
+              <a
+                href="#"
+                className="hover:text-amber-300 transition flex items-center"
+              >
+                <span className="w-2 h-2 bg-amber-400 rounded-full mr-2"></span>
+                Home
+              </a>
+            </li>
+            <li>
+              <a
+                href="/dashboard"
+                className="hover:text-amber-300 transition flex items-center"
+              >
+                <span className="w-2 h-2 bg-amber-400 rounded-full mr-2"></span>
+                Dashboard
+              </a>
+            </li>
+            <li>
+              <a
+                href="#"
+                className="hover:text-amber-300 transition flex items-center"
+              >
+                <span className="w-2 h-2 bg-amber-400 rounded-full mr-2"></span>
+                Reports
+              </a>
+            </li>
+            <li>
+              <a
+                href="#"
+                className="hover:text-amber-300 transition flex items-center"
+              >
+                <span className="w-2 h-2 bg-amber-400 rounded-full mr-2"></span>
+                Support
+              </a>
+            </li>
           </ul>
         </div>
 
         <div className="flex flex-col items-center md:items-start">
-          <h3 className="text-xl font-semibold mb-5 border-b-2 border-amber-400 pb-2">Our Tools</h3>
+          <h3 className="text-xl font-semibold mb-5 border-b-2 border-amber-400 pb-2">
+            Our Tools
+          </h3>
           <ul className="space-y-3 text-green-100">
-            <li><a href="#" className="hover:text-amber-300 transition flex items-center"><span className="w-2 h-2 bg-amber-400 rounded-full mr-2"></span>Crop Advisor</a></li>
-            <li><a href="#" className="hover:text-amber-300 transition flex items-center"><span className="w-2 h-2 bg-amber-400 rounded-full mr-2"></span>Weather Insights</a></li>
-            <li><a href="#" className="hover:text-amber-300 transition flex items-center"><span className="w-2 h-2 bg-amber-400 rounded-full mr-2"></span>Soil Health</a></li>
-            <li><a href="#" className="hover:text-amber-300 transition flex items-center"><span className="w-2 h-2 bg-amber-400 rounded-full mr-2"></span>Planner</a></li>
+            <li>
+              <a
+                href="#"
+                className="hover:text-amber-300 transition flex items-center"
+              >
+                <span className="w-2 h-2 bg-amber-400 rounded-full mr-2"></span>
+                Crop Advisor
+              </a>
+            </li>
+            <li>
+              <a
+                href="#"
+                className="hover:text-amber-300 transition flex items-center"
+              >
+                <span className="w-2 h-2 bg-amber-400 rounded-full mr-2"></span>
+                Weather Insights
+              </a>
+            </li>
+            <li>
+              <a
+                href="#"
+                className="hover:text-amber-300 transition flex items-center"
+              >
+                <span className="w-2 h-2 bg-amber-400 rounded-full mr-2"></span>
+                Soil Health
+              </a>
+            </li>
+            <li>
+              <a
+                href="#"
+                className="hover:text-amber-300 transition flex items-center"
+              >
+                <span className="w-2 h-2 bg-amber-400 rounded-full mr-2"></span>
+                Planner
+              </a>
+            </li>
           </ul>
         </div>
       </div>
@@ -81,7 +159,9 @@ export default function Footer() {
       <div className="border-t border-green-800 pt-8 pb-10">
         <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
           <div className="text-center md:text-left">
-            <p className="text-green-100 mb-2">Subscribe to our farming newsletter</p>
+            <p className="text-green-100 mb-2">
+              Subscribe to our farming newsletter
+            </p>
             <div className="flex">
               <input
                 type="email"
@@ -96,10 +176,12 @@ export default function Footer() {
 
           <div className="text-center md:text-right">
             <p className="text-md text-green-100">
-              © {new Date().getFullYear()} KisanMitra | Driving Sustainable Farming
+              © {new Date().getFullYear()} KisanMitra | Driving Sustainable
+              Farming
             </p>
             <p className="text-green-200 mt-1">
-              Made with <FaHeart className="inline text-amber-400 mx-1"/> for farmers
+              Made with <FaHeart className="inline text-amber-400 mx-1" /> for
+              farmers
             </p>
           </div>
         </div>
