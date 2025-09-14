@@ -13,6 +13,7 @@ import EnhancedFarmerProfile from "./components/Profile";
 import Smart from "./components/SmartFarming";
 import FeedbackForm from "./components/FeedbackForm";
 import Notification from "./components/Notification";
+import KisanMitraAbout from "./components/About";
 
 function Home() {
   return (
@@ -61,6 +62,7 @@ function App() {
             <Route path="/profile" element={<EnhancedFarmerProfile />} />
             <Route path="/feedback" element={<FeedbackForm />} />
             <Route path="/notifications" element={<Notification />} />
+            <Route path="/about" element={<KisanMitraAbout />} />
           </Routes>
         </main>
         <FooterConditional />
