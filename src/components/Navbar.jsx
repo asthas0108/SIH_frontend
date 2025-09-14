@@ -1,20 +1,20 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { 
-  Sun, 
-  Moon, 
-  LogOut, 
-  MessageSquare, 
-  Menu, 
-  X, 
-  Bell, 
-  Search, 
+import {
+  Sun,
+  Moon,
+  LogOut,
+  MessageSquare,
+  Menu,
+  X,
+  Bell,
+  Search,
   User,
   Settings,
   HelpCircle,
   ChevronDown,
   Sprout,
-  Calendar
+  Calendar,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
@@ -32,7 +32,8 @@ const Navbar = () => {
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   const toggleProfile = () => setIsProfileOpen(!isProfileOpen);
-  const toggleNotifications = () => setIsNotificationsOpen(!isNotificationsOpen);
+  const toggleNotifications = () =>
+    setIsNotificationsOpen(!isNotificationsOpen);
   const toggleDarkMode = () => setIsDarkMode(!isDarkMode);
 
   const navigate = useNavigate();
@@ -44,14 +45,14 @@ const Navbar = () => {
   const handleHome = () => {
     navigate("/");
     console.log("Navigate to home page!");
-  }
+  };
 
   useEffect(() => {
     const date = new Date();
-    const formattedDate = date.toLocaleDateString('en-US', { 
-      weekday: 'short', 
-      month: 'short', 
-      day: 'numeric' 
+    const formattedDate = date.toLocaleDateString("en-US", {
+      weekday: "short",
+      month: "short",
+      day: "numeric",
     });
     setCurrentDate(formattedDate);
 
@@ -67,10 +68,17 @@ const Navbar = () => {
       if (profileRef.current && !profileRef.current.contains(event.target)) {
         setIsProfileOpen(false);
       }
-      if (notificationsRef.current && !notificationsRef.current.contains(event.target)) {
+      if (
+        notificationsRef.current &&
+        !notificationsRef.current.contains(event.target)
+      ) {
         setIsNotificationsOpen(false);
       }
-      if (menuRef.current && !menuRef.current.contains(event.target) && isMenuOpen) {
+      if (
+        menuRef.current &&
+        !menuRef.current.contains(event.target) &&
+        isMenuOpen
+      ) {
         setIsMenuOpen(false);
       }
     };
@@ -80,21 +88,36 @@ const Navbar = () => {
   }, [isMenuOpen]);
 
   const notifications = [
-    { id: 1, text: "Your soil analysis report is ready", time: "10 mins ago", read: false },
-    { id: 2, text: "New crop recommendations available", time: "1 hour ago", read: false },
-    { id: 3, text: "Weather alert: Rain expected tomorrow", time: "2 hours ago", read: true },
+    {
+      id: 1,
+      text: "Your soil analysis report is ready",
+      time: "10 mins ago",
+      read: false,
+    },
+    {
+      id: 2,
+      text: "New crop recommendations available",
+      time: "1 hour ago",
+      read: false,
+    },
+    {
+      id: 3,
+      text: "Weather alert: Rain expected tomorrow",
+      time: "2 hours ago",
+      read: true,
+    },
   ];
 
-  const unreadCount = notifications.filter(n => !n.read).length;
+  const unreadCount = notifications.filter((n) => !n.read).length;
 
   const colors = {
-    primary: "#2E7D32",        
-    primaryLight: "#4CAF50",  
-    primaryDark: "#1B5E20",    
-    accent: "#8BC34A",      
-    light: "#F1F8E9",          
-    dark: "#1B5E20",           
-    notification: "#FF9800",   
+    primary: "#2E7D32",
+    primaryLight: "#4CAF50",
+    primaryDark: "#1B5E20",
+    accent: "#8BC34A",
+    light: "#F1F8E9",
+    dark: "#1B5E20",
+    notification: "#FF9800",
   };
 
   const menuVariants = {
@@ -103,17 +126,17 @@ const Navbar = () => {
       height: 0,
       transition: {
         duration: 0.3,
-        ease: "easeInOut"
-      }
+        ease: "easeInOut",
+      },
     },
     open: {
       opacity: 1,
       height: "auto",
       transition: {
         duration: 0.3,
-        ease: "easeInOut"
-      }
-    }
+        ease: "easeInOut",
+      },
+    },
   };
 
   const dropdownVariants = {
@@ -122,43 +145,42 @@ const Navbar = () => {
       y: -10,
       transition: {
         duration: 0.2,
-        ease: "easeInOut"
-      }
+        ease: "easeInOut",
+      },
     },
     open: {
       opacity: 1,
       y: 0,
       transition: {
         duration: 0.2,
-        ease: "easeInOut"
-      }
-    }
+        ease: "easeInOut",
+      },
+    },
   };
 
   const navVariants = {
     initial: { y: -100 },
-    animate: { 
+    animate: {
       y: 0,
       transition: {
         duration: 0.5,
-        ease: "easeOut"
-      }
-    }
+        ease: "easeOut",
+      },
+    },
   };
 
   return (
-    <motion.nav 
+    <motion.nav
       className={`flex items-center justify-between px-4 sm:px-6 md:px-8 py-3 sticky top-0 z-50 ${
-        scrolled 
-          ? "bg-green-900 shadow-lg backdrop-blur-sm bg-opacity-100" 
+        scrolled
+          ? "bg-green-900 shadow-lg backdrop-blur-sm bg-opacity-100"
           : "bg-green-800 border-b border-green-900"
       }`}
       variants={navVariants}
       initial="initial"
       animate="animate"
     >
-      
-      <motion.div 
+      <motion.div
         className="flex items-center gap-2 md:gap-3 cursor-pointer"
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
@@ -176,19 +198,25 @@ const Navbar = () => {
             <Sprout className="w-2 h-2 md:w-3 md:h-3 text-white" />
           </motion.div> */}
         </div>
-        <h1 
-          className="text-lg md:text-xl font-bold tracking-wide text-white"
-        >
+        <h1 className="text-lg md:text-xl font-bold tracking-wide text-white">
           KisanMitra
         </h1>
       </motion.div>
 
-      <div className="hidden md:flex items-center gap-2 bg-green-100 px-3 py-1 rounded-lg">
+      <motion.div
+        className="hidden md:flex items-center gap-2 bg-green-100 px-3 py-1 rounded-lg cursor-pointer hover:bg-green-200 transition-colors"
+        whileHover={{ scale: 1.02 }}
+        whileTap={{ scale: 0.98 }}
+        onClick={() => navigate("/cropCalendar")}
+      >
         <Calendar className="w-4 h-4 text-green-700" />
-        <span className="text-sm font-medium text-green-800">{currentDate}</span>
-      </div>
+        <span className="text-sm font-medium text-green-800">
+          {currentDate}
+        </span>
+        <span className="text-xs text-green-600 ml-1">• Calendar</span>
+      </motion.div>
 
-      <motion.div 
+      <motion.div
         className="hidden md:flex flex-1 max-w-md mx-4 lg:mx-8"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -200,8 +228,8 @@ const Navbar = () => {
             type="text"
             placeholder="Search crops, analytics..."
             className={`w-full pl-10 pr-4 py-2 rounded-lg ${
-              scrolled 
-                ? "bg-green-50 text-green-800 placeholder-green-600 border border-green-200 focus:ring-2 focus:ring-green-400" 
+              scrolled
+                ? "bg-green-50 text-green-800 placeholder-green-600 border border-green-200 focus:ring-2 focus:ring-green-400"
                 : "bg-white/20 text-white placeholder-green-100 border border-green-300/30 focus:ring-2 focus:ring-green-200"
             } focus:outline-none focus:border-transparent`}
           />
@@ -210,10 +238,10 @@ const Navbar = () => {
 
       <div className="hidden md:flex items-center gap-2 lg:gap-3">
         <div className="relative" ref={notificationsRef}>
-          <motion.button 
+          <motion.button
             className={`relative flex items-center justify-center w-10 h-10 rounded-lg ${
-              scrolled 
-                ? "bg-green-100 text-green-700 hover:bg-green-200" 
+              scrolled
+                ? "bg-green-100 text-green-700 hover:bg-green-200"
                 : "bg-white/20 text-white hover:bg-white/30"
             } transition`}
             onClick={toggleNotifications}
@@ -222,7 +250,7 @@ const Navbar = () => {
           >
             <Bell className="w-5 h-5" />
             {hasUnreadNotifications && (
-              <motion.span 
+              <motion.span
                 className="absolute -top-1 -right-1 w-4 h-4 bg-amber-500 text-xs text-white rounded-full flex items-center justify-center"
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
@@ -235,7 +263,7 @@ const Navbar = () => {
 
           <AnimatePresence>
             {isNotificationsOpen && (
-              <motion.div 
+              <motion.div
                 className="absolute right-0 top-12 w-80 bg-white rounded-lg shadow-xl py-2 z-50 border border-green-200"
                 variants={dropdownVariants}
                 initial="closed"
@@ -243,17 +271,25 @@ const Navbar = () => {
                 exit="closed"
               >
                 <div className="px-4 py-2 border-b border-green-200">
-                  <h3 className="font-semibold text-green-800">Notifications</h3>
+                  <h3 className="font-semibold text-green-800">
+                    Notifications
+                  </h3>
                 </div>
                 <div className="max-h-96 overflow-y-auto">
-                  {notifications.map(notification => (
-                    <motion.div 
-                      key={notification.id} 
-                      className={`px-4 py-3 hover:bg-green-50 transition ${!notification.read ? 'bg-green-50' : ''}`}
+                  {notifications.map((notification) => (
+                    <motion.div
+                      key={notification.id}
+                      className={`px-4 py-3 hover:bg-green-50 transition ${
+                        !notification.read ? "bg-green-50" : ""
+                      }`}
                       whileHover={{ x: 5 }}
                     >
-                      <p className="text-sm text-gray-800">{notification.text}</p>
-                      <p className="text-xs text-green-600 mt-1">{notification.time}</p>
+                      <p className="text-sm text-gray-800">
+                        {notification.text}
+                      </p>
+                      <p className="text-xs text-green-600 mt-1">
+                        {notification.time}
+                      </p>
                     </motion.div>
                   ))}
                 </div>
@@ -267,10 +303,10 @@ const Navbar = () => {
           </AnimatePresence>
         </div>
 
-        <motion.button 
+        <motion.button
           className={`flex items-center gap-1 lg:gap-2 px-3 py-1.5 lg:px-4 lg:py-2 rounded-lg ${
-            scrolled 
-              ? "bg-green-100 text-green-800 hover:bg-green-200" 
+            scrolled
+              ? "bg-green-100 text-green-800 hover:bg-green-200"
               : "bg-white/20 text-white hover:bg-white/30"
           } transition text-sm lg:text-base`}
           whileHover={{ scale: 1.05 }}
@@ -280,10 +316,10 @@ const Navbar = () => {
           <span className="font-medium">Feedback</span>
         </motion.button>
 
-        <motion.button 
+        <motion.button
           className={`flex items-center justify-center w-10 h-10 rounded-lg ${
-            scrolled 
-              ? "bg-green-100 text-green-700 hover:bg-green-200" 
+            scrolled
+              ? "bg-green-100 text-green-700 hover:bg-green-200"
               : "bg-white/20 text-white hover:bg-white/30"
           } transition`}
           onClick={toggleDarkMode}
@@ -291,23 +327,29 @@ const Navbar = () => {
           whileTap={{ scale: 0.9 }}
           transition={{ type: "spring", stiffness: 300 }}
         >
-          {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+          {isDarkMode ? (
+            <Sun className="w-5 h-5" />
+          ) : (
+            <Moon className="w-5 h-5" />
+          )}
         </motion.button>
 
         <div className="relative" ref={profileRef}>
-          <motion.button 
+          <motion.button
             className={`flex items-center gap-2 px-3 py-1.5 rounded-lg ${
-              scrolled 
-                ? "bg-green-100 text-green-800 hover:bg-green-200" 
+              scrolled
+                ? "bg-green-100 text-green-800 hover:bg-green-200"
                 : "bg-white/20 text-white hover:bg-white/30"
             } transition`}
             onClick={toggleProfile}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${
-              scrolled ? "bg-green-600 text-white" : "bg-white text-green-700"
-            }`}>
+            <div
+              className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${
+                scrolled ? "bg-green-600 text-white" : "bg-white text-green-700"
+              }`}
+            >
               JD
             </div>
             <span className="font-medium text-sm">John Doe</span>
@@ -321,7 +363,7 @@ const Navbar = () => {
 
           <AnimatePresence>
             {isProfileOpen && (
-              <motion.div 
+              <motion.div
                 className="absolute right-0 top-12 w-48 bg-white rounded-lg shadow-xl py-2 z-50 border border-green-200"
                 variants={dropdownVariants}
                 initial="closed"
@@ -330,23 +372,25 @@ const Navbar = () => {
               >
                 <div className="px-4 py-2 border-b border-green-200">
                   <p className="text-sm text-green-600">Signed in as</p>
-                  <p className="font-medium text-green-800">john.doe@example.com</p>
+                  <p className="font-medium text-green-800">
+                    john.doe@example.com
+                  </p>
                 </div>
-                <motion.button 
+                <motion.button
                   className="flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 hover:bg-green-50 transition"
                   whileHover={{ x: 5 }}
                 >
                   <User className="w-4 h-4" />
                   <span>Profile</span>
                 </motion.button>
-                <motion.button 
+                <motion.button
                   className="flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 hover:bg-green-50 transition"
                   whileHover={{ x: 5 }}
                 >
                   <Settings className="w-4 h-4" />
                   <span>Settings</span>
                 </motion.button>
-                <motion.button 
+                <motion.button
                   className="flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 hover:bg-green-50 transition"
                   whileHover={{ x: 5 }}
                 >
@@ -354,7 +398,7 @@ const Navbar = () => {
                   <span>Help & Support</span>
                 </motion.button>
                 <div className="border-t border-green-200 my-1"></div>
-                <motion.button 
+                <motion.button
                   className="flex items-center gap-2 w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition"
                   whileHover={{ x: 5 }}
                 >
@@ -367,9 +411,11 @@ const Navbar = () => {
         </div>
       </div>
 
-      <motion.button 
+      <motion.button
         className={`md:hidden flex items-center justify-center w-10 h-10 rounded-md ${
-          scrolled ? "text-green-700 hover:bg-green-100" : "text-white hover:bg-white/20"
+          scrolled
+            ? "text-green-700 hover:bg-green-100"
+            : "text-white hover:bg-white/20"
         } transition`}
         onClick={toggleMenu}
         whileHover={{ scale: 1.1 }}
@@ -402,7 +448,7 @@ const Navbar = () => {
 
       <AnimatePresence>
         {isMenuOpen && (
-          <motion.div 
+          <motion.div
             ref={menuRef}
             className="absolute top-full left-0 right-0 bg-white shadow-xl md:hidden z-50 border-t border-green-200"
             variants={menuVariants}
@@ -411,10 +457,23 @@ const Navbar = () => {
             exit="closed"
           >
             <div className="p-4 border-b border-green-200">
-              <div className="flex items-center gap-2 bg-green-100 px-3 py-2 rounded-lg mb-3">
+              <motion.div
+                className="flex items-center gap-2 bg-green-100 px-3 py-2 rounded-lg mb-3 cursor-pointer hover:bg-green-200 transition-colors"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={() => {
+                  navigate("/cropCalendar");
+                  handleMobileMenuItemClick();
+                }}
+              >
                 <Calendar className="w-4 h-4 text-green-700" />
-                <span className="text-sm font-medium text-green-800">{currentDate}</span>
-              </div>
+                <span className="text-sm font-medium text-green-800">
+                  {currentDate}
+                </span>
+                <span className="text-xs text-green-600 ml-1">
+                  • View Calendar
+                </span>
+              </motion.div>
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-green-500 w-4 h-4" />
                 <input
@@ -424,9 +483,9 @@ const Navbar = () => {
                 />
               </div>
             </div>
-            
+
             <div className="flex flex-col p-4 space-y-3">
-              <motion.button 
+              <motion.button
                 className="flex items-center gap-3 px-4 py-3 rounded-lg bg-green-50 hover:bg-green-100 text-green-800 transition"
                 whileHover={{ x: 5 }}
                 whileTap={{ scale: 0.98 }}
@@ -441,7 +500,7 @@ const Navbar = () => {
                 )}
               </motion.button>
 
-              <motion.button 
+              <motion.button
                 className="flex items-center gap-3 px-4 py-3 rounded-lg bg-green-50 hover:bg-green-100 text-green-800 transition"
                 whileHover={{ x: 5 }}
                 whileTap={{ scale: 0.98 }}
@@ -451,7 +510,7 @@ const Navbar = () => {
                 <span className="font-medium">Feedback</span>
               </motion.button>
 
-              <motion.button 
+              <motion.button
                 className="flex items-center gap-3 px-4 py-3 rounded-lg bg-green-50 hover:bg-green-100 text-green-800 transition"
                 whileHover={{ x: 5 }}
                 whileTap={{ scale: 0.98 }}
@@ -464,7 +523,7 @@ const Navbar = () => {
                 <span className="font-medium">Profile</span>
               </motion.button>
 
-              <motion.button 
+              <motion.button
                 className="flex items-center gap-3 px-4 py-3 rounded-lg bg-green-50 hover:bg-green-100 text-green-800 transition"
                 whileHover={{ x: 5 }}
                 whileTap={{ scale: 0.98 }}
@@ -474,7 +533,7 @@ const Navbar = () => {
                 <span className="font-medium">Settings</span>
               </motion.button>
 
-              <motion.button 
+              <motion.button
                 className="flex items-center gap-3 px-4 py-3 rounded-lg bg-green-50 hover:bg-green-100 text-green-800 transition"
                 onClick={() => {
                   toggleDarkMode();
@@ -483,13 +542,19 @@ const Navbar = () => {
                 whileHover={{ x: 5 }}
                 whileTap={{ scale: 0.98 }}
               >
-                {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-                <span className="font-medium">{isDarkMode ? 'Light Mode' : 'Dark Mode'}</span>
+                {isDarkMode ? (
+                  <Sun className="w-5 h-5" />
+                ) : (
+                  <Moon className="w-5 h-5" />
+                )}
+                <span className="font-medium">
+                  {isDarkMode ? "Light Mode" : "Dark Mode"}
+                </span>
               </motion.button>
 
               <div className="border-t border-green-200 my-2"></div>
 
-              <motion.button 
+              <motion.button
                 className="flex items-center gap-3 px-4 py-3 rounded-lg bg-red-100 hover:bg-red-200 text-red-700 transition"
                 whileHover={{ x: 5 }}
                 whileTap={{ scale: 0.98 }}

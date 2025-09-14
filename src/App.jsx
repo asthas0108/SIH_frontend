@@ -1,4 +1,9 @@
-import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useLocation,
+} from "react-router-dom";
 import FeatureGrid from "./components/FeatureGrid";
 import Footer from "./components/Footer";
 import Navbar from "./components/Navbar";
@@ -9,6 +14,7 @@ import WeatherCheck from "./components/WeatherCheck";
 import OrganicFarming from "./components/OrganicFarming/index";
 import PlantDiseaseDetection from "./components/PlantDisease";
 import ChatBot from "./components/ChatBot";
+import CropCalendar from "./components/CropCalendar";
 
 function Home() {
   return (
@@ -21,11 +27,11 @@ function Home() {
 
 function FooterConditional() {
   const location = useLocation();
-  
+
   if (location.pathname === "/chatbot") {
     return null;
   }
-  
+
   return <Footer />;
 }
 
@@ -37,11 +43,18 @@ function App() {
         <main className="flex-grow">
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/cropRecommendation" element={<CropRecommendationForm />} />
+            <Route
+              path="/cropRecommendation"
+              element={<CropRecommendationForm />}
+            />
             <Route path="/yieldPredict" element={<YieldPrediction />} />
-            <Route path="/diseasePrediction" element={<PlantDiseaseDetection />} />
+            <Route
+              path="/diseasePrediction"
+              element={<PlantDiseaseDetection />}
+            />
             <Route path="/organicFarming" element={<OrganicFarming />} />
             <Route path="/weatherCheck" element={<WeatherCheck />} />
+            <Route path="/cropCalendar" element={<CropCalendar />} />
             <Route path="/chatbot" element={<ChatBot />} />
           </Routes>
         </main>
