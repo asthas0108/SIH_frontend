@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import {
   HelpCircle,
   MessageSquare,
@@ -16,6 +17,7 @@ import {
 
 const HelpSupportPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const navigate = useNavigate();
 
   const helpCategories = [
     {
@@ -24,6 +26,7 @@ const HelpSupportPage = () => {
       description: "Learn the basics of KisanMitra",
       articles: 12,
       color: "blue",
+      route: "/about", // Add route for Getting Started
     },
     {
       icon: <Users className="w-6 h-6 text-green-600" />,
@@ -31,6 +34,7 @@ const HelpSupportPage = () => {
       description: "Tips for better crop planning",
       articles: 18,
       color: "green",
+      route: "/cropRecommendation", // Route to crop recommendation
     },
     {
       icon: <Video className="w-6 h-6 text-purple-600" />,
@@ -38,6 +42,7 @@ const HelpSupportPage = () => {
       description: "Watch step-by-step guides",
       articles: 8,
       color: "purple",
+      route: "/help", // Stay on help page for videos
     },
     {
       icon: <FileText className="w-6 h-6 text-orange-600" />,
@@ -45,6 +50,7 @@ const HelpSupportPage = () => {
       description: "Detailed feature documentation",
       articles: 25,
       color: "orange",
+      route: "/help", // Stay on help page for documentation
     },
   ];
 
@@ -55,6 +61,7 @@ const HelpSupportPage = () => {
       description: "Chat with our support team",
       action: "Start Chat",
       available: true,
+      route: "/chatbot",
     },
     {
       icon: <Mail className="w-6 h-6 text-green-600" />,
@@ -62,13 +69,16 @@ const HelpSupportPage = () => {
       description: "Get help via email",
       action: "Send Email",
       available: true,
+      route: "/feedback",
     },
     {
       icon: <Phone className="w-6 h-6 text-purple-600" />,
       title: "Phone Support",
-      description: "Call our helpline",
+      description: "Call our helpline: +91 7031678999",
       action: "Call Now",
       available: true,
+      route: "tel:+917031678999",
+      isPhone: true,
     },
   ];
 
@@ -153,6 +163,7 @@ const HelpSupportPage = () => {
                 className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-all duration-300 cursor-pointer group"
                 whileHover={{ y: -5 }}
                 whileTap={{ scale: 0.98 }}
+                onClick={() => navigate(category.route)}
               >
                 <div
                   className={`w-12 h-12 bg-${category.color}-100 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}
@@ -202,7 +213,16 @@ const HelpSupportPage = () => {
                 <p className="text-gray-600 text-sm mb-4">
                   {option.description}
                 </p>
-                <button className="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white py-2 px-4 rounded-lg font-medium hover:from-purple-700 hover:to-blue-700 transition-all duration-300">
+                <button 
+                  onClick={() => {
+                    if (option.isPhone) {
+                      window.location.href = option.route;
+                    } else {
+                      navigate(option.route);
+                    }
+                  }}
+                  className="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white py-2 px-4 rounded-lg font-medium hover:from-purple-700 hover:to-blue-700 transition-all duration-300"
+                >
                   {option.action}
                 </button>
                 {option.available && (
