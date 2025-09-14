@@ -39,7 +39,7 @@ const CropManagementPage = () => {
 
   const handleArticleClick = (article) => {
     if (article.type === "video" && article.videoUrl) {
-      window.open(article.videoUrl, '_blank');
+      window.open(article.videoUrl, "_blank");
     } else {
       // For now, we'll just show an alert for articles
       // In a real app, this would navigate to the full article page
@@ -440,7 +440,7 @@ const CropManagementPage = () => {
                     {article.excerpt}
                   </p>
 
-                  <button 
+                  <button
                     onClick={() => handleArticleClick(article)}
                     className="w-full bg-gradient-to-r from-green-600 to-emerald-600 text-white py-2 px-4 rounded-lg font-medium hover:from-green-700 hover:to-emerald-700 transition-all duration-300 flex items-center justify-center gap-2"
                   >
@@ -592,7 +592,7 @@ const CropManagementPage = () => {
                       ))}
                     </div>
 
-                    <button 
+                    <button
                       onClick={() => handleArticleClick(article)}
                       className="w-full bg-gray-100 text-gray-700 py-2 px-4 rounded-lg font-medium hover:bg-green-100 hover:text-green-700 transition-all duration-300 flex items-center justify-center gap-2 group-hover:bg-green-600 group-hover:text-white"
                     >

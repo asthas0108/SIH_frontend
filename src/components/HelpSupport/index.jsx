@@ -30,7 +30,7 @@ const HelpSupportPage = () => {
       duration: "10:30",
       thumbnail: "/api/placeholder/320/180",
       videoUrl: "https://youtu.be/dQw4w9WgXcQ",
-      category: "basics"
+      category: "basics",
     },
     {
       id: 2,
@@ -39,7 +39,7 @@ const HelpSupportPage = () => {
       duration: "8:45",
       thumbnail: "/api/placeholder/320/180",
       videoUrl: "https://youtu.be/dQw4w9WgXcQ",
-      category: "disease"
+      category: "disease",
     },
     {
       id: 3,
@@ -48,7 +48,7 @@ const HelpSupportPage = () => {
       duration: "6:20",
       thumbnail: "/api/placeholder/320/180",
       videoUrl: "https://youtu.be/dQw4w9WgXcQ",
-      category: "weather"
+      category: "weather",
     },
     {
       id: 4,
@@ -57,7 +57,7 @@ const HelpSupportPage = () => {
       duration: "7:15",
       thumbnail: "/api/placeholder/320/180",
       videoUrl: "https://youtu.be/dQw4w9WgXcQ",
-      category: "market"
+      category: "market",
     },
     {
       id: 5,
@@ -66,7 +66,7 @@ const HelpSupportPage = () => {
       duration: "12:40",
       thumbnail: "/api/placeholder/320/180",
       videoUrl: "https://youtu.be/Vof1GmL2DAQ?si=c44bqgmcgJSQIO7M",
-      category: "irrigation"
+      category: "irrigation",
     },
     {
       id: 6,
@@ -75,7 +75,7 @@ const HelpSupportPage = () => {
       duration: "9:25",
       thumbnail: "/api/placeholder/320/180",
       videoUrl: "https://youtu.be/dQw4w9WgXcQ",
-      category: "crops"
+      category: "crops",
     },
     {
       id: 7,
@@ -84,7 +84,7 @@ const HelpSupportPage = () => {
       duration: "11:10",
       thumbnail: "/api/placeholder/320/180",
       videoUrl: "https://youtu.be/dQw4w9WgXcQ",
-      category: "yield"
+      category: "yield",
     },
     {
       id: 8,
@@ -93,8 +93,8 @@ const HelpSupportPage = () => {
       duration: "15:30",
       thumbnail: "/api/placeholder/320/180",
       videoUrl: "https://youtu.be/dQw4w9WgXcQ",
-      category: "organic"
-    }
+      category: "organic",
+    },
   ];
 
   // Documentation Articles Data
@@ -115,7 +115,7 @@ const HelpSupportPage = () => {
       `,
       category: "account",
       readTime: "5 min",
-      lastUpdated: "2025-09-10"
+      lastUpdated: "2025-09-10",
     },
     {
       id: 2,
@@ -133,12 +133,13 @@ const HelpSupportPage = () => {
       `,
       category: "api",
       readTime: "8 min",
-      lastUpdated: "2025-09-12"
+      lastUpdated: "2025-09-12",
     },
     {
       id: 3,
       title: "Weather Data Integration",
-      excerpt: "How to integrate and use weather data in your farming decisions",
+      excerpt:
+        "How to integrate and use weather data in your farming decisions",
       content: `
         <h3>Weather Sources</h3>
         <p>KisanMitra integrates with multiple weather data providers...</p>
@@ -151,7 +152,7 @@ const HelpSupportPage = () => {
       `,
       category: "weather",
       readTime: "6 min",
-      lastUpdated: "2025-09-08"
+      lastUpdated: "2025-09-08",
     },
     {
       id: 4,
@@ -169,8 +170,8 @@ const HelpSupportPage = () => {
       `,
       category: "market",
       readTime: "7 min",
-      lastUpdated: "2025-09-14"
-    }
+      lastUpdated: "2025-09-14",
+    },
   ];
 
   // External Resources
@@ -180,43 +181,43 @@ const HelpSupportPage = () => {
       description: "Government financial support for farmers",
       url: "https://pmkisan.gov.in/",
       category: "government",
-      type: "scheme"
+      type: "scheme",
     },
     {
       title: "Kisan Credit Card",
       description: "Agricultural credit scheme for farmers",
       url: "https://www.nabard.org/content1.aspx?to=Agriculture%20and%20Rural%20Development&id=25&catid=23",
       category: "government",
-      type: "credit"
+      type: "credit",
     },
     {
       title: "Indian Council of Agricultural Research",
       description: "Latest agricultural research and publications",
       url: "https://icar.org.in/",
       category: "research",
-      type: "institution"
+      type: "institution",
     },
     {
       title: "Soil Health Card Scheme",
       description: "Check soil health and get recommendations",
       url: "https://www.soilhealth.dac.gov.in/",
       category: "government",
-      type: "scheme"
+      type: "scheme",
     },
     {
       title: "Agricultural Marketing Division",
       description: "Market information and price data",
       url: "https://agmarknet.gov.in/",
       category: "market",
-      type: "data"
+      type: "data",
     },
     {
       title: "Central Research Institute for Dryland Agriculture",
       description: "Research on dryland farming techniques",
       url: "https://www.crida.in/",
       category: "research",
-      type: "institution"
-    }
+      type: "institution",
+    },
   ];
 
   const helpCategories = [
@@ -285,64 +286,76 @@ const HelpSupportPage = () => {
   const faqItems = [
     {
       question: "How do I get crop recommendations?",
-      answer: "Navigate to the Crop Recommendation section and fill in your soil details, location, and season preferences. Our AI system will analyze your data and suggest the best crops for your farm conditions.",
-      category: "crops"
+      answer:
+        "Navigate to the Crop Recommendation section and fill in your soil details, location, and season preferences. Our AI system will analyze your data and suggest the best crops for your farm conditions.",
+      category: "crops",
     },
     {
       question: "How accurate are weather predictions?",
-      answer: "Our weather data is sourced from reliable meteorological services and is updated every 6 hours for maximum accuracy. We achieve 85-90% accuracy for 7-day forecasts and 95% for 3-day forecasts.",
-      category: "weather"
+      answer:
+        "Our weather data is sourced from reliable meteorological services and is updated every 6 hours for maximum accuracy. We achieve 85-90% accuracy for 7-day forecasts and 95% for 3-day forecasts.",
+      category: "weather",
     },
     {
       question: "Can I export my farming data?",
-      answer: "Yes, you can export your data from the Settings page under Privacy & Security section. Data is available in CSV, Excel, and PDF formats for your records and analysis.",
-      category: "data"
+      answer:
+        "Yes, you can export your data from the Settings page under Privacy & Security section. Data is available in CSV, Excel, and PDF formats for your records and analysis.",
+      category: "data",
     },
     {
       question: "How do I reset my password?",
-      answer: "Click on 'Forgot Password' on the login page or change it from your profile settings. You'll receive a reset link via email that's valid for 24 hours.",
-      category: "account"
+      answer:
+        "Click on 'Forgot Password' on the login page or change it from your profile settings. You'll receive a reset link via email that's valid for 24 hours.",
+      category: "account",
     },
     {
       question: "How does disease detection work?",
-      answer: "Upload a clear photo of affected plant parts. Our AI analyzes the image using computer vision to identify diseases, pests, and nutritional deficiencies with 92% accuracy.",
-      category: "disease"
+      answer:
+        "Upload a clear photo of affected plant parts. Our AI analyzes the image using computer vision to identify diseases, pests, and nutritional deficiencies with 92% accuracy.",
+      category: "disease",
     },
     {
       question: "What crops are supported for recommendations?",
-      answer: "We support over 50 major crops including cereals (rice, wheat, maize), pulses (chickpea, lentils), oilseeds (soybean, mustard), and cash crops (cotton, sugarcane).",
-      category: "crops"
+      answer:
+        "We support over 50 major crops including cereals (rice, wheat, maize), pulses (chickpea, lentils), oilseeds (soybean, mustard), and cash crops (cotton, sugarcane).",
+      category: "crops",
     },
     {
       question: "How do I set up weather alerts?",
-      answer: "Go to Weather section > Alert Settings. You can set alerts for temperature, rainfall, humidity, wind speed, and severe weather warnings. Choose SMS, email, or app notifications.",
-      category: "weather"
+      answer:
+        "Go to Weather section > Alert Settings. You can set alerts for temperature, rainfall, humidity, wind speed, and severe weather warnings. Choose SMS, email, or app notifications.",
+      category: "weather",
     },
     {
       question: "Are market prices updated in real-time?",
-      answer: "Market prices are updated twice daily from major mandis across India. Premium users get hourly updates and advanced analytics features.",
-      category: "market"
+      answer:
+        "Market prices are updated twice daily from major mandis across India. Premium users get hourly updates and advanced analytics features.",
+      category: "market",
     },
     {
       question: "Can I use KisanMitra offline?",
-      answer: "Basic features like viewing saved data and offline crop guides are available without internet. Real-time features like weather and market prices require internet connection.",
-      category: "technical"
+      answer:
+        "Basic features like viewing saved data and offline crop guides are available without internet. Real-time features like weather and market prices require internet connection.",
+      category: "technical",
     },
     {
       question: "How do I contact technical support?",
-      answer: "Use the Live Chat feature, email us at support@kisanmitra.com, or call our helpline at +91 7031678999. Support is available 24/7 for premium users and 9 AM - 6 PM for basic users.",
-      category: "support"
+      answer:
+        "Use the Live Chat feature, email us at support@kisanmitra.com, or call our helpline at +91 7031678999. Support is available 24/7 for premium users and 9 AM - 6 PM for basic users.",
+      category: "support",
     },
     {
       question: "What is yield prediction accuracy?",
-      answer: "Our yield prediction model achieves 88% accuracy based on historical data, weather patterns, soil conditions, and farming practices. Accuracy improves with more farm-specific data.",
-      category: "yield"
+      answer:
+        "Our yield prediction model achieves 88% accuracy based on historical data, weather patterns, soil conditions, and farming practices. Accuracy improves with more farm-specific data.",
+      category: "yield",
     },
     {
       question: "How do I upgrade to premium?",
-      answer: "Go to Profile > Subscription and choose from our premium plans. Premium includes advanced analytics, priority support, real-time market data, and unlimited disease scans.",
-      category: "account"
-    }
+      answer:
+        "Go to Profile > Subscription and choose from our premium plans. Premium includes advanced analytics, priority support, real-time market data, and unlimited disease scans.",
+      category: "account",
+    },
   ];
 
   return (
@@ -437,11 +450,31 @@ const HelpSupportPage = () => {
           <div className="bg-white rounded-xl shadow-lg p-4">
             <div className="flex flex-wrap gap-2 justify-center">
               {[
-                { id: "overview", label: "Overview", icon: <HelpCircle className="w-4 h-4" /> },
-                { id: "videos", label: "Video Tutorials", icon: <Video className="w-4 h-4" /> },
-                { id: "docs", label: "Documentation", icon: <FileText className="w-4 h-4" /> },
-                { id: "resources", label: "External Resources", icon: <ExternalLink className="w-4 h-4" /> },
-                { id: "faq", label: "FAQ", icon: <MessageSquare className="w-4 h-4" /> }
+                {
+                  id: "overview",
+                  label: "Overview",
+                  icon: <HelpCircle className="w-4 h-4" />,
+                },
+                {
+                  id: "videos",
+                  label: "Video Tutorials",
+                  icon: <Video className="w-4 h-4" />,
+                },
+                {
+                  id: "docs",
+                  label: "Documentation",
+                  icon: <FileText className="w-4 h-4" />,
+                },
+                {
+                  id: "resources",
+                  label: "External Resources",
+                  icon: <ExternalLink className="w-4 h-4" />,
+                },
+                {
+                  id: "faq",
+                  label: "FAQ",
+                  icon: <MessageSquare className="w-4 h-4" />,
+                },
               ].map((section) => (
                 <button
                   key={section.id}
@@ -478,7 +511,7 @@ const HelpSupportPage = () => {
                     key={video.id}
                     className="bg-gray-50 rounded-lg overflow-hidden hover:shadow-lg transition-shadow cursor-pointer"
                     whileHover={{ scale: 1.02 }}
-                    onClick={() => window.open(video.videoUrl, '_blank')}
+                    onClick={() => window.open(video.videoUrl, "_blank")}
                   >
                     <div className="relative bg-gradient-to-br from-purple-400 to-blue-500 h-40 flex items-center justify-center">
                       <Play className="w-12 h-12 text-white" />
@@ -487,8 +520,12 @@ const HelpSupportPage = () => {
                       </div>
                     </div>
                     <div className="p-4">
-                      <h3 className="font-semibold text-gray-800 mb-2">{video.title}</h3>
-                      <p className="text-gray-600 text-sm">{video.description}</p>
+                      <h3 className="font-semibold text-gray-800 mb-2">
+                        {video.title}
+                      </h3>
+                      <p className="text-gray-600 text-sm">
+                        {video.description}
+                      </p>
                       <div className="mt-3 flex items-center justify-between">
                         <span className="text-xs text-purple-600 bg-purple-100 px-2 py-1 rounded-full">
                           {video.category}
@@ -526,7 +563,9 @@ const HelpSupportPage = () => {
                     onClick={() => setSelectedArticle(article)}
                   >
                     <div className="flex justify-between items-start mb-3">
-                      <h3 className="text-lg font-semibold text-gray-800">{article.title}</h3>
+                      <h3 className="text-lg font-semibold text-gray-800">
+                        {article.title}
+                      </h3>
                       <div className="flex items-center gap-2 text-xs text-gray-500">
                         <span>{article.readTime}</span>
                         <span>•</span>
@@ -568,7 +607,9 @@ const HelpSupportPage = () => {
                     className="border border-gray-200 rounded-lg p-6 hover:shadow-lg transition-shadow"
                     whileHover={{ scale: 1.02 }}
                   >
-                    <h3 className="text-lg font-semibold text-gray-800 mb-2">{resource.title}</h3>
+                    <h3 className="text-lg font-semibold text-gray-800 mb-2">
+                      {resource.title}
+                    </h3>
                     <p className="text-gray-600 mb-4">{resource.description}</p>
                     <div className="flex items-center justify-between">
                       <div className="flex gap-2">
@@ -650,63 +691,82 @@ const HelpSupportPage = () => {
 
         {/* FAQ Section */}
         {(activeSection === "faq" || activeSection === "overview") && (
-        <motion.div
-          className="bg-white rounded-xl shadow-lg p-8"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-        >
-          <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">
-            Frequently Asked Questions
-          </h2>
-          
-          {/* FAQ Categories */}
-          <div className="flex flex-wrap gap-2 mb-6 justify-center">
-            {["all", "crops", "weather", "disease", "market", "account", "technical"].map((category) => (
-              <button
-                key={category}
-                onClick={() => setSearchQuery(category === "all" ? "" : category)}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
-                  searchQuery === category || (category === "all" && !searchQuery)
-                    ? "bg-purple-600 text-white"
-                    : "bg-gray-100 text-gray-600 hover:bg-purple-100"
-                }`}
-              >
-                {category.charAt(0).toUpperCase() + category.slice(1)}
+          <motion.div
+            className="bg-white rounded-xl shadow-lg p-8"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+          >
+            <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">
+              Frequently Asked Questions
+            </h2>
+
+            {/* FAQ Categories */}
+            <div className="flex flex-wrap gap-2 mb-6 justify-center">
+              {[
+                "all",
+                "crops",
+                "weather",
+                "disease",
+                "market",
+                "account",
+                "technical",
+              ].map((category) => (
+                <button
+                  key={category}
+                  onClick={() =>
+                    setSearchQuery(category === "all" ? "" : category)
+                  }
+                  className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
+                    searchQuery === category ||
+                    (category === "all" && !searchQuery)
+                      ? "bg-purple-600 text-white"
+                      : "bg-gray-100 text-gray-600 hover:bg-purple-100"
+                  }`}
+                >
+                  {category.charAt(0).toUpperCase() + category.slice(1)}
+                </button>
+              ))}
+            </div>
+
+            <div className="space-y-4">
+              {faqItems
+                .filter(
+                  (faq) =>
+                    !searchQuery ||
+                    faq.category.includes(searchQuery) ||
+                    faq.question
+                      .toLowerCase()
+                      .includes(searchQuery.toLowerCase()) ||
+                    faq.answer.toLowerCase().includes(searchQuery.toLowerCase())
+                )
+                .map((faq, index) => (
+                  <motion.div
+                    key={index}
+                    className="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 transition-colors"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.1 * index }}
+                  >
+                    <h3 className="font-semibold text-gray-800 mb-2 flex items-center gap-2">
+                      <HelpCircle className="w-4 h-4 text-purple-600" />
+                      {faq.question}
+                      <span className="ml-auto text-xs text-purple-600 bg-purple-100 px-2 py-1 rounded-full">
+                        {faq.category}
+                      </span>
+                    </h3>
+                    <p className="text-gray-600 text-sm ml-6">{faq.answer}</p>
+                  </motion.div>
+                ))}
+            </div>
+
+            <div className="text-center mt-8">
+              <button className="inline-flex items-center gap-2 text-purple-600 hover:text-purple-700 font-medium">
+                View All FAQs
+                <ExternalLink className="w-4 h-4" />
               </button>
-            ))}
-          </div>
-
-          <div className="space-y-4">
-            {faqItems
-              .filter(faq => !searchQuery || faq.category.includes(searchQuery) || faq.question.toLowerCase().includes(searchQuery.toLowerCase()) || faq.answer.toLowerCase().includes(searchQuery.toLowerCase()))
-              .map((faq, index) => (
-              <motion.div
-                key={index}
-                className="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 transition-colors"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.1 * index }}
-              >
-                <h3 className="font-semibold text-gray-800 mb-2 flex items-center gap-2">
-                  <HelpCircle className="w-4 h-4 text-purple-600" />
-                  {faq.question}
-                  <span className="ml-auto text-xs text-purple-600 bg-purple-100 px-2 py-1 rounded-full">
-                    {faq.category}
-                  </span>
-                </h3>
-                <p className="text-gray-600 text-sm ml-6">{faq.answer}</p>
-              </motion.div>
-            ))}
-          </div>
-
-          <div className="text-center mt-8">
-            <button className="inline-flex items-center gap-2 text-purple-600 hover:text-purple-700 font-medium">
-              View All FAQs
-              <ExternalLink className="w-4 h-4" />
-            </button>
-          </div>
-        </motion.div>
+            </div>
+          </motion.div>
         )}
 
         {/* Article Modal */}
@@ -725,7 +785,9 @@ const HelpSupportPage = () => {
             >
               <div className="p-8">
                 <div className="flex justify-between items-start mb-6">
-                  <h2 className="text-2xl font-bold text-gray-800">{selectedArticle.title}</h2>
+                  <h2 className="text-2xl font-bold text-gray-800">
+                    {selectedArticle.title}
+                  </h2>
                   <button
                     onClick={() => setSelectedArticle(null)}
                     className="text-gray-500 hover:text-gray-700 text-2xl"
@@ -733,7 +795,7 @@ const HelpSupportPage = () => {
                     ×
                   </button>
                 </div>
-                <div 
+                <div
                   className="prose max-w-none"
                   dangerouslySetInnerHTML={{ __html: selectedArticle.content }}
                 />
