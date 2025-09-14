@@ -318,7 +318,7 @@ const ChatBot = () => {
             </div>
           </div>
           <div className="flex items-center gap-2 sm:gap-4">
-            <img src="/user.jpg" alt="user" className="w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-amber-200 shadow-md" />
+            <img src="/user.jpg" alt="user" className="w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-amber-200 shadow-md cursor-pointer" onClick={() => window.location.href = "/profile"}/>
           </div>
         </div>
 

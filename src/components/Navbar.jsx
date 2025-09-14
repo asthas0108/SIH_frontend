@@ -261,7 +261,7 @@ const Navbar = () => {
       <div className="hidden md:flex items-center gap-2 lg:gap-3">
         <div className="relative" ref={notificationsRef}>
           <motion.button
-            className={`relative flex items-center justify-center w-10 h-10 rounded-lg ${
+            className={`relative cursor-pointer flex items-center justify-center w-10 h-10 rounded-lg ${
               scrolled
                 ? "bg-green-100 text-green-700 hover:bg-green-200"
                 : "bg-white/20 text-white hover:bg-white/30"
@@ -325,7 +325,7 @@ const Navbar = () => {
           </AnimatePresence>
         </div>
         <motion.button
-          className={`flex items-center gap-1 lg:gap-2 px-3 py-1.5 lg:px-4 lg:py-2 rounded-lg ${
+          className={`flex items-center cursor-pointer gap-1 lg:gap-2 px-3 py-1.5 lg:px-4 lg:py-2 rounded-lg ${
             scrolled
               ? "bg-green-100 text-green-800 hover:bg-green-200"
               : "bg-white/20 text-white hover:bg-white/30"
@@ -338,7 +338,7 @@ const Navbar = () => {
           <span className="font-medium">Feedback</span>
         </motion.button>{" "}
         <motion.button
-          className={`flex items-center justify-center w-10 h-10 rounded-lg ${
+          className={`flex cursor-pointer items-center justify-center w-10 h-10 rounded-lg ${
             scrolled
               ? "bg-green-100 text-green-700 hover:bg-green-200"
               : "bg-white/20 text-white hover:bg-white/30"
@@ -356,7 +356,7 @@ const Navbar = () => {
         </motion.button>
         <div className="relative" ref={profileRef}>
           <motion.button
-            className={`flex items-center gap-2 px-3 py-1.5 rounded-lg ${
+            className={`flex cursor-pointer items-center gap-2 px-3 py-1.5 rounded-lg ${
               scrolled
                 ? "bg-green-100 text-green-800 hover:bg-green-200"
                 : "bg-white/20 text-white hover:bg-white/30"
@@ -589,7 +589,7 @@ const Navbar = () => {
                 }}
               >
                 <MessageSquare className="w-5 h-5" />
-                <span className="font-medium">Feedback</span>
+                <span className="font-medium cursor-pointer">Feedback</span>
               </motion.button>
 
               <motion.button

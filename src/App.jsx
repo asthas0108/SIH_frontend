@@ -43,11 +43,21 @@ function FooterConditional() {
   return <Footer />;
 }
 
+function NavBarConditional() {
+  const location = useLocation();
+
+  if (location.pathname === "/chatbot") {
+    return null;
+  }
+
+  return <Navbar />;
+}
+
 function App() {
   return (
     <Router>
       <div className="min-h-screen flex flex-col">
-        <Navbar />
+        <NavBarConditional />
         <main className="flex-grow">
           <Routes>
             <Route path="/" element={<Home />} />
