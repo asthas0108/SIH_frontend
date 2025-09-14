@@ -57,6 +57,19 @@ const Navbar = () => {
 
   const handleFeedback = () => {
     navigate("/feedback");
+  }
+
+  const handleSettings = () => {
+    navigate("/settings");
+  }
+
+  const handleHelp = () => {
+    navigate("/help");
+  }
+
+  const handleLogout = () => {
+    // Add logout logic here
+    console.log("Logout clicked");
   };
 
   useEffect(() => {
@@ -371,48 +384,98 @@ const Navbar = () => {
           <AnimatePresence>
             {isProfileOpen && (
               <motion.div
-                className="absolute right-0 top-12 w-48 bg-white rounded-lg shadow-xl py-2 z-50 border border-green-200"
+                className="absolute right-0 top-12 w-64 bg-white rounded-xl shadow-2xl py-3 z-50 border border-green-100 overflow-hidden"
                 variants={dropdownVariants}
                 initial="closed"
                 animate="open"
                 exit="closed"
+                style={{
+                  background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
+                  boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)'
+                }}
               >
-                <div className="px-4 py-2 border-b border-green-200">
-                  <p className="text-sm text-green-600">Signed in as</p>
-                  <p className="font-medium text-green-800">
-                    john.doe@example.com
-                  </p>
+                {/* User Info Section */}
+                <div className="px-5 py-4 border-b border-green-100 bg-gradient-to-r from-green-50 to-blue-50">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-lg">
+                      JD
+                    </div>
+                    <div>
+                      <p className="text-xs text-green-600 font-medium">Signed in as</p>
+                      <p className="font-semibold text-gray-800 text-sm">John Doe</p>
+                      <p className="text-xs text-gray-500">john.doe@example.com</p>
+                    </div>
+                  </div>
                 </div>
-                <motion.button
-                  className="flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 hover:bg-green-50 transition"
-                  whileHover={{ x: 5 }}
-                  onClick={handleProfile}
-                >
-                  <User className="w-4 h-4" />
-                  <span>Profile</span>
-                </motion.button>
-                <motion.button
-                  className="flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 hover:bg-green-50 transition"
-                  whileHover={{ x: 5 }}
-                >
-                  <Settings className="w-4 h-4" />
-                  <span>Settings</span>
-                </motion.button>
-                <motion.button
-                  className="flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 hover:bg-green-50 transition"
-                  whileHover={{ x: 5 }}
-                >
-                  <HelpCircle className="w-4 h-4" />
-                  <span>Help & Support</span>
-                </motion.button>
-                <div className="border-t border-green-200 my-1"></div>
-                <motion.button
-                  className="flex items-center gap-2 w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition"
-                  whileHover={{ x: 5 }}
-                >
-                  <LogOut className="w-4 h-4" />
-                  <span>Logout</span>
-                </motion.button>
+
+                {/* Menu Items */}
+                <div className="py-2">
+                  <motion.button
+                    className="flex items-center gap-3 w-full px-5 py-3 text-sm text-gray-700 hover:bg-gradient-to-r hover:from-green-50 hover:to-green-100 transition-all duration-200 group"
+                    whileHover={{ x: 5 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={handleProfile}
+                  >
+                    <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center group-hover:bg-green-200 transition-colors">
+                      <User className="w-4 h-4 text-green-600" />
+                    </div>
+                    <div className="flex-1 text-left">
+                      <span className="font-medium">Profile</span>
+                      <p className="text-xs text-gray-500">Manage your account</p>
+                    </div>
+                  </motion.button>
+
+                  <motion.button
+                    className="flex items-center gap-3 w-full px-5 py-3 text-sm text-gray-700 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 transition-all duration-200 group"
+                    whileHover={{ x: 5 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={handleSettings}
+                  >
+                    <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center group-hover:bg-blue-200 transition-colors">
+                      <Settings className="w-4 h-4 text-blue-600" />
+                    </div>
+                    <div className="flex-1 text-left">
+                      <span className="font-medium">Settings</span>
+                      <p className="text-xs text-gray-500">Preferences & privacy</p>
+                    </div>
+                  </motion.button>
+
+                  <motion.button
+                    className="flex items-center gap-3 w-full px-5 py-3 text-sm text-gray-700 hover:bg-gradient-to-r hover:from-purple-50 hover:to-purple-100 transition-all duration-200 group"
+                    whileHover={{ x: 5 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={handleHelp}
+                  >
+                    <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center group-hover:bg-purple-200 transition-colors">
+                      <HelpCircle className="w-4 h-4 text-purple-600" />
+                    </div>
+                    <div className="flex-1 text-left">
+                      <span className="font-medium">Help & Support</span>
+                      <p className="text-xs text-gray-500">Get help & contact us</p>
+                    </div>
+                  </motion.button>
+                </div>
+
+                {/* Divider */}
+                <div className="border-t border-gray-200 my-2"></div>
+
+                {/* Logout Button */}
+                <div className="px-2 pb-2">
+                  <motion.button
+                    className="flex items-center gap-3 w-full px-3 py-2 text-sm text-red-600 hover:bg-gradient-to-r hover:from-red-50 hover:to-red-100 rounded-lg transition-all duration-200 group"
+                    whileHover={{ x: 5 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={handleLogout}
+                  >
+                    <div className="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center group-hover:bg-red-200 transition-colors">
+                      <LogOut className="w-4 h-4 text-red-600" />
+                    </div>
+                    <div className="flex-1 text-left">
+                      <span className="font-medium">Logout</span>
+                      <p className="text-xs text-red-400">Sign out of your account</p>
+                    </div>
+                  </motion.button>
+                </div>
               </motion.div>
             )}
           </AnimatePresence>

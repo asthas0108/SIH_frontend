@@ -19,6 +19,8 @@ import EnhancedFarmerProfile from "./components/Profile";
 import FeedbackForm from "./components/FeedbackForm";
 import Notification from "./components/Notification";
 import CropCalendar from "./components/CropCalendar";
+import SettingsPage from "./components/Settings";
+import HelpSupportPage from "./components/HelpSupport";
 
 function Home() {
   return (
@@ -63,6 +65,8 @@ function App() {
             <Route path="/feedback" element={<FeedbackForm />} />
             <Route path="/notifications" element={<Notification />} />
             <Route path="/calendar" element={<CropCalendar />} />
+            <Route path="/settings" element={<SettingsPage />} />
+            <Route path="/help" element={<HelpSupportPage />} />
           </Routes>
         </main>
 
