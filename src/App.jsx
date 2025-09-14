@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 import FeatureGrid from "./components/FeatureGrid";
+import MandiPrice from "./components/MandiPrice";
 import Footer from "./components/Footer";
 import Navbar from "./components/Navbar";
 import SolutionsSection from "./components/SolutionsSection";
@@ -63,6 +64,7 @@ function App() {
             <Route path="/feedback" element={<FeedbackForm />} />
             <Route path="/notifications" element={<Notification />} />
             <Route path="/about" element={<KisanMitraAbout />} />
+            <Route path="/marketPrices" element={<MandiPrice />} />
           </Routes>
         </main>
         <FooterConditional />

@@ -1,0 +1,46 @@
+/* Basic styles for MandiPrice component */
+.mandi-price-container {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: #f9fafb;
+  border-radius: 1rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+}
+.mandi-title {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+.mandi-form label {
+  display: block;
+  margin-bottom: 1rem;
+  font-weight: 500;
+}
+.mandi-form select, .mandi-form button {
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  border: 1px solid #d1d5db;
+  width: 100%;
+  font-size: 1rem;
+}
+.mandi-form button {
+  background: #2563eb;
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 1rem;
+}
+.mandi-form button:disabled {
+  background: #a5b4fc;
+  cursor: not-allowed;
+}
+.mandi-result {
+  margin-top: 2rem;
+  background: #e0f2fe;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  text-align: center;
+}
