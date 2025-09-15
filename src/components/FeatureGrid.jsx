@@ -87,7 +87,7 @@ const FeatureGrid = () => {
         <button
           key={index}
           onClick={() => handleFeatureClick(feature.path)}
-          className="flex items-center gap-2 px-5 py-2 rounded-full bg-green-950 border border-green-700 shadow-sm hover:shadow-md hover:bg-green-800 transition-all duration-300 hover:-translate-y-1 animate-float"
+          className="flex items-center gap-2 px-5 py-2 rounded-full bg-green-950 border border-green-700 shadow-sm hover:shadow-md hover:bg-green-800 transition-all duration-300 hover:-translate-y-1 cursor-pointer animate-float"
           style={{
             animationDelay: `${index * 0.1}s`,
             animationDuration: "3s",

@@ -13,7 +13,6 @@ import {
 } from "lucide-react";
 import "./CropCalendar.css";
 
-// Enhanced crop data with additional metadata
 const cropsData = [
   {
     crop: "Wheat",

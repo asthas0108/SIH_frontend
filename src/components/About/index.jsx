@@ -32,6 +32,15 @@ const KisanMitraAbout = () => {
 
   const navigate = useNavigate();
 
+  const handleRendering = () => {
+    const token = localStorage.getItem("token");
+    if(token){
+      window.location.href = "/";
+    }else {
+      window.location.href = "/signup";
+    }
+  }
+
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -259,14 +268,14 @@ const KisanMitraAbout = () => {
             </p>
             <div className="mt-8 flex flex-col sm:flex-row justify-center gap-4">
               <button
-                onClick={() => navigate("/")}
-                className="bg-white text-emerald-700 font-semibold py-3 px-8 rounded-full shadow-lg hover:bg-emerald-50 transition-all transform hover:-translate-y-1"
+                onClick={handleRendering}
+                className="bg-white text-emerald-700 font-semibold py-3 px-8 rounded-full shadow-lg hover:bg-emerald-50 transition-all transform hover:-translate-y-1 cursor-pointer"
               >
                 Get Started
               </button>
               <button
                 onClick={() => navigate("/chatbot")}
-                className="bg-transparent border-2 border-white text-white font-semibold py-3 px-8 rounded-full hover:bg-white/10 transition-all"
+                className="bg-transparent border-2 border-white text-white font-semibold py-3 px-8 rounded-full hover:bg-white/10 transition-all cursor-pointer"
               >
                 Try Our AI Assistant
               </button>
@@ -275,7 +284,6 @@ const KisanMitraAbout = () => {
         </div>
       </header>
 
-      {/* Statistics Section */}
       <section className="py-16 bg-white relative">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
@@ -642,20 +650,20 @@ const KisanMitraAbout = () => {
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-4">
               <button
-                onClick={() => navigate("/")}
-                className="bg-white text-emerald-700 font-semibold py-3 px-8 rounded-full shadow-lg hover:bg-emerald-50 transition-all transform hover:-translate-y-1"
+                onClick={handleRendering}
+                className="bg-white text-emerald-700 font-semibold py-3 px-8 rounded-full shadow-lg hover:bg-emerald-50 transition-all transform hover:-translate-y-1 cursor-pointer"
               >
                 Start Your Journey
               </button>
               <button
-                onClick={() => navigate("/chatbot")}
-                className="bg-transparent border-2 border-white text-white font-semibold py-3 px-8 rounded-full hover:bg-white/10 transition-all"
+                onClick={() => window.location.href = "/chatbot"}
+                className="bg-transparent border-2 border-white text-white font-semibold py-3 px-8 rounded-full hover:bg-white/10 transition-all cursor-pointer"
               >
                 Talk to AI Assistant
               </button>
               <button
-                onClick={() => navigate("/feedback")}
-                className="bg-amber-500 text-emerald-900 font-semibold py-3 px-8 rounded-full hover:bg-amber-400 transition-all transform hover:-translate-y-1"
+                onClick={() => window.location.href = "/feedback"}
+                className="bg-amber-500 text-emerald-900 font-semibold py-3 px-8 rounded-full hover:bg-amber-400 transition-all transform hover:-translate-y-1 cursor-pointer"
               >
                 Request Demo
               </button>

@@ -18,6 +18,15 @@ const SolutionsSection = () => {
   const [isVisible, setIsVisible] = useState(false);
   const navigate = useNavigate();
 
+  const handleRendering = () => {
+    const token = localStorage.getItem("token");
+    if(token){
+      window.location.href = "/";
+    }else {
+      window.location.href = "/signup";
+    }
+  }
+
   const renderChatbotButton = () => {
     const handleStartChat = () => {
       navigate("/chatbot", { state: { startNewChat: true } });
@@ -26,7 +35,7 @@ const SolutionsSection = () => {
     return (
       <button
         onClick={handleStartChat}
-        className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-green-600 to-emerald-600 text-white font-semibold rounded-xl hover:from-green-700 hover:to-emerald-700 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+        className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-green-600 to-emerald-600 text-white font-semibold rounded-xl hover:from-green-700 hover:to-emerald-700 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 cursor-pointer"
       >
         <MessageCircle className="w-5 h-5" />
         <span>Start Chatting Now</span>
@@ -209,12 +218,12 @@ const SolutionsSection = () => {
         </div>
 
         <div className="flex justify-center mb-12 md:mb-16 px-2">
-          <div className="inline-flex bg-white/80 backdrop-blur-sm rounded-full p-1 shadow-sm border border-green-100/50 max-w-full overflow-x-auto">
+          <div className="inline-flex bg-white/80 backdrop-blur-sm rounded-full p-1 shadow-sm border border-green-100/50 max-w-full overflow-x-auto cursor-pointer">
             {categories.map((category) => (
               <button
                 key={category.id}
                 onClick={() => setActiveFilter(category.id)}
-                className={`px-4 py-2 text-xs sm:text-sm font-medium rounded-full transition-all duration-300 whitespace-nowrap ${
+                className={`px-4 py-2 text-xs sm:text-sm font-medium rounded-full transition-all duration-300 whitespace-nowrap cursor-pointer ${
                   activeFilter === category.id
                     ? "bg-gradient-to-r from-green-600 to-emerald-600 text-white shadow-md"
                     : "text-gray-700 hover:text-green-700 hover:bg-green-50/50"
@@ -528,14 +537,14 @@ const SolutionsSection = () => {
 
           <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4 relative z-10">
             <button
-              onClick={() => (window.location.href = "/signup")}
-              className="bg-white text-green-700 hover:bg-green-50 font-semibold py-3 sm:py-3.5 px-6 sm:px-8 md:px-10 rounded-full transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 text-sm sm:text-base"
+              onClick={handleRendering}
+              className="bg-white text-green-700 hover:bg-green-50 font-semibold py-3 sm:py-3.5 px-6 sm:px-8 md:px-10 rounded-full transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 text-sm sm:text-base cursor-pointer"
             >
               Get Started Free
             </button>
             <button
               onClick={() => (window.location.href = "/demo")}
-              className="bg-transparent border-2 border-white text-white hover:bg-white/10 font-semibold py-3 sm:py-3.5 px-6 sm:px-8 md:px-10 rounded-full transition-all duration-300 transform hover:-translate-y-0.5 text-sm sm:text-base"
+              className="bg-transparent border-2 border-white text-white hover:bg-white/10 font-semibold py-3 sm:py-3.5 px-6 sm:px-8 md:px-10 rounded-full transition-all duration-300 transform hover:-translate-y-0.5 text-sm sm:text-base cursor-pointer"
             >
               Request Demo
             </button>

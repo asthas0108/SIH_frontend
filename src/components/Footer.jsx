@@ -168,7 +168,7 @@ export default function Footer() {
                 placeholder="Your email address"
                 className="flex-grow px-4 py-2 rounded-l-lg bg-green-800 border border-green-700 text-white placeholder-green-300 focus:outline-none focus:ring-2 focus:ring-amber-400"
               />
-              <button className="bg-amber-500 text-green-900 font-semibold px-4 py-2 rounded-r-lg hover:bg-amber-400 transition">
+              <button className="bg-amber-500 text-green-900 font-semibold px-4 py-2 rounded-r-lg hover:bg-amber-400 transition cursor-pointer">
                 Subscribe
               </button>
             </div>

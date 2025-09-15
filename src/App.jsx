@@ -25,6 +25,7 @@ import AboutPage from "./components/About";
 import CropManagementPage from "./components/CropManagement";
 import FarmerChatbot from "./components/FarmerChatbot";
 import SmartFarming from "./components/SmartFarming/SmartFarmingEnhanced";
+import FarmerAuth from "./components/FarmerAuth";
 
 function Home() {
   return (
@@ -38,7 +39,7 @@ function Home() {
 function FooterConditional() {
   const location = useLocation();
 
-  if (location.pathname === "/chatbot") {
+  if (location.pathname === "/chatbot" || location.pathname === "/signup") {
     return null;
   }
 
@@ -85,6 +86,7 @@ function App() {
             <Route path="/about" element={<AboutPage />} />
             <Route path="/crop-management" element={<CropManagementPage />} />
             <Route path="/smartfarming" element={<SmartFarming />} />
+            <Route path="/signup" element={<FarmerAuth />} />
           </Routes>
         </main>
 
