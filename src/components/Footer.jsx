@@ -118,7 +118,7 @@ export default function Footer() {
           <ul className="space-y-3 text-green-100">
             <li>
               <a
-                href="#"
+                href="/cropRecommendation"
                 className="hover:text-amber-300 transition flex items-center"
               >
                 <span className="w-2 h-2 bg-amber-400 rounded-full mr-2"></span>
@@ -127,7 +127,7 @@ export default function Footer() {
             </li>
             <li>
               <a
-                href="#"
+                href="/weatherCheck"
                 className="hover:text-amber-300 transition flex items-center"
               >
                 <span className="w-2 h-2 bg-amber-400 rounded-full mr-2"></span>
@@ -136,7 +136,7 @@ export default function Footer() {
             </li>
             <li>
               <a
-                href="#"
+                href="/soilHealth"
                 className="hover:text-amber-300 transition flex items-center"
               >
                 <span className="w-2 h-2 bg-amber-400 rounded-full mr-2"></span>

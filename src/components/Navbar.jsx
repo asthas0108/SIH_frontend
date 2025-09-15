@@ -67,6 +67,10 @@ const Navbar = () => {
     navigate("/help");
   };
 
+  const handleNotifications = () => {
+    navigate("/notifications");
+  }
+
   const handleLogout = () => {
     localStorage.removeItem('token');
     // console.log("User logged out!");
@@ -165,8 +169,8 @@ const Navbar = () => {
         animate="animate"
       >
         <motion.div
-          className="flex items-center gap-2 md:gap-3 cursor-pointer"
-          whileHover={{ scale: 1.02 }}
+          className="flex items-cewhileHover={{ scale: 1.02 }}nter gap-2 md:gap-3 cursor-pointer items-center"
+          
           whileTap={{ scale: 0.98 }}
           onClick={handleHome}
         >
@@ -264,7 +268,8 @@ const Navbar = () => {
                     ))}
                   </div>
                   <div className="px-4 py-2 border-t border-green-200">
-                    <button className="text-sm text-green-600 font-medium w-full text-center hover:text-green-800 transition">
+                    <button className="text-sm text-green-600 font-medium w-full text-center hover:text-green-800 transition cursor-pointer" 
+                    onClick={() => window.location.href = "/notifications"}>
                       View All Notifications
                     </button>
                   </div>
@@ -477,7 +482,7 @@ const Navbar = () => {
         {isMenuOpen && (
           <motion.div
             ref={menuRef}
-            className="md:hidden absolute top-16 inset-x-4 
+            className="md:hidden fixed top-16 inset-x-4 
                  bg-white/80 backdrop-blur-xl 
                  shadow-2xl rounded-3xl z-50 
                  overflow-hidden border border-gray-200"
@@ -491,6 +496,7 @@ const Navbar = () => {
                 { label: "Home", onClick: handleHome },
                 { label: "Profile", onClick: handleProfile },
                 { label: "Settings", onClick: handleSettings },
+                { label: "Notifications", onClick: handleNotifications },
                 { label: "Help & Support", onClick: handleHelp },
                 { label: "Calendar", onClick: handleCalendar },
                 { label: "Feedback", onClick: handleFeedback },
