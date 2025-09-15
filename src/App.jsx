@@ -24,6 +24,7 @@ import HelpSupportPage from "./components/HelpSupport";
 import AboutPage from "./components/About";
 import CropManagementPage from "./components/CropManagement";
 import FarmerChatbot from "./components/FarmerChatbot";
+import SmartFarming from "./components/SmartFarming/SmartFarmingEnhanced";
 
 function Home() {
   return (
@@ -83,6 +84,7 @@ function App() {
             <Route path="/help" element={<HelpSupportPage />} />
             <Route path="/about" element={<AboutPage />} />
             <Route path="/crop-management" element={<CropManagementPage />} />
+            <Route path="/smartfarming" element={<SmartFarming />} />
           </Routes>
         </main>
 
