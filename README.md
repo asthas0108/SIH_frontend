@@ -85,7 +85,7 @@ A unified digital ecosystem that integrates:
 <td align="center">
 <img src="https://github.com/asthas0108" width="120px;" alt="Astha Singh"/><br />
 <b>Astha Singh</b><br />
-<i>UI/UX Designer</i><br />
+<i>Full-Stack Developer</i><br />
 <a href="https://github.com/asthas0108">💻 GitHub</a> |
 <a href="https://www.linkedin.com/in/astha-singh-001877294/">💼 LinkedIn</a> |
 <a href="https://dribbble.com/asthasingh">🎨 Dribbble</a>
