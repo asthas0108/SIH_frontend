@@ -484,17 +484,6 @@ npm run preview
 
 ---
 
-## 📞 **Contact & Support**
-
-### **Team Contact**
-
-- **Project Lead**: ayush.singh@kisanmitra.com
-- **Technical Lead**: udit.verma@kisanmitra.com
-- **AI Lead**: divyansh.garg@kisanmitra.com
-- **Data Science Lead**: ashwani.gupta@kisanmitra.com
-
----
-
 ## 📄 **License**
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
