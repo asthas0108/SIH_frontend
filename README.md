@@ -43,7 +43,7 @@ A unified digital ecosystem that integrates:
 <td align="center">
 <img src="https://github.com/ayusingh-54.png" width="120px;" alt="Ayush Singh"/><br />
 <b>Ayush Singh</b><br />
-<i>ML Specialist & Team Lead</i><br />
+<i>ML Specialist</i><br />
 <a href="https://github.com/ayusingh-54">💻 GitHub</a> |
 <a href="https://linkedin.com/in/ayush-singh-ml">💼 LinkedIn</a> |
 <a href="https://twitter.com/ayushsingh_ml">🐦 Twitter</a>
@@ -52,7 +52,7 @@ A unified digital ecosystem that integrates:
 <img src="https://github.com/divyanshgarg.png" width="120px;" alt="Divyansh Garg"/><br />
 <b>Divyansh Garg</b><br />
 <i>AI Specialist</i><br />
-<a href="https://github.com/divyanshgarg">💻 GitHub</a> |
+<a href="https://github.com/gargdivyansh1">💻 GitHub</a> |
 <a href="https://linkedin.com/in/divyansh-garg-ai">💼 LinkedIn</a> |
 <a href="https://twitter.com/divyansh_ai">🐦 Twitter</a>
 </td>
@@ -60,7 +60,7 @@ A unified digital ecosystem that integrates:
 <img src="https://github.com/uditverma.png" width="120px;" alt="Udit Verma"/><br />
 <b>Udit Verma</b><br />
 <i>Full-Stack Developer</i><br />
-<a href="https://github.com/uditverma">💻 GitHub</a> |
+<a href="https://github.com/Udit0104">💻 GitHub</a> |
 <a href="https://linkedin.com/in/udit-verma-dev">💼 LinkedIn</a> |
 <a href="https://instagram.com/udit.codes">📸 Instagram</a>
 </td>
@@ -70,7 +70,7 @@ A unified digital ecosystem that integrates:
 <img src="https://github.com/ashwanigupta.png" width="120px;" alt="Ashwani Gupta"/><br />
 <b>Ashwani Gupta</b><br />
 <i>Data Scientist</i><br />
-<a href="https://github.com/ashwanigupta">💻 GitHub</a> |
+<a href="https://github.com/ASHWANIGUPTA18">💻 GitHub</a> |
 <a href="https://linkedin.com/in/ashwani-gupta-ds">💼 LinkedIn</a> |
 <a href="https://kaggle.com/ashwanigupta">📊 Kaggle</a>
 </td>
@@ -83,7 +83,7 @@ A unified digital ecosystem that integrates:
 <a href="https://medium.com/@vishalgupta">✍️ Medium</a>
 </td>
 <td align="center">
-<img src="https://github.com/asthasingh.png" width="120px;" alt="Astha Singh"/><br />
+<img src="https://github.com/asthas0108" width="120px;" alt="Astha Singh"/><br />
 <b>Astha Singh</b><br />
 <i>UI/UX Designer</i><br />
 <a href="https://github.com/asthasingh">💻 GitHub</a> |
