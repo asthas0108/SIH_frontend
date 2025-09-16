@@ -85,7 +85,7 @@ const SoilHealthAnalysis = () => {
       {/* --- Header Section --- */}
       <header className="text-center mb-10 sm:mb-12 w-full max-w-5xl">
         <h1 className="text-4xl sm:text-5xl font-bold text-green-900 mb-4">
-          🌱 Welcome to the Soil Health Portal
+          🌱 Welcome to the Soil Health Page
         </h1>
         <p className="text-base sm:text-lg text-gray-600 max-w-4xl mx-auto leading-relaxed">
             Soil is far more than just dirt; it's a living, dynamic ecosystem critical for life on Earth. <strong>Soil health</strong> is its capacity to function as a vital system—sustaining plants, animals, and humans while maintaining environmental quality.
