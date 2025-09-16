@@ -74,6 +74,9 @@ const Navbar = () => {
 
   const handleLogout = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('userId');
+    localStorage.removeItem('user_id');
+    localStorage.removeItem('access_token');
     // console.log("User logged out!");
     window.location.href = "/";
     setShowLogoutConfirm(false);

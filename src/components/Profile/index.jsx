@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from "axios";
 import { Sun } from 'lucide-react';
 import { PhoneCallIcon } from 'lucide-react';
 import { PersonStanding } from 'lucide-react';
@@ -16,21 +17,29 @@ import { Droplet } from 'lucide-react';
 import { Building } from 'lucide-react';
 import { div } from 'framer-motion/client';
 import { BiDownArrow, BiLeftArrow } from 'react-icons/bi';
+import os from "os";
 
 const EnhancedFarmerProfile = () => {
+
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
   const [farmerData, setFarmerData] = useState({
     name: "Rajesh Singh",
+    logo: "RS",
     phone: "+91 9876543210",
     language: "हिंदी (Hindi)",
     pincode: "413305",
     village: "Baramati",
+    taluka: "Baramati",
     district: "Pune",
+    member_since: 2018,
+    isPhoneVerified: false,
     state: "Maharashtra",
     landHolding: "4.5 Acres",
     farmingType: "Irrigated",
     soilType: "Black Cotton Soil (Regur Soil)",
     irrigationSource: "Well + Canal",
-    experience: "15 years",
+    experience: "Add your farming experience(number of years)",
     plots: [
       { id: 1, name: "मुख्य शेत (Main Field)", area: "3.0", crop: "Sugarcane", sowingDate: "15 Feb 2024", status: "Growing" },
       { id: 2, name: "बाग (Orchard)", area: "1.0", crop: "Mango (Alphonso)", sowingDate: "N/A (Perennial)", status: "Fruiting" },
@@ -60,6 +69,7 @@ const EnhancedFarmerProfile = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [activeSection, setActiveSection] = useState("overview");
   const [newPlot, setNewPlot] = useState({ name: "", area: "", crop: "", sowingDate: "" });
+  const [profile, setProfile] = useState(null);
 
   const toggleEdit = () => {
     setIsEditing(!isEditing);
@@ -107,17 +117,66 @@ const EnhancedFarmerProfile = () => {
     }
   };
 
+  const get_Profile = async (userId, token) => {
+    try {
+      const response = await axios.get(`${API_BASE_URL}/users/get_profile/${userId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching profile:", error.response?.data || error.message);
+      throw error;
+    }
+  };
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const userId = localStorage.getItem("userId");
+        const data = await get_Profile(userId, token); // already parsed JSON
+
+        setFarmerData(prev => ({
+          ...prev, // keep existing nested structures like plots, alerts, queries
+          name: data.full_name || prev.name,
+          phone: `${data.country_code || "+91"} ${data.phone_number || ""}`,
+          pincode: data.current_pincode || prev.pincode,
+          village: data.current_village || prev.village,
+          taluka: data.current_taluka || prev.taluka,
+          district: data.current_district || prev.district,
+          logo: data.full_name[0],
+          member_since: new Date(data.created_at).getFullYear(),
+          state: data.current_state || prev.state,
+          isPhoneVerified: data.isPhoneVerified,
+          landHolding: data.total_land_holdings
+            ? `${data.total_land_holdings} Acres`
+            : prev.landHolding,
+        }));
+
+        console.log("Mapped farmer data:", data);
+      } catch (err) {
+        console.error("Failed to load profile", err);
+      }
+    };
+
+    fetchProfile();
+  }, []);
+
+
   return (
     <div className="bg-green-50">
       <div className="max-w-6xl mx-auto p-4 font-sans bg-green-100 min-h-screen">
         <header className="bg-gradient-to-r from-green-800 to-green-700 text-white p-6 rounded-xl shadow-lg mb-6">
           <div className="flex items-center mb-5">
             <div className="w-20 h-20 rounded-full bg-green-500 flex items-center justify-center text-3xl font-bold mr-5">
-              RS
+              {farmerData.logo}
             </div>
             <div>
               <h1 className="text-3xl font-bold">नमस्ते, {farmerData.name}!</h1>
-              <p className="text-green-100">Member since 2018 • {farmerData.village}, {farmerData.district}</p>
+              <p className="text-green-100">Member since {farmerData.member_since} • {farmerData.village}, {farmerData.district}</p>
             </div>
           </div>
 
@@ -154,8 +213,8 @@ const EnhancedFarmerProfile = () => {
           <div className="hidden md:flex">
             <button
               className={`flex-1 py-4 flex items-center justify-center gap-2 font-medium transition-all duration-200 ${activeSection === "overview"
-                  ? "text-green-700 bg-green-50 border-b-2 border-green-700"
-                  : "text-gray-600 hover:text-green-600 hover:bg-green-50"
+                ? "text-green-700 bg-green-50 border-b-2 border-green-700"
+                : "text-gray-600 hover:text-green-600 hover:bg-green-50"
                 }`}
               onClick={() => setActiveSection("overview")}
             >
@@ -164,8 +223,8 @@ const EnhancedFarmerProfile = () => {
             </button>
             <button
               className={`flex-1 py-4 flex items-center justify-center gap-2 font-medium transition-all duration-200 ${activeSection === "personal"
-                  ? "text-green-700 bg-green-50 border-b-2 border-green-700"
-                  : "text-gray-600 hover:text-green-600 hover:bg-green-50"
+                ? "text-green-700 bg-green-50 border-b-2 border-green-700"
+                : "text-gray-600 hover:text-green-600 hover:bg-green-50"
                 }`}
               onClick={() => setActiveSection("personal")}
             >
@@ -174,8 +233,8 @@ const EnhancedFarmerProfile = () => {
             </button>
             <button
               className={`flex-1 py-4 flex items-center justify-center gap-2 font-medium transition-all duration-200 ${activeSection === "farm"
-                  ? "text-green-700 bg-green-50 border-b-2 border-green-700"
-                  : "text-gray-600 hover:text-green-600 hover:bg-green-50"
+                ? "text-green-700 bg-green-50 border-b-2 border-green-700"
+                : "text-gray-600 hover:text-green-600 hover:bg-green-50"
                 }`}
               onClick={() => setActiveSection("farm")}
             >
@@ -184,8 +243,8 @@ const EnhancedFarmerProfile = () => {
             </button>
             <button
               className={`flex-1 py-4 flex items-center justify-center gap-2 font-medium transition-all duration-200 ${activeSection === "alerts"
-                  ? "text-green-700 bg-green-50 border-b-2 border-green-700"
-                  : "text-gray-600 hover:text-green-600 hover:bg-green-50"
+                ? "text-green-700 bg-green-50 border-b-2 border-green-700"
+                : "text-gray-600 hover:text-green-600 hover:bg-green-50"
                 }`}
               onClick={() => setActiveSection("alerts")}
             >
@@ -194,8 +253,8 @@ const EnhancedFarmerProfile = () => {
             </button>
             <button
               className={`flex-1 py-4 flex items-center justify-center gap-2 font-medium transition-all duration-200 ${activeSection === "activity"
-                  ? "text-green-700 bg-green-50 border-b-2 border-green-700"
-                  : "text-gray-600 hover:text-green-600 hover:bg-green-50"
+                ? "text-green-700 bg-green-50 border-b-2 border-green-700"
+                : "text-gray-600 hover:text-green-600 hover:bg-green-50"
                 }`}
               onClick={() => setActiveSection("activity")}
             >
@@ -205,7 +264,7 @@ const EnhancedFarmerProfile = () => {
           </div>
 
           <div className="md:hidden relative">
-            <BiDownArrow className='absolute right-8 top-5'/>
+            <BiDownArrow className='absolute right-8 top-5' />
             <select
               className="w-full p-4 text-gray-700 bg-white border-none rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none appearance-none"
               value={activeSection}
@@ -357,11 +416,15 @@ const EnhancedFarmerProfile = () => {
                         className="w-full p-3 border border-gray-300 rounded-lg bg-gray-50 disabled:bg-gray-100 disabled:text-gray-600 focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200 pr-10"
                         placeholder="+91 00000 00000"
                       />
-                      <span className="absolute right-3 top-3.5 text-green-600 flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                      {farmerData.isPhoneVerified ? "Verified" : "Not Verified"}
+                      <span className={`absolute right-3 top-3.5 ${farmerData.isPhoneVerified ? "text-green-600" : "text-red-600"} flex items-center`}>
+                        {farmerData.isPhoneVerified ? <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
                           <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                        </svg> : <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                          <path fillRule="evenodd" d="M10 8.586l4.95-4.95a1 1 0 111.414 1.414L11.414 10l4.95 4.95a1 1 0 01-1.414 1.414L10 11.414l-4.95 4.95a1 1 0 01-1.414-1.414L8.586 10l-4.95-4.95A1 1 0 115.05 3.636L10 8.586z" clipRule="evenodd" />
                         </svg>
-                        Verified
+                        }
+                        {farmerData.isPhoneVerified ? "Verified" : "Not Verified"}
                       </span>
                     </div>
                   </div>
@@ -430,7 +493,7 @@ const EnhancedFarmerProfile = () => {
                   </div>
 
                   <div className="space-y-1">
-                    <label className="block text-sm font-medium text-gray-700">Village/Taluka</label>
+                    <label className="block text-sm font-medium text-gray-700">Village</label>
                     <input
                       type="text"
                       name="village"
@@ -439,6 +502,19 @@ const EnhancedFarmerProfile = () => {
                       disabled={!isEditing}
                       className="w-full p-3 border border-gray-300 rounded-lg bg-gray-50 disabled:bg-gray-100 disabled:text-gray-600 focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200"
                       placeholder="Enter village name"
+                    />
+                  </div>
+
+                  <div className="space-y-1">
+                    <label className="block text-sm font-medium text-gray-700">Taluka</label>
+                    <input
+                      type="text"
+                      name="taluka"
+                      value={farmerData.taluka}
+                      onChange={handleInputChange}
+                      disabled={!isEditing}
+                      className="w-full p-3 border border-gray-300 rounded-lg bg-gray-50 disabled:bg-gray-100 disabled:text-gray-600 focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200"
+                      placeholder="Enter taluka name"
                     />
                   </div>
 
@@ -465,21 +541,34 @@ const EnhancedFarmerProfile = () => {
                         disabled={!isEditing}
                         className="w-full p-3 border border-gray-300 rounded-lg bg-gray-50 disabled:bg-gray-100 disabled:text-gray-600 focus:ring-2 focus:ring-green-500 focus:border-transparent appearance-none transition-all duration-200"
                       >
-                        <option>Maharashtra</option>
-                        <option>Uttar Pradesh</option>
-                        <option>Punjab</option>
-                        <option>Gujarat</option>
-                        <option>Rajasthan</option>
-                        <option>Karnataka</option>
-                        <option>Tamil Nadu</option>
-                        <option>Kerala</option>
                         <option>Andhra Pradesh</option>
-                        <option>Telangana</option>
-                        <option>Madhya Pradesh</option>
-                        <option>West Bengal</option>
-                        <option>Bihar</option>
-                        <option>Odisha</option>
+                        <option>Arunachal Pradesh</option>
                         <option>Assam</option>
+                        <option>Bihar</option>
+                        <option>Chhattisgarh</option>
+                        <option>Goa</option>
+                        <option>Gujarat</option>
+                        <option>Haryana</option>
+                        <option>Himachal Pradesh</option>
+                        <option>Jharkhand</option>
+                        <option>Karnataka</option>
+                        <option>Kerala</option>
+                        <option>Madhya Pradesh</option>
+                        <option>Maharashtra</option>
+                        <option>Manipur</option>
+                        <option>Meghalaya</option>
+                        <option>Mizoram</option>
+                        <option>Nagaland</option>
+                        <option>Odisha</option>
+                        <option>Punjab</option>
+                        <option>Rajasthan</option>
+                        <option>Sikkim</option>
+                        <option>Tamil Nadu</option>
+                        <option>Telangana</option>
+                        <option>Tripura</option>
+                        <option>UP</option>
+                        <option>Uttarakhand</option>
+                        <option>West Bengal</option>
                       </select>
                       <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                         <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">

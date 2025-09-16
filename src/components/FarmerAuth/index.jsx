@@ -73,7 +73,7 @@ const FarmerAuth = () => {
                     },
                     body: JSON.stringify({
                         phone_number: formData.phone,
-                        email: formData.email,  
+                        email: formData.email,
                         password: formData.password,
                     }),
                 });
@@ -83,7 +83,7 @@ const FarmerAuth = () => {
                 if (!res.ok) {
                     if (data.detail) {
                         if (typeof data.detail === "string") {
-                            setErrors({ general: data.detail }); 
+                            setErrors({ general: data.detail });
                         } else if (Array.isArray(data.detail)) {
                             const validationErrors = {};
                             data.detail.forEach(error => {
@@ -104,12 +104,13 @@ const FarmerAuth = () => {
                 console.log("Login successful:", data);
 
                 localStorage.setItem("token", data.access_token || data.token);
+                localStorage.setItem("userId", data.user_id);
 
                 setSuccessMessage("Login successful! Redirecting...");
                 resetForm();
 
                 setTimeout(() => {
-                    window.location.href = "/"; 
+                    window.location.href = "/";
                 }, 1500);
 
             } else {
@@ -600,17 +601,34 @@ const FarmerAuth = () => {
                                         transition-all duration-200 ease-in-out
                                         hover:border-emerald-400"
                                                     >
-                                                        <option value="">Select State</option>
-                                                        <option value="UP">Uttar Pradesh</option>
-                                                        <option value="MH">Maharashtra</option>
-                                                        <option value="BR">Bihar</option>
-                                                        <option value="WB">West Bengal</option>
-                                                        <option value="MP">Madhya Pradesh</option>
-                                                        <option value="TN">Tamil Nadu</option>
-                                                        <option value="RJ">Rajasthan</option>
-                                                        <option value="KA">Karnataka</option>
-                                                        <option value="GJ">Gujarat</option>
-                                                        <option value="AP">Andhra Pradesh</option>
+                                                        <option>Andhra Pradesh</option>
+                                                        <option>Arunachal Pradesh</option>
+                                                        <option>Assam</option>
+                                                        <option>Bihar</option>
+                                                        <option>Chhattisgarh</option>
+                                                        <option>Goa</option>
+                                                        <option>Gujarat</option>
+                                                        <option>Haryana</option>
+                                                        <option>Himachal Pradesh</option>
+                                                        <option>Jharkhand</option>
+                                                        <option>Karnataka</option>
+                                                        <option>Kerala</option>
+                                                        <option>Madhya Pradesh</option>
+                                                        <option>Maharashtra</option>
+                                                        <option>Manipur</option>
+                                                        <option>Meghalaya</option>
+                                                        <option>Mizoram</option>
+                                                        <option>Nagaland</option>
+                                                        <option>Odisha</option>
+                                                        <option>Punjab</option>
+                                                        <option>Rajasthan</option>
+                                                        <option>Sikkim</option>
+                                                        <option>Tamil Nadu</option>
+                                                        <option>Telangana</option>
+                                                        <option>Tripura</option>
+                                                        <option>Uttar Pradesh</option>
+                                                        <option>Uttarakhand</option>
+                                                        <option>West Bengal</option>
                                                     </select>
                                                     {errors.current_state && <p className="text-red-500 text-sm mt-1">{errors.current_state}</p>}
                                                 </div>
