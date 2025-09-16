@@ -14,6 +14,7 @@ import YieldPrediction from "./components/YieldPrediction";
 import WeatherCheck from "./components/WeatherCheck";
 import OrganicFarming from "./components/OrganicFarming/index";
 import PlantDiseaseDetection from "./components/PlantDisease";
+import SoilHealthAnalysis from "./components/SoilHealth";
 import ChatBot from "./components/ChatBot";
 import EnhancedFarmerProfile from "./components/Profile";
 import FeedbackForm from "./components/FeedbackForm";
@@ -76,6 +77,7 @@ function App() {
             />
             <Route path="/organicFarming" element={<OrganicFarming />} />
             <Route path="/weatherCheck" element={<WeatherCheck />} />
+            <Route path="/soilHealth" element={<SoilHealthAnalysis />} />
             <Route path="/chatbot" element={<ChatBot />} />
             <Route path="/profile" element={<EnhancedFarmerProfile />} />
             <Route path="/feedback" element={<FeedbackForm />} />
