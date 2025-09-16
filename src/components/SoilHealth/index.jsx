@@ -120,13 +120,13 @@ const SoilHealthAnalysis = () => {
           <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 animate-fade-in">
             <button
               onClick={() => setSelection('image')}
-              className="px-6 py-4 text-lg font-semibold text-white bg-lime-600 rounded-lg shadow-md hover:bg-lime-700 transition-transform transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-lime-500 focus:ring-opacity-75 flex items-center justify-center gap-2"
+              className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-green-600 to-emerald-600 text-white font-semibold rounded-xl hover:from-green-700 hover:to-emerald-700 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
             >
               <span role="img" aria-label="camera">📷</span> Analyze by Image
             </button>
             <button
               onClick={() => setSelection('manual')}
-              className="px-6 py-4 text-lg font-semibold text-white bg-emerald-600 rounded-lg shadow-md hover:bg-emerald-700 transition-transform transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-opacity-75 flex items-center justify-center gap-2"
+              className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-green-600 to-emerald-600 text-white font-semibold rounded-xl hover:from-green-700 hover:to-emerald-700 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
             >
               <span role="img" aria-label="pencil">📝</span> Enter Values Manually
             </button>
