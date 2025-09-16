@@ -267,7 +267,7 @@ const ChatBot = () => {
   };
 
   return (
-    <div className="flex flex-col max-h-screen bg-gradient-to-b from-amber-50 to-emerald-50">
+    <div className="max-h-screen min-w-screen bg-gradient-to-b from-amber-50 to-emerald-50">
       <div className="flex min-h-screen bg-gradient-to-b from-amber-50 to-emerald-50">
         <div className={`${sidebarOpen ? "w-64 fixed md:relative inset-0 z-50 md:z-auto" : "w-0"} transition-all duration-300 bg-gradient-to-b from-emerald-800 to-emerald-900 text-white overflow-hidden flex flex-col`}>
           <div className="p-4 flex items-center justify-between border-b border-emerald-700">
@@ -302,7 +302,7 @@ const ChatBot = () => {
           />
         )}
 
-        <div className="flex-1 min-h-screen flex flex-col">
+        <div className="flex-1 max-h-screen flex flex-col">
           <div className="flex items-center justify-between px-4 py-3 sm:px-6 bg-gradient-to-r from-emerald-800 to-amber-800 text-white shadow-md">
             <div className="flex items-center">
               {!sidebarOpen && (
@@ -323,7 +323,7 @@ const ChatBot = () => {
             </div>
           </div>
 
-          <div className="flex-1 w-full max-w-4xl max-h-screen mx-auto px-3 py-4 sm:px-4 sm:py-6 md:py-8 no-scrollbar">
+          <div className="flex-1 w-full max-w-4xl max-h-[100vh] mx-auto px-3 py-4 sm:px-4 sm:py-6 md:py-8 no-scrollbar">
             {conversations.length === 0 ? (
               <>
                 <div className="my-6 sm:my-8 text-center">
@@ -348,7 +348,7 @@ const ChatBot = () => {
                 </div>
               </>
             ) : (
-              <div className="mt-6 sm:mt-8 max-h-[60vh] sm:max-h-[65vh] overflow-y-auto space-y-6 sm:space-y-8 no-scrollbar">
+              <div className="mt-6 sm:mt-8 max-h-[70vh] sm:max-h-[65vh] overflow-y-auto space-y-6 sm:space-y-8 no-scrollbar">
                 {conversations.map((message, index) => (
                   message.type === "human" || message.role === "human" ? (
                     <div key={index} className="flex justify-end">
@@ -382,7 +382,7 @@ const ChatBot = () => {
                     <div className="bg-emerald-50 text-emerald-900 px-4 py-3 sm:px-5 sm:py-4 rounded-xl sm:rounded-2xl shadow max-w-[85%] sm:max-w-[80%] border border-emerald-200">
                       <div className="space-y-2 sm:space-y-3">
                         <div className="h-3 sm:h-4 bg-emerald-200/50 rounded-full animate-pulse"></div>
-                        <div className="h-3 sm:h-4 bg-emerald-200/50 rounded-full animate-pulse w-5/6"></div>
+                        <div className="h-3 md:w-100 sm:w-50 sm:h-4 bg-emerald-200/50 rounded-full animate-pulse w-5/6"></div>
                         <div className="h-3 sm:h-4 bg-emerald-200/50 rounded-full animate-pulse w-4/6"></div>
                       </div>
                     </div>
@@ -418,7 +418,7 @@ const ChatBot = () => {
                 <button
                   onClick={handleSend}
                   disabled={loading || !input.trim()}
-                  className="bg-emerald-700 hover:bg-emerald-800 p-2 sm:p-3 rounded-lg sm:rounded-xl transition shadow-md hover:shadow-lg disabled:opacity-70"
+                  className="bg-emerald-700 hover:bg-emerald-800 p-2 sm:p-3 rounded-lg sm:rounded-xl transition shadow-md hover:shadow-lg disabled:opacity-70 cursor-pointer"
                 >
                   <img src="/send_icon.png" alt="भेजें" className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 invert" />
                 </button>
@@ -428,44 +428,7 @@ const ChatBot = () => {
         </div>
       </div>
 
-      <div className="bg-green-800">
-        <p className="text-xs sm:text-sm text-center text-white mt-3 mb-3 sm:mt-4 font-medium px-2">
-          कृपया ध्यान दें: यह चैटबॉट केवल कृषि संबंधित मार्गदर्शन देता है। कृपया अपने क्षेत्रीय कृषि विशेषज्ञ से भी सलाह लें।
-        </p>
-      </div>
 
-      <div className='bg-green-900 w-screen '>
-        <div className="border-t border-green-800 pt-8 pb-10">
-          <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
-            <div className="text-center md:text-left">
-              <p className="text-green-100 mb-2">
-                Subscribe to our farming newsletter
-              </p>
-              <div className="flex">
-                <input
-                  type="email"
-                  placeholder="Your email address"
-                  className="flex-grow px-4 py-2 rounded-l-lg bg-green-800 border border-green-700 text-white placeholder-green-300 focus:outline-none focus:ring-2 focus:ring-amber-400"
-                />
-                <button className="bg-amber-500 text-green-900 font-semibold px-4 py-2 rounded-r-lg hover:bg-amber-400 transition cursor-pointer">
-                  Subscribe
-                </button>
-              </div>
-            </div>
-
-            <div className="text-center md:text-right">
-              <p className="text-md text-green-100">
-                © {new Date().getFullYear()} KisanMitra | Driving Sustainable
-                Farming
-              </p>
-              <p className="text-green-200 mt-1">
-                Made with <FaHeart className="inline text-amber-400 mx-1" /> for
-                farmers
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   );
 };

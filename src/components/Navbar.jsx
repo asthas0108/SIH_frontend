@@ -14,6 +14,7 @@ import {
   HelpCircle,
   ChevronDown,
   Calendar,
+  LogIn,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
@@ -170,7 +171,7 @@ const Navbar = () => {
       >
         <motion.div
           className="flex items-cewhileHover={{ scale: 1.02 }}nter gap-2 md:gap-3 cursor-pointer items-center"
-          
+
           whileTap={{ scale: 0.98 }}
           onClick={handleHome}
         >
@@ -268,8 +269,8 @@ const Navbar = () => {
                     ))}
                   </div>
                   <div className="px-4 py-2 border-t border-green-200">
-                    <button className="text-sm text-green-600 font-medium w-full text-center hover:text-green-800 transition cursor-pointer" 
-                    onClick={() => window.location.href = "/notifications"}>
+                    <button className="text-sm text-green-600 font-medium w-full text-center hover:text-green-800 transition cursor-pointer"
+                      onClick={() => window.location.href = "/notifications"}>
                       View All Notifications
                     </button>
                   </div>
@@ -366,7 +367,7 @@ const Navbar = () => {
 
                   <div className="py-2">
                     <motion.button
-                      className="flex items-center gap-3 w-full px-5 py-3 text-sm text-gray-700 hover:bg-gradient-to-r hover:from-green-50 hover:to-green-100 transition-all duration-200 group"
+                      className="flex items-center gap-3 w-full px-5 py-3 text-sm text-gray-700 hover:bg-gradient-to-r hover:from-green-50 hover:to-green-100 transition-all duration-200 group cursor-pointer"
                       whileHover={{ x: 5 }}
                       whileTap={{ scale: 0.98 }}
                       onClick={handleProfile}
@@ -383,7 +384,7 @@ const Navbar = () => {
                     </motion.button>
 
                     <motion.button
-                      className="flex items-center gap-3 w-full px-5 py-3 text-sm text-gray-700 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 transition-all duration-200 group"
+                      className="flex items-center gap-3 w-full px-5 py-3 text-sm text-gray-700 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 transition-all duration-200 group cursor-pointer"
                       whileHover={{ x: 5 }}
                       whileTap={{ scale: 0.98 }}
                       onClick={handleSettings}
@@ -400,7 +401,7 @@ const Navbar = () => {
                     </motion.button>
 
                     <motion.button
-                      className="flex items-center gap-3 w-full px-5 py-3 text-sm text-gray-700 hover:bg-gradient-to-r hover:from-purple-50 hover:to-purple-100 transition-all duration-200 group"
+                      className="flex items-center gap-3 w-full px-5 py-3 text-sm text-gray-700 hover:bg-gradient-to-r hover:from-purple-50 hover:to-purple-100 transition-all duration-200 group cursor-pointer"
                       whileHover={{ x: 5 }}
                       whileTap={{ scale: 0.98 }}
                       onClick={handleHelp}
@@ -417,11 +418,10 @@ const Navbar = () => {
                     </motion.button>
                   </div>
 
-                  <div className="border-t border-gray-200 my-2"></div>
-
-                  <div className="px-2 pb-2">
+                  {localStorage.getItem('token') && <div className="px-2 pb-2">
+                    <div className="border-t border-gray-200 my-2"></div>
                     <motion.button
-                      className="flex items-center gap-3 w-full px-3 py-2 text-sm text-red-600 hover:bg-gradient-to-r hover:from-red-50 hover:to-red-100 rounded-lg transition-all duration-200 group"
+                      className="flex items-center gap-3 w-full px-3 py-2 text-sm text-red-600 hover:bg-gradient-to-r hover:from-red-50 hover:to-red-100 rounded-lg transition-all duration-200 group cursor-pointer"
                       whileHover={{ x: 5 }}
                       whileTap={{ scale: 0.98 }}
                       onClick={() => setShowLogoutConfirm(true)}
@@ -436,7 +436,27 @@ const Navbar = () => {
                         </p>
                       </div>
                     </motion.button>
-                  </div>
+                  </div>}
+
+                  {!localStorage.getItem('token') && <div className="px-2 pb-2">
+                    <div className="border-t border-gray-200 my-2"></div>
+                    <motion.button
+                      className="flex items-center gap-3 w-full px-3 py-2 text-sm text-blue-600 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 rounded-lg transition-all duration-200 group cursor-pointer"
+                      whileHover={{ x: 5 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => window.location.href = "/signup"}
+                    >
+                      <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center group-hover:bg-blue-200 transition-colors">
+                        <LogIn className="w-4 h-4 text-blue-800" />
+                      </div>
+                      <div className="flex-1 text-left">
+                        <span className="font-medium">LogIn</span>
+                        <p className="text-xs text-blue-400">
+                          Sign in to your account
+                        </p>
+                      </div>
+                    </motion.button>
+                  </div>}
                 </motion.div>
               )}
             </AnimatePresence>
@@ -521,8 +541,7 @@ const Navbar = () => {
                 </motion.button>
               ))}
 
-              {/* Logout button with bold styling */}
-              <motion.button
+              {localStorage.getItem('token') && <motion.button
                 onClick={() => {
                   setShowLogoutConfirm(true);
                   handleMobileMenuItemClick();
@@ -532,12 +551,30 @@ const Navbar = () => {
                      hover:bg-gradient-to-r 
                      hover:from-red-50 hover:to-red-100 
                      transition-all duration-300
-                     flex items-center gap-3"
+                     flex items-center gap-3 bg-red-100"
                 whileHover={{ x: 8 }}
                 whileTap={{ scale: 0.96 }}
               >
                 Logout
-              </motion.button>
+              </motion.button>}
+
+              {!localStorage.getItem('token') && <motion.button
+                onClick={
+                  () => {
+                  handleMobileMenuItemClick();
+                  navigate("/signup");
+                }}
+                className="px-6 py-4 text-left 
+                     text-blue-600 font-semibold
+                     hover:bg-gradient-to-r 
+                     hover:from-blue-500 hover:to-blue-100 
+                     transition-all duration-300
+                     flex items-center gap-3 bg-blue-100"
+                whileHover={{ x: 8 }}
+                whileTap={{ scale: 0.96 }}
+              >
+                Login
+              </motion.button>}
             </div>
           </motion.div>
         )}
