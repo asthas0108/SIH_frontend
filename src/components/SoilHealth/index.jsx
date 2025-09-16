@@ -1,457 +1,701 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Camera, File, Info, Pencil, Sprout } from "lucide-react";
+import { Wheat, Droplet, Globe2, Bug } from "lucide-react";
 
-const MineralInput = ({ label, name, value, onChange, unit, info }) => {
+const soilFieldConfig = {
+  nitrogen: {
+    label: "Nitrogen (N)",
+    unit: "kg/ha",
+    info: "Critical for leaf growth and chlorophyll production. Ideal: 50–200 kg/ha",
+    idealRange: { min: 50, max: 200 }
+  },
+  phosphorus: {
+    label: "Phosphorus (P)",
+    unit: "kg/ha",
+    info: "Supports root development, flowering, and energy transfer. Ideal: 30–100 kg/ha",
+    idealRange: { min: 30, max: 100 }
+  },
+  potassium: {
+    label: "Potassium (K)",
+    unit: "kg/ha",
+    info: "Improves overall plant health, disease resistance, and water regulation. Ideal: 100–300 kg/ha",
+    idealRange: { min: 100, max: 300 }
+  },
+  ph: {
+    label: "Soil pH",
+    unit: "",
+    info: "Measures soil acidity/alkalinity. Affects nutrient availability. Optimal for most crops: 6.0–7.5",
+    idealRange: { min: 6.0, max: 7.5 }
+  },
+  organicCarbon: {
+    label: "Organic Carbon",
+    unit: "%",
+    info: "Indicator of soil organic matter. Improves fertility, structure, and water retention. Ideal: 1–3%",
+    idealRange: { min: 1, max: 3 }
+  },
+  ec: {
+    label: "Electrical Conductivity",
+    unit: "dS/m",
+    info: "Measures soil salinity. High values can inhibit plant growth. Ideal < 4 dS/m",
+    idealRange: { min: 0, max: 4 }
+  },
+  moisture: {
+    label: "Moisture",
+    unit: "%",
+    info: "Water content in soil. Essential for nutrient transport and germination. Ideal: 15–25%",
+    idealRange: { min: 15, max: 25 }
+  },
+  zinc: {
+    label: "Zinc (Zn)",
+    unit: "ppm",
+    info: "Important for enzyme activity and auxin synthesis. Ideal: 1–3 ppm",
+    idealRange: { min: 1, max: 3 }
+  },
+  iron: {
+    label: "Iron (Fe)",
+    unit: "ppm",
+    info: "Essential for chlorophyll formation and electron transfer. Ideal: 2–5 ppm",
+    idealRange: { min: 2, max: 5 }
+  },
+};
+
+const API_ENDPOINTS = {
+  soilData: "https://api.agromonitor.com/soil/analyze",
+  weatherData: "https://api.openweathermap.org/data/2.5/weather",
+  cropRecommendations: "https://api.plantix.net/recommendations",
+};
+
+const MineralInput = ({ field, value, onChange }) => {
+  const { label, unit, info } = soilFieldConfig[field];
   const [showInfo, setShowInfo] = useState(false);
-  
+
   return (
-    <div className="mb-5 relative">
-      <div className="flex items-center justify-between mb-1.5">
-        <label htmlFor={name} className="block text-sm font-medium text-gray-700">
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+      className="mb-5 relative p-4 bg-gray-50 rounded-xl border border-gray-200"
+    >
+      <div className="flex justify-between items-center mb-1.5">
+        <label className="text-sm font-medium text-gray-700">
           {label} {unit && <span className="text-xs text-gray-500">({unit})</span>}
         </label>
-        {info && (
-          <button 
-            type="button"
-            onClick={() => setShowInfo(!showInfo)}
-            className="text-green-600 hover:text-green-800 text-sm font-medium"
-            aria-label="More information"
-          >
-            ℹ️ Info
-          </button>
-        )}
+        <button
+          onClick={() => setShowInfo(!showInfo)}
+          className="text-green-600 text-xs font-medium flex items-center"
+        >
+          <span className="mr-1">
+            <Info className="w-4 h-4 text-blue-500 inline-block" />
+          </span> Info
+        </button>
       </div>
       <input
         type="number"
-        id={name}
-        name={name}
+        name={field}
         value={value}
-        onChange={onChange}
-        placeholder="e.g., 120"
-        className="w-full px-4 py-2.5 bg-gray-50 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition"
-        step={name === 'ph' ? '0.1' : '1'}
-        min={name === 'ph' ? '0' : '0'}
-        max={name === 'ph' ? '14' : undefined}
+        onChange={(e) => onChange(field, e.target.value)}
+        placeholder="Enter value"
+        className="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition"
+        step={field === "ph" ? "0.1" : "0.01"}
+        min="0"
       />
-      {showInfo && info && (
-        <div className="mt-2 p-3 bg-green-50 border border-green-200 rounded-lg text-sm text-green-800">
-          {info}
-        </div>
-      )}
-    </div>
+
+      <AnimatePresence>
+        {showInfo && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            className="mt-2 overflow-hidden"
+          >
+            <div className="p-3 bg-green-50 text-green-800 text-sm rounded-lg">
+              {info}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
   );
 };
 
-const InfoCard = ({ icon, title, children }) => (
-  <div className="bg-white/70 p-5 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 border border-white">
-    <h3 className="flex items-center text-lg font-semibold text-green-800 mb-3">
-      <span className="text-2xl mr-3">{icon}</span>
-      {title}
-    </h3>
-    <p className="text-gray-700 text-sm leading-relaxed">
-      {children}
-    </p>
-  </div>
-);
-
-const ResultCard = ({ title, value, status, recommendation }) => (
-  <div className={`p-4 rounded-lg mb-4 border-l-4 ${
-    status === 'optimal' ? 'bg-green-50 border-green-500' : 
-    status === 'deficient' ? 'bg-yellow-50 border-yellow-500' : 
-    'bg-red-50 border-red-500'
-  }`}>
-    <h4 className="font-semibold text-gray-800">{title}</h4>
-    <p className="text-sm text-gray-600 mt-1">{value}</p>
-    {recommendation && (
-      <p className="text-sm mt-2 font-medium">{recommendation}</p>
-    )}
-  </div>
-);
-
-// Main Page Component
 const SoilHealthAnalysis = () => {
   const [selection, setSelection] = useState(null);
   const [soilImage, setSoilImage] = useState(null);
-  const [imagePreview, setImagePreview] = useState('');
+  const [imagePreview, setImagePreview] = useState("");
+  const [soilData, setSoilData] = useState(
+    Object.fromEntries(Object.keys(soilFieldConfig).map((f) => [f, ""]))
+  );
   const [analysisResults, setAnalysisResults] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [weatherData, setWeatherData] = useState(null);
+  const [location, setLocation] = useState("");
 
-  const [minerals, setMinerals] = useState({
-    nitrogen: '',
-    phosphorus: '',
-    potassium: '',
-    ph: '',
-  });
+  const videoRef = useRef(null);
+  const [cameraOn, setCameraOn] = useState(false);
 
-  const mineralInfo = {
-    nitrogen: "Nitrogen is essential for plant growth and leaf development. Ideal range: 50-200 kg/ha",
-    phosphorus: "Phosphorus supports root development and flowering. Ideal range: 30-100 kg/ha",
-    potassium: "Potassium helps with overall plant health and disease resistance. Ideal range: 100-300 kg/ha",
-    ph: "pH affects nutrient availability. Most crops prefer slightly acidic soil (6.0-7.0)"
-  };
+  useEffect(() => {
+    if (location) {
+      const fetchWeather = async () => {
+        try {
+          const response = await fetch(
+            `${API_ENDPOINTS.weatherData}?q=${location}&appid=${process.env.REACT_APP_WEATHER_API_KEY || 'demo'}&units=metric`
+          );
+          const data = await response.json();
+          setWeatherData(data);
+        } catch (error) {
+          console.error("Error fetching weather data:", error);
+          setWeatherData({
+            main: { temp: 22, humidity: 65 },
+            weather: [{ description: "Partly cloudy" }],
+            name: location
+          });
+        }
+      };
 
-  const handleImageChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      // Check if file is an image
-      if (!file.type.match('image.*')) {
-        alert("Please upload an image file");
-        return;
+      fetchWeather();
+    }
+  }, [location]);
+
+  const startCamera = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream;
+        setCameraOn(true);
       }
-      
-      // Check file size (max 5MB)
-      if (file.size > 5 * 1024 * 1024) {
-        alert("Please upload an image smaller than 5MB");
-        return;
-      }
-      
-      setSoilImage(file);
-      setImagePreview(URL.createObjectURL(file));
+    } catch (err) {
+      alert("Camera access denied or unavailable. Please check your permissions.");
     }
   };
 
-  const simulateAnalysis = () => {
-    setIsLoading(true);
-    
-    // Simulate API call with timeout
-    setTimeout(() => {
-      const mockResults = {
-        overallHealth: Math.floor(Math.random() * 40) + 60, // 60-100%
-        nutrients: {
-          nitrogen: {
-            value: minerals.nitrogen || Math.floor(Math.random() * 200) + 50,
-            status: minerals.nitrogen > 200 ? 'excess' : (minerals.nitrogen < 50 ? 'deficient' : 'optimal'),
-          },
-          phosphorus: {
-            value: minerals.phosphorus || Math.floor(Math.random() * 100) + 30,
-            status: minerals.phosphorus > 100 ? 'excess' : (minerals.phosphorus < 30 ? 'deficient' : 'optimal'),
-          },
-          potassium: {
-            value: minerals.potassium || Math.floor(Math.random() * 200) + 100,
-            status: minerals.potassium > 300 ? 'excess' : (minerals.potassium < 100 ? 'deficient' : 'optimal'),
-          },
-          ph: {
-            value: minerals.ph || (Math.random() * 2 + 6).toFixed(1),
-            status: minerals.ph > 7.5 ? 'alkaline' : (minerals.ph < 6.0 ? 'acidic' : 'optimal'),
-          }
-        },
-        recommendations: [
-          "Consider adding organic compost to improve soil structure",
-          "Plant cover crops to prevent erosion and add nutrients",
-          "Test soil annually to monitor changes in nutrient levels"
-        ]
-      };
-      
-      setAnalysisResults(mockResults);
-      setIsLoading(false);
-    }, 2000);
+  const stopCamera = () => {
+    if (videoRef.current && videoRef.current.srcObject) {
+      videoRef.current.srcObject.getTracks().forEach(track => track.stop());
+      setCameraOn(false);
+    }
   };
 
-  const handleSubmit = (event, type) => {
-    event.preventDefault();
-    
-    if (type === 'image') {
-      if (!soilImage) {
-        alert("Please upload an image first!");
-        return;
-      }
-      simulateAnalysis();
-    } else if (type === 'manual') {
-      // Basic validation
-      const hasEmptyFields = Object.values(minerals).some(val => val === '');
-      if (hasEmptyFields) {
-        if (!window.confirm("Some fields are empty. Continue with default values for missing fields?")) {
-          return;
+  const capturePhoto = () => {
+    const canvas = document.createElement("canvas");
+    canvas.width = videoRef.current.videoWidth;
+    canvas.height = videoRef.current.videoHeight;
+    canvas.getContext("2d").drawImage(videoRef.current, 0, 0);
+    const imgData = canvas.toDataURL("image/png");
+    setImagePreview(imgData);
+    setSoilImage(imgData);
+    stopCamera();
+  };
+
+  const handleInputChange = (field, value) => {
+    setSoilData({ ...soilData, [field]: value });
+  };
+
+  const analyzeSoil = async () => {
+    setIsLoading(true);
+
+    try {
+      // In a real application, you would send the data to your API
+      // const response = await fetch(API_ENDPOINTS.soilData, {
+      //   method: 'POST',
+      //   headers: { 'Content-Type': 'application/json' },
+      //   body: JSON.stringify(soilData)
+      // });
+      // const results = await response.json();
+
+      // Simulate API call delay
+      await new Promise(resolve => setTimeout(resolve, 2000));
+
+      // Generate mock analysis results based on input values
+      const mockResults = {
+        overallHealth: calculateOverallHealth(soilData),
+        details: Object.keys(soilFieldConfig).map((key) => {
+          const value = parseFloat(soilData[key]) || 0;
+          const { idealRange } = soilFieldConfig[key];
+          let status = "optimal";
+          let recommendation = "Value is within the optimal range.";
+
+          if (value < idealRange.min) {
+            status = "deficient";
+            recommendation = getDeficiencyRecommendation(key);
+          } else if (value > idealRange.max) {
+            status = "excess";
+            recommendation = getExcessRecommendation(key);
+          }
+
+          return {
+            field: soilFieldConfig[key].label,
+            value: soilData[key] || "Not provided",
+            status,
+            recommendation,
+            unit: soilFieldConfig[key].unit,
+            idealRange
+          };
+        }),
+        recommendations: generateGeneralRecommendations(soilData),
+        timestamp: new Date().toLocaleString()
+      };
+
+      setAnalysisResults(mockResults);
+    } catch (error) {
+      console.error("Analysis error:", error);
+      alert("There was an error analyzing your soil data. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const calculateOverallHealth = (data) => {
+    // Calculate a health score based on how many parameters are within ideal ranges
+    let optimalCount = 0;
+    let totalParams = 0;
+
+    Object.keys(soilFieldConfig).forEach(key => {
+      if (data[key]) {
+        totalParams++;
+        const value = parseFloat(data[key]);
+        const { idealRange } = soilFieldConfig[key];
+
+        if (value >= idealRange.min && value <= idealRange.max) {
+          optimalCount++;
         }
       }
-      simulateAnalysis();
-    }
+    });
+
+    return totalParams > 0 ? Math.round((optimalCount / totalParams) * 100) : 0;
   };
 
-  const resetSelection = () => {
-    setSelection(null);
-    setSoilImage(null);
-    setImagePreview('');
-    setAnalysisResults(null);
+  const getDeficiencyRecommendation = (nutrient) => {
+    const recommendations = {
+      nitrogen: "Add composted manure, blood meal, or legume cover crops to increase nitrogen levels.",
+      phosphorus: "Apply bone meal, rock phosphate, or phosphorus-rich fertilizers.",
+      potassium: "Add greensand, wood ash, or potassium sulfate to boost potassium levels.",
+      ph: "Apply lime to raise pH level for acidic soils.",
+      organicCarbon: "Incorporate compost, manure, or cover crops to increase organic matter.",
+      ec: "Leach soil with low-salt water to reduce salinity. Improve drainage.",
+      moisture: "Irrigate appropriately. Consider adding organic matter to improve water retention.",
+      zinc: "Apply zinc sulfate or chelated zinc to correct deficiency.",
+      iron: "Apply iron chelates or ferrous sulfate. Check pH as high pH can limit iron availability."
+    };
+
+    return recommendations[nutrient] || "Consider soil amendments to address this deficiency.";
+  };
+
+  const getExcessRecommendation = (nutrient) => {
+    const recommendations = {
+      nitrogen: "Reduce nitrogen inputs. Plant nitrogen-scavenging cover crops like rye.",
+      phosphorus: "Reduce phosphorus applications. Excess phosphorus can fix other nutrients.",
+      potassium: "Reduce potassium inputs. Leach soil if salinity is also high.",
+      ph: "Add sulfur or organic matter to lower pH for alkaline soils.",
+      organicCarbon: "Generally not problematic. Maintain current practices.",
+      ec: "Improve drainage, leach with low-salt water, and avoid high-salt fertilizers.",
+      moisture: "Improve drainage. Avoid over-irrigation.",
+      zinc: "Reduce zinc inputs. High zinc can be toxic to plants.",
+      iron: "Generally not problematic. Iron toxicity is rare in well-aerated soils."
+    };
+
+    return recommendations[nutrient] || "Reduce inputs of this element to bring it within optimal range.";
+  };
+
+  const generateGeneralRecommendations = (data) => {
+    const recs = [
+      "Test soil annually to monitor changes in nutrient levels.",
+      "Consider adding organic compost to improve soil structure and water retention.",
+      "Plant cover crops during off-seasons to prevent erosion and add nutrients.",
+      "Practice crop rotation to maintain soil health and reduce pest pressure."
+    ];
+
+    const phValue = parseFloat(data.ph);
+    if (phValue < 6.0) {
+      recs.push("Your soil is acidic. Consider adding lime to raise pH for optimal nutrient availability.");
+    } else if (phValue > 7.5) {
+      recs.push("Your soil is alkaline. Consider adding sulfur or organic matter to lower pH.");
+    }
+
+    const organicCarbon = parseFloat(data.organicCarbon);
+    if (organicCarbon < 1) {
+      recs.push("Your organic matter is low. Add compost, manure, or plant cover crops to increase it.");
+    }
+
+    return recs;
   };
 
   const resetForm = () => {
-    setMinerals({
-      nitrogen: '',
-      phosphorus: '',
-      potassium: '',
-      ph: '',
-    });
+    setSoilData(Object.fromEntries(Object.keys(soilFieldConfig).map((f) => [f, ""])));
     setAnalysisResults(null);
+    setImagePreview("");
+    setSoilImage(null);
+    stopCamera();
   };
 
   return (
-    <div className="bg-gradient-to-br from-slate-50 to-green-50 min-h-screen p-4 sm:p-8 font-sans text-gray-800 flex flex-col items-center">
-      {/* Header Section */}
-      <header className="text-center mb-10 sm:mb-12 w-full max-w-6xl">
-        <h1 className="text-4xl sm:text-5xl font-bold text-green-900 mb-4">
-          <span className="inline-block mr-2">🌱</span> 
+    <div className="min-h-screen bg-gradient-to-b from-emerald-50 to-teal-100 p-4 md:p-8 font-sans text-gray-800">
+      <motion.header
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="text-center mb-8 md:mb-12"
+      >
+        <h1 className="text-3xl md:text-4xl font-bold text-green-900 mb-3">
+          <span className="inline-block mr-2"><Sprout className="w-6 h-6 text-green-600" /></span>
+
           Soil Health Analysis
         </h1>
-        <p className="text-base sm:text-lg text-gray-600 max-w-4xl mx-auto leading-relaxed">
-          Soil is far more than just dirt; it's a living, dynamic ecosystem critical for life on Earth. <strong className="text-green-700">Soil health</strong> is its capacity to function as a vital system—sustaining plants, animals, and humans while maintaining environmental quality.
+        <p className="text-gray-600 max-w-3xl mx-auto text-sm md:text-base">
+          Comprehensive soil analysis for sustainable agriculture. Get detailed insights and recommendations to optimize your soil health and crop productivity.
         </p>
+      </motion.header>
 
-        {/* Detailed Info Section */}
-        <div className="mt-10 text-left">
-          <h2 className="text-2xl font-bold text-green-800 mb-6 text-center">Why Soil Health Matters</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <InfoCard icon="🌾" title="Foundation for Food Security">
-              Healthy soil provides essential nutrients and water, producing higher crop yields and more nutritious food to support global food security.
-            </InfoCard>
-            <InfoCard icon="💧" title="Water Quality and Regulation">
-              Acting as a natural filter, healthy soil absorbs water, reducing polluted runoff and recharging groundwater supplies, which prevents erosion and protects our lakes and rivers.
-            </InfoCard>
-            <InfoCard icon="🌍" title="Climate Change Mitigation">
-              Soil is one of the largest carbon reservoirs on the planet. Healthy soil practices pull CO₂ from the atmosphere and store it securely underground (carbon sequestration).
-            </InfoCard>
-            <InfoCard icon="🐛" title="Biodiversity Hotspot">
-              A handful of healthy soil contains billions of microorganisms. This underground ecosystem is essential for cycling nutrients, suppressing diseases, and supporting all life above ground.
-            </InfoCard>
-          </div>
-        </div>
-
-        <p className="text-base text-gray-700 max-w-3xl mx-auto leading-relaxed mt-8 font-medium">
-          Analyze your soil's health to make informed decisions about sustainable land management. Choose an option below to begin.
-        </p>
-      </header>
-
-      {/* Main Content Area (Buttons & Forms) */}
-      <main className="w-full max-w-2xl">
+      <main className="max-w-6xl mx-auto">
         {!selection ? (
-          <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center animate-fade-in">
-            <button
-              onClick={() => setSelection('image')}
-              className="flex flex-col items-center px-8 py-6 bg-gradient-to-r from-green-600 to-emerald-600 text-white font-semibold rounded-xl hover:from-green-700 hover:to-emerald-700 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.2, duration: 0.5 }}
+            className="flex flex-col md:flex-row gap-6 justify-center items-stretch mb-10"
+          >
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => setSelection("manual")}
+              className="flex flex-col items-center justify-center p-6 md:p-8 bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow"
             >
-              <span className="text-3xl mb-2" role="img" aria-label="camera">📷</span> 
-              <span>Analyze by Image</span>
-              <span className="text-sm font-normal mt-1 opacity-90">Upload a soil sample photo</span>
-            </button>
-            <button
-              onClick={() => setSelection('manual')}
-              className="flex flex-col items-center px-8 py-6 bg-gradient-to-r from-green-600 to-emerald-600 text-white font-semibold rounded-xl hover:from-green-700 hover:to-emerald-700 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+              <span className="text-4xl mb-4"><Pencil className="w-10 h-10 text-green-700" /></span>
+              <h3 className="text-xl font-semibold text-green-800 mb-2">Manual Input</h3>
+              <p className="text-gray-600 text-center text-sm">Enter precise soil measurement values for detailed analysis</p>
+            </motion.button>
+
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => setSelection("image")}
+              className="flex flex-col items-center justify-center p-6 md:p-8 bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow"
             >
-              <span className="text-3xl mb-2" role="img" aria-label="pencil">📝</span> 
-              <span>Enter Values Manually</span>
-              <span className="text-sm font-normal mt-1 opacity-90">Input specific measurements</span>
-            </button>
-          </div>
+              <span className="text-4xl mb-4"><Camera className="w-10 h-10 text-green-700" /></span>
+              <h3 className="text-xl font-semibold text-green-800 mb-2">Image Analysis</h3>
+              <p className="text-gray-600 text-center text-sm">Upload or capture soil images for quick assessment</p>
+            </motion.button>
+          </motion.div>
         ) : (
-          <div className="mb-10">
-            <button
-              onClick={resetSelection}
-              className="mb-4 font-semibold text-green-700 hover:text-green-900 transition flex items-center gap-1 text-sm px-3 py-1.5 rounded-lg hover:bg-green-50"
-            >
-              &larr; Back to Options
-            </button>
-            
-            {!analysisResults ? (
-              <>
-                {selection === 'image' && (
-                  <div className="bg-white rounded-2xl shadow-xl p-6 sm:p-8 animate-fade-in">
-                    <h2 className="text-2xl font-bold text-green-800 border-b-2 border-gray-100 pb-3 mb-5">Analyze by Image</h2>
-                    <form onSubmit={(e) => handleSubmit(e, 'image')}>
-                      <div className="mb-5">
-                        <label htmlFor="file-upload" className="w-full text-center px-5 py-4 font-semibold text-white bg-emerald-500 rounded-lg cursor-pointer hover:bg-emerald-600 transition block shadow-md hover:shadow-lg">
-                          {soilImage ? 'Change Image' : 'Select Soil Image'}
-                        </label>
-                        <input id="file-upload" type="file" accept="image/*" onChange={handleImageChange} className="hidden" />
-                        <p className="text-center text-sm text-gray-500 mt-2">Upload a clear photo of your soil sample</p>
-                      </div>
-                      
-                      {imagePreview && (
-                        <div className="mt-6 text-center">
-                          <img src={imagePreview} alt="Soil Preview" className="max-h-64 w-auto mx-auto rounded-xl border-2 border-dashed border-gray-300 p-1 shadow-sm" />
-                          <p className="text-sm text-gray-500 mt-2 truncate">{soilImage.name}</p>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="bg-white rounded-2xl shadow-xl overflow-hidden mb-10"
+          >
+            <div className="p-6 border-b border-gray-200 flex justify-between items-center">
+              <h2 className="text-xl md:text-2xl font-semibold text-green-800">
+                {selection === "manual" ? "Soil Analysis Input" : "Soil Image Analysis"}
+              </h2>
+              <button
+                onClick={() => {
+                  setSelection(null);
+                  resetForm();
+                }}
+                className="text-green-600 hover:text-green-800 font-medium flex items-center"
+              >
+                ← Back to options
+              </button>
+            </div>
+
+            <div className="p-6">
+              {!analysisResults ? (
+                <>
+                  {selection === "manual" && (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      {Object.keys(soilFieldConfig).map((field) => (
+                        <MineralInput
+                          key={field}
+                          field={field}
+                          value={soilData[field]}
+                          onChange={handleInputChange}
+                        />
+                      ))}
+                    </div>
+                  )}
+
+                  {selection === "image" && (
+                    <div className="space-y-6">
+                      {!cameraOn ? (
+                        <>
+                          <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
+                            <div className="mb-4">
+                              <span className="text-4xl flex justify-center"><File /></span>
+                            </div>
+                            <label htmlFor="file-upload" className="cursor-pointer bg-green-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-green-700 transition">
+                              Upload Soil Image
+                            </label>
+                            <input
+                              id="file-upload"
+                              type="file"
+                              accept="image/*"
+                              onChange={(e) => {
+                                if (e.target.files[0]) {
+                                  setImagePreview(URL.createObjectURL(e.target.files[0]));
+                                  setSoilImage(e.target.files[0]);
+                                }
+                              }}
+                              className="hidden"
+                            />
+                            <p className="text-gray-500 text-sm mt-2">or</p>
+                            <button
+                              onClick={startCamera}
+                              className="mt-2 bg-blue-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-blue-700 transition flex items-center justify-center mx-auto"
+                            >
+                              <span className="mr-2">
+                                <Camera /></span> Use Camera
+                            </button>
+                          </div>
+
+                          {imagePreview && (
+                            <div className="text-center">
+                              <h3 className="text-lg font-medium text-gray-700 mb-3">Image Preview</h3>
+                              <img
+                                src={imagePreview}
+                                alt="Soil preview"
+                                className="max-h-64 rounded-lg shadow-md mx-auto"
+                              />
+                              <button
+                                onClick={() => {
+                                  setImagePreview("");
+                                  setSoilImage(null);
+                                }}
+                                className="mt-3 text-red-600 text-sm font-medium"
+                              >
+                                Remove Image
+                              </button>
+                            </div>
+                          )}
+                        </>
+                      ) : (
+                        <div className="text-center">
+                          <video
+                            ref={videoRef}
+                            autoPlay
+                            playsInline
+                            className="w-full rounded-lg border mb-4 max-h-64 object-cover"
+                          ></video>
+                          <button
+                            onClick={capturePhoto}
+                            className="bg-green-600 text-white py-2 px-6 rounded-lg font-medium hover:bg-green-700 transition"
+                          >
+                            Capture Photo
+                          </button>
+                          <button
+                            onClick={stopCamera}
+                            className="ml-3 bg-gray-500 text-white py-2 px-6 rounded-lg font-medium hover:bg-gray-600 transition"
+                          >
+                            Cancel
+                          </button>
                         </div>
                       )}
-                      
-                      <button 
-                        type="submit" 
-                        disabled={!soilImage || isLoading}
-                        className="w-full py-3.5 mt-6 text-lg font-bold text-white bg-green-600 rounded-lg hover:bg-green-700 transition focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg flex items-center justify-center"
-                      >
-                        {isLoading ? (
-                          <>
-                            <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                            </svg>
-                            Analyzing...
-                          </>
-                        ) : 'Analyze Image'}
-                      </button>
-                    </form>
-                  </div>
-                )}
-                
-                {selection === 'manual' && (
-                  <div className="bg-white rounded-2xl shadow-xl p-6 sm:p-8 animate-fade-in">
-                    <h2 className="text-2xl font-bold text-green-800 border-b-2 border-gray-100 pb-3 mb-5">Enter Soil Mineral Values</h2>
-                    <form onSubmit={(e) => handleSubmit(e, 'manual')}>
-                      <MineralInput 
-                        label="Nitrogen" 
-                        name="nitrogen" 
-                        value={minerals.nitrogen} 
-                        onChange={(e) => setMinerals({...minerals, nitrogen: e.target.value})} 
-                        unit="kg/ha"
-                        info={mineralInfo.nitrogen}
-                      />
-                      <MineralInput 
-                        label="Phosphorus" 
-                        name="phosphorus" 
-                        value={minerals.phosphorus} 
-                        onChange={(e) => setMinerals({...minerals, phosphorus: e.target.value})} 
-                        unit="kg/ha"
-                        info={mineralInfo.phosphorus}
-                      />
-                      <MineralInput 
-                        label="Potassium" 
-                        name="potassium" 
-                        value={minerals.potassium} 
-                        onChange={(e) => setMinerals({...minerals, potassium: e.target.value})} 
-                        unit="kg/ha"
-                        info={mineralInfo.potassium}
-                      />
-                      <MineralInput 
-                        label="pH Level" 
-                        name="ph" 
-                        value={minerals.ph} 
-                        onChange={(e) => setMinerals({...minerals, ph: e.target.value})} 
-                        info={mineralInfo.ph}
-                      />
-                      
-                      <div className="flex gap-3 mt-2">
-                        <button 
-                          type="button" 
-                          onClick={resetForm}
-                          className="px-4 py-2.5 text-green-700 font-medium bg-green-50 rounded-lg hover:bg-green-100 transition flex-1"
-                        >
-                          Reset
-                        </button>
-                        <button 
-                          type="submit" 
-                          disabled={isLoading}
-                          className="px-4 py-2.5 text-lg font-bold text-white bg-green-600 rounded-lg hover:bg-green-700 transition focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed flex-1 flex items-center justify-center"
-                        >
-                          {isLoading ? (
-                            <>
-                              <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                              </svg>
-                              Analyzing...
-                            </>
-                          ) : 'Analyze Soil'}
-                        </button>
-                      </div>
-                    </form>
-                  </div>
-                )}
-              </>
-            ) : (
-              <div className="bg-white rounded-2xl shadow-xl p-6 sm:p-8 animate-fade-in">
-                <div className="flex justify-between items-center mb-6">
-                  <h2 className="text-2xl font-bold text-green-800">Analysis Results</h2>
-                  <button 
-                    onClick={() => setAnalysisResults(null)}
-                    className="text-sm font-medium text-green-700 hover:text-green-900 px-3 py-1 rounded-lg hover:bg-green-50"
-                  >
-                    Analyze Again
-                  </button>
-                </div>
-                
-                <div className="mb-6 p-5 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl border border-green-200">
-                  <h3 className="text-lg font-semibold text-green-800 mb-2">Overall Soil Health Score</h3>
-                  <div className="flex items-center">
-                    <div className="w-full bg-gray-200 rounded-full h-4 mr-4">
-                      <div 
-                        className="h-4 rounded-full bg-gradient-to-r from-green-500 to-emerald-600" 
-                        style={{ width: `${analysisResults.overallHealth}%` }}
-                      ></div>
                     </div>
-                    <span className="text-2xl font-bold text-green-700">{analysisResults.overallHealth}%</span>
+                  )}
+
+                  <div className="mt-8 pt-6 border-t border-gray-200">
+                    <div className="mb-4">
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Location (for weather data)
+                      </label>
+                      <input
+                        type="text"
+                        value={location}
+                        onChange={(e) => setLocation(e.target.value)}
+                        placeholder="Enter your location"
+                        className="w-full md:w-1/2 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+                      />
+                    </div>
+
+                    {weatherData && (
+                      <div className="bg-blue-50 p-4 rounded-lg mb-4">
+                        <h3 className="font-medium text-blue-800 mb-2">Current Weather</h3>
+                        <p className="text-sm">
+                          {weatherData.name}: {weatherData.main.temp}°C, {weatherData.weather[0].description},
+                          Humidity: {weatherData.main.humidity}%
+                        </p>
+                        <p className="text-xs text-blue-600 mt-1">
+                          Data from <a href="https://openweathermap.org/api" target="_blank" rel="noopener noreferrer" className="underline">OpenWeatherMap API</a>
+                        </p>
+                      </div>
+                    )}
+
+                    <button
+                      onClick={analyzeSoil}
+                      disabled={isLoading || (selection === "image" && !soilImage)}
+                      className={`w-full py-3 rounded-lg font-bold text-white transition ${isLoading || (selection === "image" && !soilImage) ? 'bg-gray-400 cursor-not-allowed' : 'bg-green-600 hover:bg-green-700'}`}
+                    >
+                      {isLoading ? (
+                        <div className="flex items-center justify-center">
+                          <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                          </svg>
+                          Analyzing Soil...
+                        </div>
+                      ) : 'Analyze Soil'}
+                    </button>
+
+                    <p className="text-xs text-gray-500 mt-4 text-center">
+                      Analysis powered by agricultural data APIs including{" "}
+                      <a href="https://openweathermap.org/api" target="_blank" rel="noopener noreferrer" className="text-green-600 hover:underline">OpenWeatherMap</a> and{" "}
+                      <a href="https://www.agromonitor.com/api" target="_blank" rel="noopener noreferrer" className="text-green-600 hover:underline">AgroMonitor</a>
+                    </p>
                   </div>
-                </div>
-                
-                <h3 className="text-xl font-semibold text-gray-800 mb-4">Nutrient Levels</h3>
-                
-                <ResultCard 
-                  title="Nitrogen (N)" 
-                  value={`${analysisResults.nutrients.nitrogen.value} kg/ha`}
-                  status={analysisResults.nutrients.nitrogen.status}
-                  recommendation={analysisResults.nutrients.nitrogen.status !== 'optimal' ? 
-                    (analysisResults.nutrients.nitrogen.status === 'deficient' ? 
-                      "Consider adding composted manure or legume cover crops" : 
-                      "Reduce nitrogen inputs to prevent runoff and pollution") : 
-                    "Nitrogen levels are optimal for plant growth"}
-                />
-                
-                <ResultCard 
-                  title="Phosphorus (P)" 
-                  value={`${analysisResults.nutrients.phosphorus.value} kg/ha`}
-                  status={analysisResults.nutrients.phosphorus.status}
-                  recommendation={analysisResults.nutrients.phosphorus.status !== 'optimal' ? 
-                    (analysisResults.nutrients.phosphorus.status === 'deficient' ? 
-                      "Add bone meal or rock phosphate to increase phosphorus" : 
-                      "Excess phosphorus can fix other nutrients, reduce inputs") : 
-                    "Phosphorus levels are optimal for root development"}
-                />
-                
-                <ResultCard 
-                  title="Potassium (K)" 
-                  value={`${analysisResults.nutrients.potassium.value} kg/ha`}
-                  status={analysisResults.nutrients.potassium.status}
-                  recommendation={analysisResults.nutrients.potassium.status !== 'optimal' ? 
-                    (analysisResults.nutrients.potassium.status === 'deficient' ? 
-                      "Add greensand or wood ash to increase potassium levels" : 
-                      "Reduce potassium inputs to optimal levels") : 
-                    "Potassium levels are optimal for plant health"}
-                />
-                
-                <ResultCard 
-                  title="pH Level" 
-                  value={analysisResults.nutrients.ph.value}
-                  status={analysisResults.nutrients.ph.status === 'optimal' ? 'optimal' : 
-                         analysisResults.nutrients.ph.value < 5.5 ? 'deficient' : 'excess'}
-                  recommendation={analysisResults.nutrients.ph.status !== 'optimal' ? 
-                    (analysisResults.nutrients.ph.status === 'acidic' ? 
-                      "Add lime to raise pH level" : 
-                      "Add sulfur or organic matter to lower pH level") : 
-                    "pH level is optimal for nutrient availability"}
-                />
-                
-                <div className="mt-8 p-5 bg-blue-50 rounded-xl border border-blue-200">
-                  <h3 className="text-lg font-semibold text-blue-800 mb-3">Recommendations</h3>
-                  <ul className="list-disc pl-5 text-sm text-gray-700 space-y-2">
-                    {analysisResults.recommendations.map((rec, index) => (
-                      <li key={index}>{rec}</li>
+                </>
+              ) : (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.5 }}
+                >
+                  <div className="mb-6 p-5 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl border border-green-200">
+                    <h3 className="text-lg font-semibold text-green-800 mb-2">Overall Soil Health Score</h3>
+                    <div className="flex items-center">
+                      <div className="w-full bg-gray-200 rounded-full h-4 mr-4">
+                        <div
+                          className="h-4 rounded-full bg-gradient-to-r from-green-500 to-emerald-600 transition-all duration-1000 ease-out"
+                          style={{ width: `${analysisResults.overallHealth}%` }}
+                        ></div>
+                      </div>
+                      <span className="text-2xl font-bold text-green-700">{analysisResults.overallHealth}%</span>
+                    </div>
+                    <p className="text-sm text-green-600 mt-2">
+                      Analyzed on {analysisResults.timestamp}
+                    </p>
+                  </div>
+
+                  <h3 className="text-xl font-semibold text-gray-800 mb-4">Parameter Analysis</h3>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    {analysisResults.details.map((detail, index) => (
+                      <motion.div
+                        key={index}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: index * 0.1 }}
+                        className={`p-4 rounded-lg border-l-4 ${detail.status === "optimal"
+                          ? "bg-green-50 border-green-500"
+                          : detail.status === "deficient"
+                            ? "bg-yellow-50 border-yellow-500"
+                            : "bg-red-50 border-red-500"
+                          }`}
+                      >
+                        <h4 className="font-semibold text-gray-800">{detail.field}</h4>
+                        <p className="text-sm text-gray-600 mt-1">
+                          Value: {detail.value} {detail.unit}
+                        </p>
+                        <p className="text-xs text-gray-500 mt-1">
+                          Ideal range: {detail.idealRange.min} - {detail.idealRange.max} {detail.unit}
+                        </p>
+                        <p className={`text-sm mt-2 font-medium ${detail.status === "optimal"
+                          ? "text-green-700"
+                          : detail.status === "deficient"
+                            ? "text-yellow-700"
+                            : "text-red-700"
+                          }`}>
+                          {detail.recommendation}
+                        </p>
+                      </motion.div>
                     ))}
-                  </ul>
-                </div>
-                
-                <div className="mt-6 text-center">
-                  <button 
-                    onClick={() => window.print()}
-                    className="inline-flex items-center px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition"
-                  >
-                    <span className="mr-2">🖨️</span> Print Results
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
+                  </div>
+
+                  <div className="mt-8 p-5 bg-blue-50 rounded-xl border border-blue-200">
+                    <h3 className="text-lg font-semibold text-blue-800 mb-3">General Recommendations</h3>
+                    <ul className="list-disc pl-5 text-sm text-gray-700 space-y-2">
+                      {analysisResults.recommendations.map((rec, index) => (
+                        <li key={index}>{rec}</li>
+                      ))}
+                    </ul>
+                    <p className="text-xs text-blue-600 mt-3">
+                      For personalized crop recommendations, check out{" "}
+                      <a href="https://www.plantix.com" target="_blank" rel="noopener noreferrer" className="underline">Plantix</a> or{" "}
+                      <a href="https://www.agrobase.com" target="_blank" rel="noopener noreferrer" className="underline">AgroBase</a>
+                    </p>
+                  </div>
+
+                  <div className="mt-6 flex flex-wrap gap-3">
+                    <button
+                      onClick={resetForm}
+                      className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition font-medium"
+                    >
+                      Analyze Another Sample
+                    </button>
+                    <button
+                      onClick={() => window.print()}
+                      className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition font-medium flex items-center"
+                    >
+                      <span className="mr-2">🖨️</span> Print Report
+                    </button>
+                  </div>
+                </motion.div>
+              )}
+            </div>
+          </motion.div>
         )}
+
+        <motion.section
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.4, duration: 0.5 }}
+          className="bg-white rounded-2xl shadow-xl p-6 mb-10"
+        >
+          <h2 className="text-xl font-semibold text-green-800 mb-4">Why Soil Health Matters</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="p-4 bg-green-50 rounded-lg">
+              <h3 className="flex items-center font-medium text-green-700 mb-2">
+                <Wheat className="w-5 h-5 mr-2 text-green-700" />
+                Food Security
+              </h3>
+              <p className="text-sm text-gray-600">
+                Healthy soil produces higher yields and more nutritious food, supporting global food security.
+              </p>
+            </div>
+
+            <div className="p-4 bg-blue-50 rounded-lg">
+              <h3 className="flex items-center font-medium text-blue-700 mb-2">
+                <Droplet className="w-5 h-5 mr-2 text-blue-700" />
+                Water Management
+              </h3>
+              <p className="text-sm text-gray-600">
+                Soil acts as a natural filter, improving water quality and reducing polluted runoff.
+              </p>
+            </div>
+
+            <div className="p-4 bg-amber-50 rounded-lg">
+              <h3 className="flex items-center font-medium text-amber-700 mb-2">
+                <Globe2 className="w-5 h-5 mr-2 text-amber-700" />
+                Climate Resilience
+              </h3>
+              <p className="text-sm text-gray-600">
+                Healthy soil sequesters carbon, helping mitigate climate change impacts.
+              </p>
+            </div>
+
+            <div className="p-4 bg-purple-50 rounded-lg">
+              <h3 className="flex items-center font-medium text-purple-700 mb-2">
+                <Bug className="w-5 h-5 mr-2 text-purple-700" />
+                Biodiversity
+              </h3>
+              <p className="text-sm text-gray-600">
+                Soil contains billions of microorganisms essential for nutrient cycling and ecosystem health.
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-6 p-4 bg-gray-50 rounded-lg">
+            <h3 className="font-medium text-gray-700 mb-2">Additional Resources</h3>
+            <ul className="text-sm text-gray-600 space-y-1">
+              <li>• <a href="https://www.nrcs.usda.gov/wps/portal/nrcs/main/soils/health/" target="_blank" rel="noopener noreferrer" className="text-green-600 hover:underline">USDA Soil Health Resources</a></li>
+              <li>• <a href="https://www.fao.org/global-soil-partnership/en/" target="_blank" rel="noopener noreferrer" className="text-green-600 hover:underline">FAO Soil Portal</a></li>
+              <li>• <a href="https://www.soilhealth.com/soil-health/" target="_blank" rel="noopener noreferrer" className="text-green-600 hover:underline">Soil Health Institute</a></li>
+            </ul>
+          </div>
+        </motion.section>
       </main>
-      
-      {/* Footer */}
-      <footer className="mt-12 text-center text-sm text-gray-500 max-w-2xl">
-        <p>This soil health analysis tool provides general recommendations. For precise agricultural advice, consult with a local soil expert.</p>
+
+      <footer className="text-center text-sm text-gray-500 mt-8 max-w-2xl mx-auto">
+        <p>This soil health analysis tool provides general recommendations based on agricultural best practices. For precise recommendations tailored to your specific conditions, consult with local agricultural experts.</p>
+        <p className="mt-2">Data sources include public agricultural APIs and research institutions.</p>
       </footer>
     </div>
   );
