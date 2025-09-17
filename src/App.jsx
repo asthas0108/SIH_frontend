@@ -27,6 +27,7 @@ import CropManagementPage from "./components/CropManagement";
 import FarmerChatbot from "./components/FarmerChatbot";
 import SmartFarming from "./components/SmartFarming/SmartFarmingEnhanced";
 import FarmerAuth from "./components/FarmerAuth";
+import CropForm from "./components/Planner";
 
 function Home() {
   return (
@@ -89,6 +90,7 @@ function App() {
             <Route path="/crop-management" element={<CropManagementPage />} />
             <Route path="/smartfarming" element={<SmartFarming />} />
             <Route path="/signup" element={<FarmerAuth />} />
+            <Route path="/planner" element={<CropForm />} />
           </Routes>
         </main>
 
