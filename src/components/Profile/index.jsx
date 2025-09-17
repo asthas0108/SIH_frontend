@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from "axios";
-import { Sun } from 'lucide-react';
+import { Mail, Sun, User } from 'lucide-react';
 import { PhoneCallIcon } from 'lucide-react';
 import { PersonStanding } from 'lucide-react';
 import { Bell } from 'lucide-react';
@@ -24,21 +24,23 @@ const EnhancedFarmerProfile = () => {
   const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
   const [farmerData, setFarmerData] = useState({
-    name: "Rajesh Singh",
-    logo: "RS",
-    phone: "+91 9876543210",
+    name: "------ ------",
+    logo: "--",
+    phone: "** **********",
+    role: "farmer",
+    email: "xyz@email",
     language: "हिंदी (Hindi)",
-    pincode: "413305",
-    village: "Baramati",
-    taluka: "Baramati",
-    district: "Pune",
-    member_since: 2018,
+    pincode: "413****",
+    village: "-----",
+    taluka: "---------",
+    district: "----",
+    member_since: 1900,
     isPhoneVerified: false,
     state: "Maharashtra",
-    landHolding: "4.5 Acres",
+    landHolding: "-- Acres",
     farmingType: "Irrigated",
-    soilType: "Black Cotton Soil (Regur Soil)",
-    irrigationSource: "Well + Canal",
+    soilType: "------------",
+    irrigationSource: "-------",
     experience: "Add your farming experience(number of years)",
     plots: [
       { id: 1, name: "मुख्य शेत (Main Field)", area: "3.0", crop: "Sugarcane", sowingDate: "15 Feb 2024", status: "Growing" },
@@ -70,6 +72,10 @@ const EnhancedFarmerProfile = () => {
   const [activeSection, setActiveSection] = useState("overview");
   const [newPlot, setNewPlot] = useState({ name: "", area: "", crop: "", sowingDate: "" });
   const [profile, setProfile] = useState(null);
+
+  const handleVerifyPhone = () => {
+
+  }
 
   const toggleEdit = () => {
     setIsEditing(!isEditing);
@@ -137,10 +143,10 @@ const EnhancedFarmerProfile = () => {
       try {
         const token = localStorage.getItem("token");
         const userId = localStorage.getItem("userId");
-        const data = await get_Profile(userId, token); // already parsed JSON
+        const data = await get_Profile(userId, token);
 
         setFarmerData(prev => ({
-          ...prev, // keep existing nested structures like plots, alerts, queries
+          ...prev,
           name: data.full_name || prev.name,
           phone: `${data.country_code || "+91"} ${data.phone_number || ""}`,
           pincode: data.current_pincode || prev.pincode,
@@ -150,13 +156,16 @@ const EnhancedFarmerProfile = () => {
           logo: data.full_name[0],
           member_since: new Date(data.created_at).getFullYear(),
           state: data.current_state || prev.state,
-          isPhoneVerified: data.isPhoneVerified,
+          role: data.role,
+          email: data.email,
+          isPhoneVerified: data.is_phone_verified,
           landHolding: data.total_land_holdings
             ? `${data.total_land_holdings} Acres`
             : prev.landHolding,
         }));
 
         console.log("Mapped farmer data:", data);
+        console.log(data.isPhoneVerified);
       } catch (err) {
         console.error("Failed to load profile", err);
       }
@@ -170,49 +179,82 @@ const EnhancedFarmerProfile = () => {
     <div className="bg-green-50">
       <div className="max-w-6xl mx-auto p-4 font-sans bg-green-100 min-h-screen">
         <header className="bg-gradient-to-r from-green-800 to-green-700 text-white p-6 rounded-xl shadow-lg mb-6">
-          <div className="flex items-center mb-5">
-            <div className="w-20 h-20 rounded-full bg-green-500 flex items-center justify-center text-3xl font-bold mr-5">
-              {farmerData.logo}
+          <div className="flex flex-col md:flex-row items-center md:items-start justify-between w-full bg-green-100/30 rounded-xl shadow-md p-6 gap-6 md:gap-4">
+            <div className="w-24 h-24 md:w-28 md:h-28 rounded-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center text-3xl font-bold text-white shadow-lg">
+              {farmerData.logo || farmerData.name.charAt(0)}
             </div>
-            <div>
-              <h1 className="text-3xl font-bold">नमस्ते, {farmerData.name}!</h1>
-              <p className="text-green-100">Member since {farmerData.member_since} • {farmerData.village}, {farmerData.district}</p>
+
+            <div className="flex-1 flex flex-col items-center md:items-start text-center md:text-left">
+              <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-1">नमस्ते, {farmerData.name}!</h1>
+              <p className="text-white text-sm md:text-base mb-2">
+                <span className="inline-flex items-center">
+                  <i className="far fa-calendar-alt mr-1.5"></i>
+                  Member since {farmerData.member_since}
+                </span>
+                <span className="mx-2">•</span>
+                <span className="inline-flex items-center">
+                  <i className="fas fa-map-marker-alt mr-1.5"></i>
+                  {farmerData.village}, {farmerData.district}
+                </span>
+              </p>
+
+              <div className="grid gap-3 mt-2 w-full max-w-md">
+                <div className="bg-green-50 rounded-lg p-2 text-center">
+                  <p className="text-xs text-green-700"><strong>Crops</strong></p>
+                  <p className="font-semibold text-green-800">{farmerData.crops || 0}</p>
+                </div>
+                <div className="bg-amber-50 rounded-lg p-2 text-center">
+                  <p className="text-xs text-amber-700"><strong>Experience</strong></p>
+                  <p className="font-semibold text-amber-800">{farmerData.experience || '8+'} years</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex flex-col gap-3 text-gray-700 text-sm md:text-base border-t md:border-t-0 pt-4 md:pt-0 w-full md:w-auto md:min-w-[200px] md:pl-6 md:border-l border-gray-100">
+              <div className="flex items-center gap-2 justify-center md:justify-start">
+                <a
+                  href={`mailto:${farmerData.email}`}
+                  className="hover:underline hover:text-green-700 transition-colors"
+                >
+                  <strong>{farmerData.email}</strong>
+                </a>
+              </div>
+              <div className="flex items-center gap-2 justify-center md:justify-start">
+                <span className="px-3 py-1 rounded-full bg-green-100 text-green-700 font-medium text-xs md:text-sm">
+                  {farmerData.role}
+                </span>
+              </div>
+
+              {farmerData.phone && (
+                <div className="flex items-center gap-2 justify-center md:justify-start">
+                  <a
+                    href={`tel:${farmerData.phone}`}
+                    className="hover:underline hover:text-green-700 transition-colors"
+                  >
+                    <strong>{farmerData.phone}</strong>
+                  </a>
+                </div>
+              )}
             </div>
           </div>
 
-          <div className="flex justify-around my-6 py-4 border-t border-b border-green-600">
-            <div className="text-center">
-              <span className="block text-2xl font-bold">{farmerData.landHolding}</span>
-              <span className="text-sm text-green-200">Land Holding</span>
-            </div>
-            <div className="text-center">
-              <span className="block text-2xl font-bold">{farmerData.plots.length}</span>
-              <span className="text-sm text-green-200">Plots</span>
-            </div>
-            <div className="text-center">
-              <span className="block text-2xl font-bold">{farmerData.experience}</span>
-              <span className="text-sm text-green-200">Experience</span>
-            </div>
-          </div>
-
-          <div className="flex gap-4">
+          <div className="flex gap-4 mt-5">
             <button
-              className="bg-white text-green-800 px-5 py-3 rounded-lg font-semibold hover:bg-green-50 transition-all duration-300"
+              className="bg-white text-green-800 cursor-pointer px-5 py-3 rounded-lg font-semibold hover:bg-green-50 transition-all duration-300"
               onClick={toggleEdit}
             >
               {isEditing ? 'Save Changes' : 'Edit Profile'}
             </button>
-            <button className="bg-transparent text-white border-2 border-white px-5 py-3 rounded-lg font-semibold hover:bg-white/10 transition-colors">
+            <button className="bg-transparent cursor-pointer text-white border-2 border-white px-5 py-3 rounded-lg font-semibold hover:bg-white/10 transition-colors">
               Download Report
             </button>
           </div>
         </header>
 
         <nav className="bg-white rounded-xl shadow-md mb-6 overflow-hidden">
-          {/* Desktop Navigation */}
           <div className="hidden md:flex">
             <button
-              className={`flex-1 py-4 flex items-center justify-center gap-2 font-medium transition-all duration-200 ${activeSection === "overview"
+              className={`flex-1 py-4 flex items-center cursor-pointer justify-center gap-2 font-medium transition-all duration-200 ${activeSection === "overview"
                 ? "text-green-700 bg-green-50 border-b-2 border-green-700"
                 : "text-gray-600 hover:text-green-600 hover:bg-green-50"
                 }`}
@@ -222,7 +264,7 @@ const EnhancedFarmerProfile = () => {
               <span>Overview</span>
             </button>
             <button
-              className={`flex-1 py-4 flex items-center justify-center gap-2 font-medium transition-all duration-200 ${activeSection === "personal"
+              className={`flex-1 py-4 flex items-center cursor-pointer justify-center gap-2 font-medium transition-all duration-200 ${activeSection === "personal"
                 ? "text-green-700 bg-green-50 border-b-2 border-green-700"
                 : "text-gray-600 hover:text-green-600 hover:bg-green-50"
                 }`}
@@ -232,7 +274,7 @@ const EnhancedFarmerProfile = () => {
               <span>Personal Info</span>
             </button>
             <button
-              className={`flex-1 py-4 flex items-center justify-center gap-2 font-medium transition-all duration-200 ${activeSection === "farm"
+              className={`flex-1 py-4 flex items-center cursor-pointer justify-center gap-2 font-medium transition-all duration-200 ${activeSection === "farm"
                 ? "text-green-700 bg-green-50 border-b-2 border-green-700"
                 : "text-gray-600 hover:text-green-600 hover:bg-green-50"
                 }`}
@@ -242,7 +284,7 @@ const EnhancedFarmerProfile = () => {
               <span>Farm Details</span>
             </button>
             <button
-              className={`flex-1 py-4 flex items-center justify-center gap-2 font-medium transition-all duration-200 ${activeSection === "alerts"
+              className={`flex-1 py-4 flex items-center cursor-pointer justify-center gap-2 font-medium transition-all duration-200 ${activeSection === "alerts"
                 ? "text-green-700 bg-green-50 border-b-2 border-green-700"
                 : "text-gray-600 hover:text-green-600 hover:bg-green-50"
                 }`}
@@ -252,7 +294,7 @@ const EnhancedFarmerProfile = () => {
               <span>Alerts</span>
             </button>
             <button
-              className={`flex-1 py-4 flex items-center justify-center gap-2 font-medium transition-all duration-200 ${activeSection === "activity"
+              className={`flex-1 py-4 flex items-center cursor-pointer justify-center gap-2 font-medium transition-all duration-200 ${activeSection === "activity"
                 ? "text-green-700 bg-green-50 border-b-2 border-green-700"
                 : "text-gray-600 hover:text-green-600 hover:bg-green-50"
                 }`}
@@ -266,32 +308,32 @@ const EnhancedFarmerProfile = () => {
           <div className="md:hidden relative">
             <BiDownArrow className='absolute right-8 top-5' />
             <select
-              className="w-full p-4 text-gray-700 bg-white border-none rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none appearance-none"
+              className="w-full p-4 text-gray-700 bg-white cursor-pointer border-none rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none appearance-none"
               value={activeSection}
               onChange={(e) => setActiveSection(e.target.value)}
             >
               <option value="overview">
-                <span className="flex items-center gap-2">
+                <span className="flex items-center cursor-pointer gap-2">
                   <GitGraphIcon /> Overview
                 </span>
               </option>
               <option value="personal">
-                <span className="flex items-center gap-2">
+                <span className="flex items-center cursor-pointer gap-2">
                   <PersonStanding /> Personal Info
                 </span>
               </option>
               <option value="farm">
-                <span className="flex items-center gap-2">
+                <span className="flex items-center cursor-pointer gap-2">
                   <Trees /> Farm Details
                 </span>
               </option>
               <option value="alerts">
-                <span className="flex items-center gap-2">
+                <span className="flex items-center cursor-pointer gap-2">
                   <Bell /> Alerts
                 </span>
               </option>
               <option value="activity">
-                <span className="flex items-center gap-2">
+                <span className="flex items-center cursor-pointer gap-2">
                   <BookAIcon /> Activity
                 </span>
               </option>
@@ -413,21 +455,59 @@ const EnhancedFarmerProfile = () => {
                         value={farmerData.phone}
                         onChange={handleInputChange}
                         disabled={!isEditing}
-                        className="w-full p-3 border border-gray-300 rounded-lg bg-gray-50 disabled:bg-gray-100 disabled:text-gray-600 focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200 pr-10"
+                        className="w-full p-3 border border-gray-300 rounded-lg bg-gray-50 disabled:bg-gray-100 disabled:text-gray-600 focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200 pr-24"
                         placeholder="+91 00000 00000"
                       />
-                      {farmerData.isPhoneVerified ? "Verified" : "Not Verified"}
-                      <span className={`absolute right-3 top-3.5 ${farmerData.isPhoneVerified ? "text-green-600" : "text-red-600"} flex items-center`}>
-                        {farmerData.isPhoneVerified ? <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
-                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                        </svg> : <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
-                          <path fillRule="evenodd" d="M10 8.586l4.95-4.95a1 1 0 111.414 1.414L11.414 10l4.95 4.95a1 1 0 01-1.414 1.414L10 11.414l-4.95 4.95a1 1 0 01-1.414-1.414L8.586 10l-4.95-4.95A1 1 0 115.05 3.636L10 8.586z" clipRule="evenodd" />
-                        </svg>
-                        }
+                      <span
+                        className={`absolute right-3 top-3.5 ${farmerData.isPhoneVerified ? "text-green-600" : "text-red-600"
+                          } flex items-center`}
+                      >
+                        {farmerData.isPhoneVerified ? (
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-5 w-5 mr-1"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                          >
+                            <path
+                              fillRule="evenodd"
+                              d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                              clipRule="evenodd"
+                            />
+                          </svg>
+                        ) : (
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-5 w-5 mr-1"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                          >
+                            <path
+                              fillRule="evenodd"
+                              d="M10 8.586l4.95-4.95a1 1 0 111.414 1.414L11.414 10l4.95 4.95a1 1 0 01-1.414 1.414L10 11.414l-4.95 4.95a1 1 0 01-1.414-1.414L8.586 10l-4.95-4.95A1 1 0 115.05 3.636L10 8.586z"
+                              clipRule="evenodd"
+                            />
+                          </svg>
+                        )}
                         {farmerData.isPhoneVerified ? "Verified" : "Not Verified"}
                       </span>
                     </div>
+                    {!farmerData.isPhoneVerified && (
+                      <button
+                        type="button"
+                        onClick={handleVerifyPhone}
+                        className="bg-green-600 text-white text-sm px-4 py-2 rounded-lg 
+           hover:bg-green-700 focus:outline-none focus:ring-2 
+           focus:ring-green-500 focus:ring-offset-1 
+           disabled:opacity-50 disabled:cursor-not-allowed 
+           transition-all duration-200 shadow-sm cursor-pointer"
+
+                      >
+                        Verify
+                      </button>
+                    )}
                   </div>
+
 
                   <div className="space-y-1">
                     <label className="block text-sm font-medium text-gray-700">Preferred Language</label>
