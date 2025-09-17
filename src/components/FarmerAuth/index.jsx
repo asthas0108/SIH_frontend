@@ -103,7 +103,7 @@ const FarmerAuth = () => {
 
                 console.log("Login successful:", data);
 
-                localStorage.setItem("token", data.access_token || data.token);
+                localStorage.setItem("token", data.access_token);
                 localStorage.setItem("userId", data.user_id);
 
                 setSuccessMessage("Login successful! Redirecting...");

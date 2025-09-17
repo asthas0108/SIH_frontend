@@ -47,6 +47,8 @@ const CropRecommendationSystem = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const token = localStorage.getItem('token');
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -59,6 +61,7 @@ const CropRecommendationSystem = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
         },
         body: JSON.stringify(formData),
       });
@@ -411,7 +414,7 @@ const CropRecommendationSystem = () => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={handleNewAnalysis}
-                className="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg flex items-center"
+                className="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg flex items-center cursor-pointer"
               >
                 <RefreshCw className="w-4 h-4 mr-2" />
                 New Analysis
@@ -658,7 +661,7 @@ const CropRecommendationSystem = () => {
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: 0.05 * index }}
-                  className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-rose-100 text-rose-700"
+                  className="inline-flex items-center px-3 py-1 rounded-3xl text-sm font-medium bg-rose-100 text-rose-700"
                 >
                   <AlertCircle className="w-4 h-4 mr-1" />
                   {risk}
