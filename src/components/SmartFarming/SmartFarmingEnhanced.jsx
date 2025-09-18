@@ -25,7 +25,6 @@ import {
   Leaf,
 } from "lucide-react";
 
-// Enhanced component images with modern icons
 const SoilSensorImage = () => (
   <div className="relative w-32 h-32 bg-gradient-to-br from-emerald-400 via-green-500 to-teal-600 rounded-2xl flex items-center justify-center text-white mx-auto shadow-xl transform hover:scale-105 transition-all duration-300">
     <div className="absolute inset-0 bg-white/20 rounded-2xl backdrop-blur-sm"></div>
@@ -174,22 +173,22 @@ const SmartFarmingEnhanced = () => {
     sensorData.moisture < 30
       ? "Low"
       : sensorData.moisture < 60
-      ? "Optimal"
-      : "High";
+        ? "Optimal"
+        : "High";
   const pHStatus =
     sensorData.pH < 6.3
       ? "Acidic"
       : sensorData.pH < 6.8
-      ? "Slightly Acidic"
-      : sensorData.pH < 7.2
-      ? "Neutral"
-      : "Alkaline";
+        ? "Slightly Acidic"
+        : sensorData.pH < 7.2
+          ? "Neutral"
+          : "Alkaline";
   const irrigationStatus =
     sensorData.irrigation < 30
       ? "Needed"
       : sensorData.irrigation < 60
-      ? "Adequate"
-      : "Excessive";
+        ? "Adequate"
+        : "Excessive";
 
   const productPrices = {
     complete: { original: 24999, discounted: 19999 },
@@ -212,7 +211,6 @@ const SmartFarmingEnhanced = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-green-50 to-emerald-50 py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
-        {/* Enhanced Header Section */}
         <div className="text-center mb-12 relative">
           <div className="absolute inset-0 bg-gradient-to-r from-green-400/20 via-emerald-400/20 to-teal-400/20 rounded-3xl blur-3xl"></div>
           <div className="relative">
@@ -220,7 +218,7 @@ const SmartFarmingEnhanced = () => {
               <Leaf className="w-4 h-4 mr-2" />
               Precision Agriculture Technology
             </div>
-            <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-green-700 via-emerald-600 to-teal-600 bg-clip-text text-transparent mb-6">
+            <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-green-700 via-emerald-600 to-teal-600 bg-clip-text text-transparent mb-6 pb-3">
               Smart Farming Solutions
             </h1>
             <p className="text-xl text-gray-700 max-w-4xl mx-auto leading-relaxed">
@@ -231,27 +229,25 @@ const SmartFarmingEnhanced = () => {
           </div>
         </div>
 
-        {/* Navigation Tabs */}
-        <div className="flex justify-center mb-8">
-          <div className="flex bg-white/80 backdrop-blur-sm rounded-2xl p-2 shadow-lg border border-white/20">
+        <div className="flex justify-center mb-8 px-2">
+          <div className="flex overflow-x-auto no-scrollbar bg-white/80 backdrop-blur-sm rounded-2xl p-1 sm:p-2 shadow-lg border border-white/20">
             {tabs.map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center px-6 py-3 rounded-xl font-medium transition-all duration-300 ${
-                  activeTab === tab.id
+                className={`flex items-center flex-shrink-0 px-3 sm:px-6 py-2 sm:py-3 rounded-xl font-medium transition-all duration-300 whitespace-nowrap ${activeTab === tab.id
                     ? "bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-lg"
                     : "text-gray-600 hover:text-green-600 hover:bg-green-50"
-                }`}
+                  }`}
               >
-                <tab.icon className="w-4 h-4 mr-2" />
-                {tab.name}
+                <tab.icon className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+                <span className="text-xs sm:text-sm">{tab.name}</span>
               </button>
             ))}
           </div>
         </div>
 
-        {/* Product Selection with Enhanced Design */}
+
         <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-xl p-8 mb-12 border border-white/20">
           <div className="text-center mb-8">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">
@@ -266,19 +262,17 @@ const SmartFarmingEnhanced = () => {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">
             <button
               onClick={() => handleProductSelect("complete")}
-              className={`group p-6 rounded-2xl border-2 transition-all duration-500 transform hover:scale-105 ${
-                selectedProduct === "complete"
+              className={`group p-6 rounded-2xl border-2 transition-all duration-500 transform hover:scale-105 ${selectedProduct === "complete"
                   ? "border-green-500 bg-gradient-to-br from-green-50 to-emerald-50 shadow-xl"
                   : "border-gray-200 hover:border-green-300 bg-white hover:shadow-lg"
-              }`}
+                }`}
             >
               <div className="text-center">
                 <div
-                  className={`w-20 h-20 mx-auto mb-4 rounded-2xl flex items-center justify-center transition-all duration-300 ${
-                    selectedProduct === "complete"
+                  className={`w-20 h-20 mx-auto mb-4 rounded-2xl flex items-center justify-center transition-all duration-300 ${selectedProduct === "complete"
                       ? "bg-gradient-to-br from-green-500 to-emerald-600 text-white"
                       : "bg-gray-100 text-gray-600 group-hover:bg-green-100 group-hover:text-green-600"
-                  }`}
+                    }`}
                 >
                   <Settings className="w-10 h-10" />
                 </div>
@@ -293,19 +287,17 @@ const SmartFarmingEnhanced = () => {
 
             <button
               onClick={() => handleProductSelect("sensor")}
-              className={`group p-6 rounded-2xl border-2 transition-all duration-500 transform hover:scale-105 ${
-                selectedProduct === "sensor"
+              className={`group p-6 rounded-2xl border-2 transition-all duration-500 transform hover:scale-105 ${selectedProduct === "sensor"
                   ? "border-green-500 bg-gradient-to-br from-green-50 to-emerald-50 shadow-xl"
                   : "border-gray-200 hover:border-green-300 bg-white hover:shadow-lg"
-              }`}
+                }`}
             >
               <div className="text-center">
                 <div
-                  className={`w-20 h-20 mx-auto mb-4 rounded-2xl flex items-center justify-center transition-all duration-300 ${
-                    selectedProduct === "sensor"
+                  className={`w-20 h-20 mx-auto mb-4 rounded-2xl flex items-center justify-center transition-all duration-300 ${selectedProduct === "sensor"
                       ? "bg-gradient-to-br from-green-500 to-emerald-600 text-white"
                       : "bg-gray-100 text-gray-600 group-hover:bg-green-100 group-hover:text-green-600"
-                  }`}
+                    }`}
                 >
                   <Cpu className="w-10 h-10" />
                 </div>
@@ -318,19 +310,17 @@ const SmartFarmingEnhanced = () => {
 
             <button
               onClick={() => handleProductSelect("irrigation")}
-              className={`group p-6 rounded-2xl border-2 transition-all duration-500 transform hover:scale-105 ${
-                selectedProduct === "irrigation"
+              className={`group p-6 rounded-2xl border-2 transition-all duration-500 transform hover:scale-105 ${selectedProduct === "irrigation"
                   ? "border-blue-500 bg-gradient-to-br from-blue-50 to-cyan-50 shadow-xl"
                   : "border-gray-200 hover:border-blue-300 bg-white hover:shadow-lg"
-              }`}
+                }`}
             >
               <div className="text-center">
                 <div
-                  className={`w-20 h-20 mx-auto mb-4 rounded-2xl flex items-center justify-center transition-all duration-300 ${
-                    selectedProduct === "irrigation"
+                  className={`w-20 h-20 mx-auto mb-4 rounded-2xl flex items-center justify-center transition-all duration-300 ${selectedProduct === "irrigation"
                       ? "bg-gradient-to-br from-blue-500 to-cyan-600 text-white"
                       : "bg-gray-100 text-gray-600 group-hover:bg-blue-100 group-hover:text-blue-600"
-                  }`}
+                    }`}
                 >
                   <Droplets className="w-10 h-10" />
                 </div>
@@ -345,19 +335,17 @@ const SmartFarmingEnhanced = () => {
 
             <button
               onClick={() => handleProductSelect("drone")}
-              className={`group p-6 rounded-2xl border-2 transition-all duration-500 transform hover:scale-105 ${
-                selectedProduct === "drone"
+              className={`group p-6 rounded-2xl border-2 transition-all duration-500 transform hover:scale-105 ${selectedProduct === "drone"
                   ? "border-purple-500 bg-gradient-to-br from-purple-50 to-violet-50 shadow-xl"
                   : "border-gray-200 hover:border-purple-300 bg-white hover:shadow-lg"
-              }`}
+                }`}
             >
               <div className="text-center">
                 <div
-                  className={`w-20 h-20 mx-auto mb-4 rounded-2xl flex items-center justify-center transition-all duration-300 ${
-                    selectedProduct === "drone"
+                  className={`w-20 h-20 mx-auto mb-4 rounded-2xl flex items-center justify-center transition-all duration-300 ${selectedProduct === "drone"
                       ? "bg-gradient-to-br from-purple-500 to-violet-600 text-white"
                       : "bg-gray-100 text-gray-600 group-hover:bg-purple-100 group-hover:text-purple-600"
-                  }`}
+                    }`}
                 >
                   <Drone className="w-10 h-10" />
                 </div>
@@ -579,9 +567,7 @@ const SmartFarmingEnhanced = () => {
             </div>
           </div>
 
-          {/* Enhanced Real-time Data Column */}
           <div className="space-y-6">
-            {/* Live Status Indicator */}
             <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg p-6 border border-white/20">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-bold text-gray-900">
@@ -608,7 +594,6 @@ const SmartFarmingEnhanced = () => {
               </div>
             </div>
 
-            {/* Enhanced Soil Analytics */}
             <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg p-6 border border-white/20">
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-xl font-bold text-gray-900">
@@ -620,7 +605,6 @@ const SmartFarmingEnhanced = () => {
               </div>
 
               <div className="space-y-4">
-                {/* Moisture */}
                 <div className="bg-green-50 p-4 rounded-xl border border-green-200">
                   <div className="flex items-center justify-between mb-2">
                     <span className="font-semibold text-green-900">
@@ -643,7 +627,6 @@ const SmartFarmingEnhanced = () => {
                   </div>
                 </div>
 
-                {/* Temperature */}
                 <div className="bg-amber-50 p-4 rounded-xl border border-amber-200">
                   <div className="flex items-center justify-between mb-2">
                     <span className="font-semibold text-amber-900">
@@ -653,8 +636,8 @@ const SmartFarmingEnhanced = () => {
                       {sensorData.temperature > 32
                         ? "High"
                         : sensorData.temperature < 26
-                        ? "Low"
-                        : "Optimal"}
+                          ? "Low"
+                          : "Optimal"}
                     </span>
                   </div>
                   <div className="flex items-center justify-between">
@@ -665,7 +648,6 @@ const SmartFarmingEnhanced = () => {
                   </div>
                 </div>
 
-                {/* pH Level */}
                 <div className="bg-blue-50 p-4 rounded-xl border border-blue-200">
                   <div className="flex items-center justify-between mb-2">
                     <span className="font-semibold text-blue-900">
@@ -690,7 +672,6 @@ const SmartFarmingEnhanced = () => {
                   </div>
                 </div>
 
-                {/* NPK Levels */}
                 <div className="bg-purple-50 p-4 rounded-xl border border-purple-200">
                   <h4 className="font-semibold text-purple-900 mb-3">
                     NPK Analysis
@@ -725,7 +706,6 @@ const SmartFarmingEnhanced = () => {
               </div>
             </div>
 
-            {/* Enhanced Drone Analytics */}
             <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg p-6 border border-white/20">
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-xl font-bold text-gray-900">
@@ -793,8 +773,8 @@ const SmartFarmingEnhanced = () => {
                       {droneData.issuesDetected > 3
                         ? "Critical"
                         : droneData.issuesDetected > 0
-                        ? "Monitor"
-                        : "None"}
+                          ? "Monitor"
+                          : "None"}
                     </span>
                   </div>
                   <div className="flex items-center justify-between">
@@ -828,7 +808,6 @@ const SmartFarmingEnhanced = () => {
           </div>
         </div>
 
-        {/* Enhanced Testimonials */}
         <div className="mb-12">
           <h2 className="text-3xl font-bold text-gray-900 text-center mb-8">
             Success Stories
@@ -902,7 +881,6 @@ const SmartFarmingEnhanced = () => {
           </div>
         </div>
 
-        {/* Enhanced CTA Section */}
         <div className="relative overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600 rounded-3xl"></div>
           <div className="absolute inset-0 bg-black/10 rounded-3xl"></div>
