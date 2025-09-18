@@ -12,6 +12,7 @@ import {
   TreePine,
   Calendar,
   AlertTriangle,
+  Crop,
 } from "lucide-react";
 
 const features = [
@@ -66,9 +67,9 @@ const features = [
     path: "/calendar",
   },
   {
-    icon: <AlertTriangle className="w-5 h-5 text-green-200" />,
-    label: "Labour Alerts",
-    path: "/",
+    icon: <Crop className="w-5 h-5 text-green-200" />,
+    label: "Crop Planner",
+    path: "/plannerIntro",
   },
 ];
 

@@ -299,7 +299,7 @@ const FarmerAuth = () => {
                             animate="visible"
                         >
                             <motion.div variants={itemVariants} className="w-20 h-20 bg-white/20 rounded-2xl flex items-center justify-center mx-auto md:mx-0 mb-6 backdrop-blur-sm">
-                                <img src='public\logo-no-background.png' alt="Kisan Mitra Logo" />
+                                <img src='\logo-no-background.png' alt="Kisan Mitra Logo" />
                             </motion.div>
                             <motion.h2 variants={itemVariants} className="text-3xl font-bold mb-4">Kisan Mitra</motion.h2>
                             <motion.p variants={itemVariants} className="text-emerald-100 mb-6">

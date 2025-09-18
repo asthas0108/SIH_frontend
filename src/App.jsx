@@ -28,6 +28,7 @@ import FarmerChatbot from "./components/FarmerChatbot";
 import SmartFarming from "./components/SmartFarming/SmartFarmingEnhanced";
 import FarmerAuth from "./components/FarmerAuth";
 import CropForm from "./components/Planner";
+import PlannerIntro from "./components/PlannerIntro";
 
 function Home() {
   return (
@@ -63,19 +64,12 @@ function App() {
     <Router>
       <div className="min-h-screen flex flex-col">
         <NavBarConditional />
-        {/* <FarmerChatbot /> */}
         <main className="flex-grow">
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route
-              path="/cropRecommendation"
-              element={<CropRecommendationForm />}
-            />
+            <Route path="/cropRecommendation" element={<CropRecommendationForm />}/>
             <Route path="/yieldPredict" element={<YieldPrediction />} />
-            <Route
-              path="/diseasePrediction"
-              element={<PlantDiseaseDetection />}
-            />
+            <Route path="/diseasePrediction" element={<PlantDiseaseDetection />}/>
             <Route path="/organicFarming" element={<OrganicFarming />} />
             <Route path="/weatherCheck" element={<WeatherCheck />} />
             <Route path="/soilHealth" element={<SoilHealthAnalysis />} />
@@ -91,9 +85,9 @@ function App() {
             <Route path="/smartfarming" element={<SmartFarming />} />
             <Route path="/signup" element={<FarmerAuth />} />
             <Route path="/planner" element={<CropForm />} />
+            <Route path="/plannerIntro" element={<PlannerIntro />} />
           </Routes>
         </main>
-
         <FooterConditional />
       </div>
     </Router>
