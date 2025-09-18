@@ -47,7 +47,10 @@ const Navbar = () => {
         const res = await fetch(
           "http://localhost:8000/notifications/my_notifications",
           {
-            headers: { Authorization: `Bearer ${token}` },
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${token}`
+            },
           }
         );
 
@@ -152,14 +155,11 @@ const Navbar = () => {
 
         setFarmerData(prev => ({
           name: data.full_name || prev.name,
-          logo: data.full_name[0],
+          logo: data.full_name?.[0],
           role: data.role,
           email: data.email,
           language: data.preferred_language
         }));
-
-        console.log("Mapped farmer data:", data);
-        console.log(data.isPhoneVerified);
       } catch (err) {
         console.error("Failed to load profile", err);
       }
