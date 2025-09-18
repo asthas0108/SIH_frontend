@@ -34,7 +34,7 @@ const farmer_questions = [
 ];
 
 const ChatBot = () => {
-  const user_id = "random_user_newest";
+  const user_id = localStorage.getItem('userId');
   const [sidebarOpen, setSidebarOpen] = useState(() => window.innerWidth >= 768);
   const [sessions, setSessions] = useState([]);
   const [activeSessionId, setActiveSessionId] = useState(null);
@@ -43,7 +43,9 @@ const ChatBot = () => {
   const [conversations, setConversations] = useState([]);
   const [loading, setLoading] = useState(false);
   const [listening, setListening] = useState(false);
+  const [speaking, setSpeaking] = useState(false);
   const recognitionRef = useRef(null);
+  const speechSynthesisRef = useRef(null);
   const messagesEndRef = useRef(null);
 
   const randomQuestions = useMemo(() => {
@@ -135,23 +137,80 @@ const ChatBot = () => {
     }
   }, [activeSessionId, sessions]);
 
+  // Clean up speech synthesis when component unmounts
+  useEffect(() => {
+    return () => {
+      if (speechSynthesisRef.current) {
+        window.speechSynthesis.cancel();
+      }
+    };
+  }, []);
+
   const startListening = () => {
     if (!("webkitSpeechRecognition" in window || "SpeechRecognition" in window)) {
       alert("Your browser does not support voice input");
       return;
     }
+    
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     recognitionRef.current = new SpeechRecognition();
     recognitionRef.current.lang = "hi-IN";
-    recognitionRef.current.interimResults = true;
+    recognitionRef.result = true;
     recognitionRef.current.maxAlternatives = 1;
+    
     recognitionRef.current.onstart = () => setListening(true);
+    
     recognitionRef.current.onresult = (event) => {
       const transcript = event.results[0][0].transcript;
       setInput(transcript);
+      
+      // Auto-submit when speech recognition is complete
+      if (event.results[0].isFinal) {
+        setTimeout(() => {
+          handleSend();
+        }, 500);
+      }
     };
-    recognitionRef.current.onend = () => setListening(false);
+    
+    recognitionRef.current.onend = () => {
+      setListening(false);
+    };
+    
+    recognitionRef.current.onerror = (event) => {
+      console.error("Speech recognition error:", event.error);
+      setListening(false);
+    };
+    
     recognitionRef.current.start();
+  };
+
+  const speakText = (text) => {
+    if (!text || !('speechSynthesis' in window)) return;
+    
+    // Stop any ongoing speech
+    window.speechSynthesis.cancel();
+    
+    // Clean HTML tags from text for speech
+    const cleanText = text.replace(/<[^>]*>/g, '');
+    
+    const utterance = new SpeechSynthesisUtterance(cleanText);
+    utterance.lang = 'hi-IN';
+    utterance.rate = 0.9;
+    utterance.pitch = 1;
+    
+    utterance.onstart = () => setSpeaking(true);
+    utterance.onend = () => setSpeaking(false);
+    utterance.onerror = () => setSpeaking(false);
+    
+    speechSynthesisRef.current = utterance;
+    window.speechSynthesis.speak(utterance);
+  };
+
+  const stopSpeaking = () => {
+    if (window.speechSynthesis && speaking) {
+      window.speechSynthesis.cancel();
+      setSpeaking(false);
+    }
   };
 
   const selectSession = (id) => {
@@ -214,19 +273,24 @@ const ChatBot = () => {
 
   const handleSend = async () => {
     if (!input.trim() || !activeSessionId) return;
+    
     const userMessage = {
       type: "human",
       content: input,
       timestamp: new Date().toISOString()
     };
+    
     const messageToSend = input;
-
     setConversations(prev => [...prev, userMessage]);
     setInput("");
     setLoading(true);
 
+    // Stop any ongoing speech when sending new message
+    stopSpeaking();
+
     const currentSession = sessions.find(s => s.id === activeSessionId);
     const isNewSession = currentSession.title === "नया_सत्र";
+    
     try {
       const response = await axios.post("https://kisan-mitra-chatbot-2.onrender.com/farmer_query/chat", {
         user_id: user_id,
@@ -253,6 +317,10 @@ const ChatBot = () => {
       };
 
       setConversations(prev => [...prev, botMessage]);
+      
+      // Speak the bot's response
+      speakText(response.data.response || "कोई उत्तर उपलब्ध नहीं है।");
+      
     } catch (error) {
       console.error("Error calling backend API:", error);
       const errorMessage = {
@@ -261,6 +329,7 @@ const ChatBot = () => {
         timestamp: new Date().toISOString()
       };
       setConversations(prev => [...prev, errorMessage]);
+      speakText("सर्वर से उत्तर प्राप्त नहीं हो सका।");
     } finally {
       setLoading(false);
     }
@@ -315,7 +384,7 @@ const ChatBot = () => {
                 <p className="text-xs sm:text-sm text-amber-100 mt-1 font-medium">आपका कृषि सहयोगी</p>
               </div>
               <div className="sm:hidden">
-                <p className="text-xl font-bold font-sans">Kisan Mitra</p>
+                <p className="text-xl font-bold font-sans" onClick={() => window.location.href = "/"}>KisanMitra</p>
               </div>
             </div>
             <div className="flex items-center gap-2 sm:gap-4">
@@ -334,7 +403,10 @@ const ChatBot = () => {
                   {randomQuestions.map((question, index) => (
                     <div
                       key={index}
-                      onClick={() => setInput(question)}
+                      onClick={() => {
+                        setInput(question);
+                        setTimeout(() => handleSend(), 100);
+                      }}
                       className="bg-gradient-to-br from-amber-50 to-emerald-50 rounded-xl sm:rounded-2xl shadow-lg p-4 sm:p-5 md:p-6 hover:shadow-xl transition-all cursor-pointer border border-amber-200 hover:-translate-y-1"
                     >
                       <div className="flex items-start">
@@ -368,6 +440,19 @@ const ChatBot = () => {
                       </div>
                       <div className="bg-emerald-50 text-emerald-900 px-4 py-3 sm:px-5 sm:py-4 rounded-xl sm:rounded-2xl shadow max-w-[85%] sm:max-w-[80%] border border-emerald-200">
                         <div className="text-base leading-relaxed prose" dangerouslySetInnerHTML={{ __html: formatMarkdown(message.content) }} />
+                        {index === conversations.length - 1 && conversations[conversations.length - 1].type === "bot" && (
+                          <button
+                            onClick={() => speaking ? stopSpeaking() : speakText(message.content)}
+                            className="mt-2 p-1 bg-emerald-100 rounded-full hover:bg-emerald-200 transition"
+                            title={speaking ? "Stop speech" : "Listen to response"}
+                          >
+                            <img 
+                              src={speaking ? "/mic_icon.png" : "/mic_icon.png"} 
+                              alt={speaking ? "Stop" : "Listen"} 
+                              className="w-4 h-4" 
+                            />
+                          </button>
+                        )}
                       </div>
                     </div>
                   )
@@ -411,7 +496,8 @@ const ChatBot = () => {
               <div className="flex items-center gap-2 sm:gap-3 md:gap-4">
                 <div
                   onClick={startListening}
-                  className={`p-2 sm:p-3 rounded-full cursor-pointer transition ${listening ? "bg-emerald-300/50" : "hover:bg-amber-100/50"}`}
+                  className={`p-2 sm:p-3 rounded-full cursor-pointer transition ${listening ? "bg-emerald-300/50 animate-pulse" : "hover:bg-amber-100/50"}`}
+                  title="Voice input"
                 >
                   <img src="/mic_icon.png" alt="आवाज" className="w-5 sm:w-6 md:w-6 h-5 sm:h-6 md:h-6" />
                 </div>
@@ -424,11 +510,29 @@ const ChatBot = () => {
                 </button>
               </div>
             </div>
+            
+            {/* Voice status indicator */}
+            {(listening || speaking) && (
+              <div className="mt-2 flex items-center justify-center">
+                <div className="bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full text-sm flex items-center">
+                  {listening && (
+                    <>
+                      <div className="w-2 h-2 bg-emerald-600 rounded-full mr-1 animate-pulse"></div>
+                      <span>सुन रहा हूं...</span>
+                    </>
+                  )}
+                  {speaking && (
+                    <>
+                      <div className="w-2 h-2 bg-emerald-600 rounded-full mr-1 animate-pulse"></div>
+                      <span>बोल रहा हूं...</span>
+                    </>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
-
-
     </div>
   );
 };
