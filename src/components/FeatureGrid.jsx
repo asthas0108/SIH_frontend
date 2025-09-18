@@ -13,6 +13,7 @@ import {
   Calendar,
   AlertTriangle,
   Crop,
+  AirVent,
 } from "lucide-react";
 
 const features = [
@@ -35,6 +36,11 @@ const features = [
     icon: <Leaf className="w-5 h-5 text-green-400" />,
     label: "Organic Farming",
     path: "/organicFarming",
+  },
+  {
+    icon: <AirVent className="w-5 h-5 text-green-200" />,
+    label: "AI Crop Planner",
+    path: "/plannerIntro",
   },
   {
     icon: <Users className="w-5 h-5 text-green-300" />,
@@ -63,13 +69,8 @@ const features = [
   },
   {
     icon: <Calendar className="w-5 h-5 text-green-300" />,
-    label: "Crop Planning",
+    label: "Crop TimeTable",
     path: "/calendar",
-  },
-  {
-    icon: <Crop className="w-5 h-5 text-green-200" />,
-    label: "Crop Planner",
-    path: "/plannerIntro",
   },
 ];
 

@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import { InputField, SelectField } from "./reusableFields";
-import { 
-  MapPin, 
-  Calendar, 
-  Droplets, 
-  Sprout, 
+import {
+  MapPin,
+  Calendar,
+  Droplets,
+  Sprout,
   CloudRain,
   Sun,
   Clock,
@@ -73,6 +73,71 @@ const CropForm = () => {
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
+  };
+
+  const cleanText = (text) => {
+    if (typeof text !== "string") return text;
+    return text.replace(/\*\*/g, "");
+  };
+
+  const formatValue = (value) => {
+    if (!value) return "—";
+
+    if (typeof value === "string") {
+      return value.split("\n").map((line, idx) => (
+        <p key={idx} className="mb-1">
+          {cleanText(line.trim())}
+        </p>
+      ));
+    }
+
+    if (Array.isArray(value)) {
+      return (
+        <ul className="list-disc list-inside space-y-1">
+          {value.map((item, idx) => (
+            <li key={idx}>{formatValue(item)}</li>
+          ))}
+        </ul>
+      );
+    }
+
+    if (typeof value === "object") {
+      return (
+        <div className="ml-4">
+          {Object.entries(value).map(([subKey, subValue], idx) => (
+            <div key={idx} className="mb-2">
+              <h4 className="font-semibold text-gray-700">
+                {subKey.replace(/_/g, " ")}
+              </h4>
+              <div className="text-gray-600">{formatValue(subValue)}</div>
+            </div>
+          ))}
+        </div>
+      );
+    }
+
+    return String(value);
+  };
+
+  const DisplayData = ({ data }) => {
+    if (!data || Object.keys(data).length === 0) {
+      return <p className="text-gray-500">No guidance summary available.</p>;
+    }
+
+    return (
+      <div className="space-y-6 p-6 bg-gray-50 rounded-2xl">
+        {Object.entries(data).map(([key, value], idx) => (
+          <div key={idx} className="p-4 bg-white shadow rounded-xl">
+            <h2 className="text-lg font-bold capitalize mb-2 text-gray-800">
+              {key.replace(/_/g, " ")}
+            </h2>
+            <div className="text-gray-700 leading-relaxed">
+              {formatValue(value)}
+            </div>
+          </div>
+        ))}
+      </div>
+    );
   };
 
   const handleSubmit = async (e) => {
@@ -170,10 +235,11 @@ const CropForm = () => {
 
   const parseGuidanceResponse = (guidance) => {
     try {
-      const text = guidance?.guidance_response?.summary;
-      return text;
+      const text = guidance?.guidance_response;
+      console.log(text);
+      return { text };
     } catch {
-      return null;
+      return {};
     }
   };
 
@@ -208,7 +274,7 @@ const CropForm = () => {
                 <X className="w-6 h-6" />
               </button>
             </div>
-            
+
             <div className="p-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                 <div className="bg-green-50 p-5 rounded-xl border border-green-100">
@@ -222,7 +288,7 @@ const CropForm = () => {
                     <p><span className="font-medium text-gray-700">Season:</span> {expandedGuidance.growing_season}</p>
                   </div>
                 </div>
-                
+
                 <div className="bg-blue-50 p-5 rounded-xl border border-blue-100">
                   <h4 className="font-semibold text-blue-700 mb-3 flex items-center">
                     <Droplets className="w-5 h-5 mr-2" />
@@ -236,7 +302,7 @@ const CropForm = () => {
                     )}
                   </div>
                 </div>
-                
+
                 {expandedGuidance.fertilizer && (
                   <div className="bg-amber-50 p-5 rounded-xl border border-amber-100 md:col-span-2">
                     <h4 className="font-semibold text-amber-700 mb-3 flex items-center">
@@ -260,18 +326,24 @@ const CropForm = () => {
                   </div>
                 )}
               </div>
-              
+
               <div className="bg-gray-50 p-6 rounded-xl border border-gray-200">
                 <h4 className="font-semibold text-green-700 mb-4 flex items-center">
                   <BarChart3 className="w-5 h-5 mr-2" />
                   AI Guidance Summary
                 </h4>
                 <div className="text-gray-700 whitespace-pre-line leading-relaxed bg-white p-4 rounded-lg">
-                  {parseGuidanceResponse(expandedGuidance) || "No guidance summary available."}
+                  <div className="text-gray-700 leading-relaxed bg-white p-4 rounded-lg">
+                    {expandedGuidance && Object.keys(parseGuidanceResponse(expandedGuidance)).length > 0 ? (
+                      <DisplayData data={parseGuidanceResponse(expandedGuidance)} />
+                    ) : (
+                      "No guidance summary available."
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
-            
+
             <div className="sticky bottom-0 bg-white p-4 border-t border-gray-200 rounded-b-2xl flex justify-end">
               <button
                 onClick={closeModal}
@@ -483,7 +555,7 @@ const CropForm = () => {
                       <MapPin className="w-4 h-4 mr-1" />
                       {g.location}
                     </p>
-                    
+
                     <div className="flex flex-wrap gap-2 mt-3">
                       <span className="bg-green-100 text-green-800 text-xs px-2.5 py-1 rounded-full">
                         {g.soil_type}
@@ -496,12 +568,12 @@ const CropForm = () => {
                       </span>
                     </div>
                   </div>
-                  
+
                   <div className="bg-green-100 text-green-800 p-2 rounded-lg">
                     <ChevronRight className="w-4 h-4" />
                   </div>
                 </div>
-                
+
                 <div className="pt-3 border-t border-gray-100 flex justify-between items-center">
                   <span className="text-xs text-gray-500">
                     Click to view full guidance
