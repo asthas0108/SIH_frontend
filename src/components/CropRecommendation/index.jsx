@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Leaf,
@@ -6,7 +6,6 @@ import {
   Droplets,
   CloudRain,
   BarChart3,
-  ArrowLeft,
   Zap,
   Target,
   Sparkles,
@@ -16,14 +15,11 @@ import {
   Calendar,
   Cloud,
   Package,
-  DollarSign,
   AlertCircle,
   TrendingDown,
   RefreshCw,
-  Droplet,
   ChevronDown,
   ChevronUp,
-  X
 } from "lucide-react";
 
 const CropRecommendationSystem = () => {
@@ -36,18 +32,37 @@ const CropRecommendationSystem = () => {
     Ph: "",
     Rainfall: "",
   });
-
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showTooltip, setShowTooltip] = useState(null);
   const [results, setResults] = useState(null);
   const [error, setError] = useState(null);
   const [expandedSections, setExpandedSections] = useState({});
+  const [recommendations, setRecommendations] = useState([]);
+
+  const token = localStorage.getItem("token");
+
+  useEffect(() => {
+    const fetchRecommendations = async () => {
+      try {
+        const res = await fetch("http://localhost:8000/crop_recommendation/recommendations", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (!res.ok) throw new Error("Failed to fetch recommendations");
+        const data = await res.json();
+        setRecommendations(data.recommendations || []);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    if (token) {
+      fetchRecommendations();
+    }
+  }, [token]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
-
-  const token = localStorage.getItem('token');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -55,27 +70,32 @@ const CropRecommendationSystem = () => {
     setError(null);
 
     try {
-      console.log("Form submitted:", formData);
+      const response = await fetch(
+        "http://localhost:8000/crop_recommendation/predict",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(formData),
+        }
+      );
 
-      const response = await fetch("http://localhost:8000/crop_recommendation/predict", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
-        },
-        body: JSON.stringify(formData),
-      });
-
-      if (!response.ok) {
-        throw new Error(`API error: ${response.status}`);
-      }
-
+      if (!response.ok) throw new Error(`API error: ${response.status}`);
       const data = await response.json();
-      console.log("API Response:", data);
       setResults(data);
 
-    } catch (error) {
-      console.error("Error submitting form:", error);
+      // Refresh recommendations after new prediction
+      const recRes = await fetch("http://localhost:8000/recommendations", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (recRes.ok) {
+        const recData = await recRes.json();
+        setRecommendations(recData.recommendations || []);
+      }
+    } catch (err) {
+      console.error(err);
       setError("Failed to get crop recommendation. Please try again.");
     } finally {
       setIsSubmitting(false);
@@ -88,17 +108,15 @@ const CropRecommendationSystem = () => {
   };
 
   const toggleSection = (section) => {
-    setExpandedSections(prev => ({
+    setExpandedSections((prev) => ({
       ...prev,
-      [section]: !prev[section]
+      [section]: !prev[section],
     }));
   };
 
   const SuitabilityBadge = ({ score }) => {
     const scoreText = String(score);
-
     let bgColor, textColor, icon;
-
     if (scoreText.includes("Very Low")) {
       bgColor = "bg-red-100";
       textColor = "text-red-800";
@@ -137,7 +155,7 @@ const CropRecommendationSystem = () => {
       icon: <Shapes className="w-4 h-4" />,
       tooltip: "Nitrogen content in soil (0–140 kg/ha)",
       min: 0,
-      max: 140
+      max: 140,
     },
     {
       name: "Phosphorus",
@@ -145,7 +163,7 @@ const CropRecommendationSystem = () => {
       icon: <Shapes className="w-4 h-4" />,
       tooltip: "Phosphorus content in soil (5–205 kg/ha)",
       min: 5,
-      max: 205
+      max: 205,
     },
     {
       name: "Potassium",
@@ -153,7 +171,7 @@ const CropRecommendationSystem = () => {
       icon: <Shapes className="w-4 h-4" />,
       tooltip: "Potassium content in soil (5–205 kg/ha)",
       min: 5,
-      max: 205
+      max: 205,
     },
     {
       name: "Temperature",
@@ -162,7 +180,7 @@ const CropRecommendationSystem = () => {
       tooltip: "Recommended range: 8°C – 45°C",
       min: 8,
       max: 45,
-      step: 0.1
+      step: 0.1,
     },
     {
       name: "Humidity",
@@ -170,16 +188,16 @@ const CropRecommendationSystem = () => {
       icon: <Droplets className="w-4 h-4" />,
       tooltip: "Humidity percentage in air (14% – 100%)",
       min: 14,
-      max: 100
+      max: 100,
     },
     {
       name: "Ph",
       placeholder: "Soil pH level",
-      tooltip: "Soil pH range: 3.5 – 9.5",
       icon: <Shapes className="w-4 h-4" />,
+      tooltip: "Soil pH range: 3.5 – 9.5",
       min: 3.5,
       max: 9.5,
-      step: 0.1
+      step: 0.1,
     },
     {
       name: "Rainfall",
@@ -187,20 +205,113 @@ const CropRecommendationSystem = () => {
       icon: <CloudRain className="w-4 h-4" />,
       tooltip: "Rainfall range: 20 – 300 mm",
       min: 20,
-      max: 300
-    }
+      max: 300,
+    },
   ];
 
   const firstColumnFields = inputFields.slice(0, 4);
   const secondColumnFields = inputFields.slice(4);
 
+  const PastRecommendations = () => (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="bg-white rounded-2xl shadow-lg p-6 mt-10"
+    >
+      <h2 className="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+        <BarChart3 className="w-6 h-6 text-green-600" />
+        Past Recommendations
+      </h2>
+      {recommendations.length === 0 ? (
+        <p className="text-gray-500">No past recommendations found.</p>
+      ) : (
+        <div className="space-y-4">
+          {recommendations.map((rec, index) => (
+            <motion.div
+              key={rec.id}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.05 }}
+              className="border border-gray-200 rounded-xl p-4 hover:shadow-md transition-all bg-gray-50"
+            >
+              <div className="flex justify-between items-center">
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
+                    <Package className="w-5 h-5 text-green-600" />
+                    {rec.predicted_crop}
+                  </h3>
+                  <p className="text-sm text-gray-500">
+                    {new Date(rec.created_at).toLocaleString()}
+                  </p>
+                </div>
+                <SuitabilityBadge score={rec.suitability_score} />
+              </div>
+
+              <div className="mt-3">
+                <button
+                  onClick={() => toggleSection(`rec-${rec.id}`)}
+                  className="flex items-center gap-1 text-sm text-green-600 hover:underline"
+                >
+                  {expandedSections[`rec-${rec.id}`]
+                    ? "Hide Details"
+                    : "View Details"}
+                  {expandedSections[`rec-${rec.id}`] ? (
+                    <ChevronUp className="w-4 h-4" />
+                  ) : (
+                    <ChevronDown className="w-4 h-4" />
+                  )}
+                </button>
+              </div>
+
+              <AnimatePresence>
+                {expandedSections[`rec-${rec.id}`] && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    exit={{ opacity: 0, height: 0 }}
+                    className="mt-3 space-y-2 text-sm text-gray-600"
+                  >
+                    <p>
+                      <Calendar className="inline w-4 h-4 mr-1" />
+                      Planting: {rec.best_planting_time}
+                    </p>
+                    <p>
+                      <Cloud className="inline w-4 h-4 mr-1" />
+                      Harvest: {rec.harvest_period}
+                    </p>
+                    <p>
+                      <Droplets className="inline w-4 h-4 mr-1" />
+                      Water: {rec.water_requirements}
+                    </p>
+                    <p>
+                      <Zap className="inline w-4 h-4 mr-1" />
+                      Fertilizer: {rec.fertilizer_recommendations}
+                    </p>
+                    <p>
+                      <Thermometer className="inline w-4 h-4 mr-1" />
+                      Soil: {rec.soil_condition}
+                    </p>
+                    <p>
+                      <Sparkles className="inline w-4 h-4 mr-1" />
+                      Summary: {rec.summary}
+                    </p>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.div>
+          ))}
+        </div>
+      )}
+    </motion.div>
+  );
+
   if (!results) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50">
+      <div className="min-h-screen flex flex-col items-center p-4 bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 w-full">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white/95 backdrop-blur-sm shadow-2xl rounded-2xl p-6 sm:p-8 w-full max-w-4xl"
+          className="bg-white shadow-2xl rounded-2xl p-6 w-full max-w-4xl"
         >
           <div className="text-center mb-8">
             <motion.div
@@ -353,39 +464,15 @@ const CropRecommendationSystem = () => {
                 ) : (
                   <Sparkles className="w-5 h-5 cursor-pointer" />
                 )}
-                <span className="cursor-pointer">{isSubmitting ? "ANALYZING..." : "PREDICT CROP"}</span>
+                <span className="cursor-pointer">
+                  {isSubmitting ? "ANALYZING..." : "PREDICT CROP"}
+                </span>
               </motion.button>
             </div>
           </form>
-
-          <div className="grid grid-cols-3 gap-4 mt-8 pt-6 border-t border-gray-200">
-            {[
-              { icon: <Target className="w-5 h-5 text-green-600" />, label: "Accurate", desc: "Prediction" },
-              { icon: <Zap className="w-5 h-5 text-amber-600" />, label: "Instant", desc: "Results" },
-              { icon: <BarChart3 className="w-5 h-5 text-blue-600" />, label: "Smart", desc: "Farming" }
-            ].map((feature, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.5 + index * 0.1 }}
-                className="text-center"
-              >
-                <div className="inline-flex items-center justify-center w-10 h-10 bg-gray-100 rounded-full mb-2">
-                  {feature.icon}
-                </div>
-                <p className="text-xs font-semibold text-gray-700">{feature.label}</p>
-                <p className="text-xs text-gray-500">{feature.desc}</p>
-              </motion.div>
-            ))}
-          </div>
-
-          <div className="mt-6 text-center">
-            <p className="text-xs text-gray-500">
-              Our AI analyzes multiple parameters to recommend the best crops for your specific conditions
-            </p>
-          </div>
         </motion.div>
+
+        {recommendations.length > 0 && <PastRecommendations />}
       </div>
     );
   }
@@ -476,199 +563,108 @@ const CropRecommendationSystem = () => {
           </div>
 
           <div className="lg:col-span-2 space-y-8">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="bg-white rounded-2xl shadow-xl p-6 mb-8"
-            >
-              <h2 className="text-xl font-bold text-gray-800 mb-6 flex items-center">
-                <Package className="w-6 h-6 mr-2 text-green-600" />
-                {results.predicted_crop} Details
-              </h2>
+            {["planting", "harvest", "water", "fertilizer", "soil"].map((section) => {
+              const titles = {
+                planting: "Planting Time",
+                harvest: "Harvest Period",
+                water: "Water Requirements",
+                fertilizer: "Fertilizer Recommendations",
+                soil: "Soil Condition",
+              };
+              const icons = {
+                planting: <Calendar className="w-5 h-5 mr-3 text-blue-600" />,
+                harvest: <Cloud className="w-5 h-5 mr-3 text-green-600" />,
+                water: <Droplets className="w-5 h-5 mr-3 text-teal-600" />,
+                fertilizer: <Zap className="w-5 h-5 mr-3 text-yellow-600" />,
+                soil: <Thermometer className="w-5 h-5 mr-3 text-orange-600" />,
+              };
+              const values = {
+                planting: results.best_planting_time,
+                harvest: results.harvest_period,
+                water: results.water_requirements,
+                fertilizer: results.fertilizer_recommendations,
+                soil: results.soil_condition,
+              };
+              const colors = {
+                planting: "border-blue-500 bg-blue-50",
+                harvest: "border-green-500 bg-green-50",
+                water: "border-teal-500 bg-teal-50",
+                fertilizer: "border-yellow-500 bg-yellow-50",
+                soil: "border-orange-500 bg-orange-50",
+              };
 
-              <div className="space-y-4">
+              return (
                 <motion.div
                   whileHover={{ scale: 1.01 }}
-                  className={`p-4 rounded-lg border-l-4 border-blue-500 bg-blue-50 cursor-pointer ${expandedSections.planting ? 'bg-blue-100' : ''}`}
-                  onClick={() => toggleSection('planting')}
+                  key={section}
+                  className={`p-4 rounded-lg border-l-4 cursor-pointer ${colors[section]} ${expandedSections[section] ? "bg-opacity-70" : ""
+                    }`}
+                  onClick={() => toggleSection(section)}
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center">
-                      <Calendar className="w-5 h-5 text-blue-600 mr-3" />
-                      <h3 className="font-semibold text-gray-700">Planting Time</h3>
+                      {icons[section]}
+                      <h3 className="font-semibold text-gray-700">{titles[section]}</h3>
                     </div>
-                    {expandedSections.planting ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                    {expandedSections[section] ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
                   </div>
                   <AnimatePresence>
-                    {expandedSections.planting && (
+                    {expandedSections[section] && (
                       <motion.p
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: "auto" }}
                         exit={{ opacity: 0, height: 0 }}
                         className="text-gray-600 mt-2"
                       >
-                        {results.best_planting_time}
+                        {values[section]}
                       </motion.p>
                     )}
                   </AnimatePresence>
                 </motion.div>
-
-                <motion.div
-                  whileHover={{ scale: 1.01 }}
-                  className={`p-4 rounded-lg border-l-4 border-green-500 bg-green-50 cursor-pointer ${expandedSections.harvest ? 'bg-green-100' : ''}`}
-                  onClick={() => toggleSection('harvest')}
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center">
-                      <Cloud className="w-5 h-5 text-green-600 mr-3" />
-                      <h3 className="font-semibold text-gray-700">Harvest Period</h3>
-                    </div>
-                    {expandedSections.harvest ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-                  </div>
-                  <AnimatePresence>
-                    {expandedSections.harvest && (
-                      <motion.p
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: "auto" }}
-                        exit={{ opacity: 0, height: 0 }}
-                        className="text-gray-600 mt-2"
-                      >
-                        {results.harvest_period}
-                      </motion.p>
-                    )}
-                  </AnimatePresence>
-                </motion.div>
-
-                <motion.div
-                  whileHover={{ scale: 1.01 }}
-                  className={`p-4 rounded-lg border-l-4 border-teal-500 bg-teal-50 cursor-pointer ${expandedSections.water ? 'bg-teal-100' : ''}`}
-                  onClick={() => toggleSection('water')}
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center">
-                      <Droplets className="w-5 h-5 text-teal-600 mr-3" />
-                      <h3 className="font-semibold text-gray-700">Water Requirements</h3>
-                    </div>
-                    {expandedSections.water ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-                  </div>
-                  <AnimatePresence>
-                    {expandedSections.water && (
-                      <motion.p
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: "auto" }}
-                        exit={{ opacity: 0, height: 0 }}
-                        className="text-gray-600 mt-2"
-                      >
-                        {results.water_requirements}
-                      </motion.p>
-                    )}
-                  </AnimatePresence>
-                </motion.div>
-
-                <motion.div
-                  whileHover={{ scale: 1.01 }}
-                  className={`p-4 rounded-lg border-l-4 border-yellow-500 bg-yellow-50 cursor-pointer ${expandedSections.fertilizer ? 'bg-yellow-100' : ''}`}
-                  onClick={() => toggleSection('fertilizer')}
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center">
-                      <Zap className="w-5 h-5 text-yellow-600 mr-3" />
-                      <h3 className="font-semibold text-gray-700">Fertilizer Recommendations</h3>
-                    </div>
-                    {expandedSections.fertilizer ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-                  </div>
-                  <AnimatePresence>
-                    {expandedSections.fertilizer && (
-                      <motion.p
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: "auto" }}
-                        exit={{ opacity: 0, height: 0 }}
-                        className="text-gray-600 mt-2"
-                      >
-                        {results.fertilizer_recommendations}
-                      </motion.p>
-                    )}
-                  </AnimatePresence>
-                </motion.div>
-
-                <motion.div
-                  whileHover={{ scale: 1.01 }}
-                  className={`p-4 rounded-lg border-l-4 border-orange-500 bg-orange-50 cursor-pointer ${expandedSections.soil ? 'bg-orange-100' : ''}`}
-                  onClick={() => toggleSection('soil')}
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center">
-                      <Thermometer className="w-5 h-5 text-orange-600 mr-3" />
-                      <h3 className="font-semibold text-gray-700">Soil Condition</h3>
-                    </div>
-                    {expandedSections.soil ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-                  </div>
-                  <AnimatePresence>
-                    {expandedSections.soil && (
-                      <motion.p
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: "auto" }}
-                        exit={{ opacity: 0, height: 0 }}
-                        className="text-gray-600 mt-2"
-                      >
-                        {results.soil_condition}
-                      </motion.p>
-                    )}
-                  </AnimatePresence>
-                </motion.div>
-              </div>
-            </motion.div>
+              );
+            })}
           </div>
         </div>
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white rounded-2xl shadow-lg overflow-hidden mb-8"
+          className="bg-white rounded-2xl shadow-lg overflow-hidden my-8"
         >
           <div className="flex items-center gap-2 bg-gradient-to-r from-amber-500 to-yellow-400 px-6 py-3">
             <Sparkles className="w-6 h-6 text-white" />
             <h2 className="text-lg md:text-xl font-semibold text-white">Expert Summary</h2>
           </div>
-
           <div className="p-6">
             <div className="relative bg-amber-50 border border-amber-200 rounded-xl p-5">
               <div className="absolute -top-3 -left-3 bg-amber-500 text-white p-2 rounded-full shadow-md">
                 <Sparkles className="w-4 h-4" />
               </div>
-
-              <p className="text-gray-700 leading-relaxed italic">
-                {results.summary}
-              </p>
+              <p className="text-gray-700 leading-relaxed italic">{results.summary}</p>
             </div>
           </div>
         </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="bg-white rounded-2xl shadow-lg p-6"
-        >
-          <h2 className="text-lg font-semibold text-gray-800 flex items-center gap-2 border-b border-gray-200 pb-3 mb-4">
-            <AlertTriangle className="w-5 h-5 text-red-500" /> Risk Factors
-          </h2>
-
-          <div className="flex flex-wrap gap-3">
-            {Array.isArray(results?.risk_factors) &&
-              results.risk_factors.map((risk, index) => (
-                <motion.span
-                  key={index}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: 0.05 * index }}
-                  className="inline-flex items-center px-3 py-1 rounded-3xl text-sm font-medium bg-rose-100 text-rose-700"
-                >
-                  <AlertCircle className="w-4 h-4 mr-1" />
-                  {risk}
-                </motion.span>
+        {/* Risk Factors */}
+        {results.risk_factors && results.risk_factors.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-white rounded-2xl shadow-lg p-6 mb-8"
+          >
+            <h2 className="text-xl font-bold text-gray-800 flex items-center gap-2 mb-4">
+              <AlertTriangle className="w-6 h-6 text-red-600" />
+              Risk Factors
+            </h2>
+            <ul className="list-disc pl-6 text-gray-700 space-y-1">
+              {results.risk_factors.map((risk, idx) => (
+                <li key={idx}>{risk}</li>
               ))}
-          </div>
-        </motion.div>
+            </ul>
+          </motion.div>
+        )}
+
+        {recommendations.length > 0 && <PastRecommendations />}
       </div>
     </div>
   );

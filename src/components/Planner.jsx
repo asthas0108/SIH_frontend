@@ -77,7 +77,7 @@ const CropForm = () => {
 
   const cleanText = (text) => {
     if (typeof text !== "string") return text;
-    return text.replace(/\*\*/g, "");
+    return text.replace(/\\/g, "");
   };
 
   const formatValue = (value) => {
@@ -102,19 +102,33 @@ const CropForm = () => {
     }
 
     if (typeof value === "object") {
+      const bgColors = [
+        "bg-blue-100",
+        "bg-green-100",
+        "bg-yellow-100",
+        "bg-red-100",
+        "bg-purple-100",
+        "bg-pink-100",
+        "bg-indigo-100"
+      ];
+
       return (
-        <div className="ml-4">
+        <div className="ml-4 space-y-2">
           {Object.entries(value).map(([subKey, subValue], idx) => (
-            <div key={idx} className="mb-2">
-              <h4 className="font-semibold text-gray-700">
+            <div
+              key={idx}
+              className={`mb-2 p-2 rounded ${bgColors[idx % bgColors.length]}`}
+            >
+              <h4 className="font-semibold text-gray-900">
                 {subKey.replace(/_/g, " ")}
               </h4>
-              <div className="text-gray-600">{formatValue(subValue)}</div>
+              <div className="text-gray-600 bg-blue">{formatValue(subValue)}</div>
             </div>
           ))}
         </div>
       );
     }
+
 
     return String(value);
   };

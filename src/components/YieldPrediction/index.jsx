@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -15,6 +15,10 @@ import {
   IndianRupee,
   Sprout,
   Loader,
+  ChevronDown,
+  ChevronUp,
+  Package,
+  AlertTriangle,
 } from "lucide-react";
 
 const containerVariants = {
@@ -67,6 +71,38 @@ const YieldPrediction = () => {
   });
   const [predictionData, setPredictionData] = useState(null);
   const [error, setError] = useState("");
+  const [previousPredictions, setPreviousPredictions] = useState([]);
+  const [expandedSections, setExpandedSections] = useState({});
+
+  const token = localStorage.getItem('token');
+
+  useEffect(() => {
+    // Fetch previous predictions when component mounts
+    const fetchPreviousPredictions = async () => {
+      try {
+        const response = await fetch(
+          "http://localhost:8000/yeild_prediction/my_predictions",
+          {
+            method: "GET",
+            headers: {
+              "Authorization": `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (response.ok) {
+          const data = await response.json();
+          setPreviousPredictions(data.yield_predictions || []);
+        }
+      } catch (err) {
+        console.error("Failed to fetch previous predictions:", err);
+      }
+    };
+
+    if (token) {
+      fetchPreviousPredictions();
+    }
+  }, [token]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -75,8 +111,6 @@ const YieldPrediction = () => {
       [name]: value,
     }));
   };
-
-  const token = localStorage.getItem('token');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -114,6 +148,22 @@ const YieldPrediction = () => {
 
       const data = await response.json();
       setPredictionData(data);
+
+      // Refresh previous predictions after new prediction
+      const prevResponse = await fetch(
+        "http://localhost:8000/yeild_prediction/my_predictions",
+        {
+          method: "GET",
+          headers: {
+            "Authorization": `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (prevResponse.ok) {
+        const prevData = await prevResponse.json();
+        setPreviousPredictions(prevData.yield_predictions || []);
+      }
     } catch (err) {
       setError(err.message || "An error occurred while fetching prediction");
     } finally {
@@ -142,6 +192,13 @@ const YieldPrediction = () => {
     navigate("/");
   };
 
+  const toggleSection = (section) => {
+    setExpandedSections((prev) => ({
+      ...prev,
+      [section]: !prev[section],
+    }));
+  };
+
   const getAdditionalInfo = () => {
     if (!predictionData) return [];
     return [
@@ -152,6 +209,125 @@ const YieldPrediction = () => {
       { key: "Expected Market Price", value: predictionData.expected_market_price, icon: IndianRupee },
     ];
   };
+
+  const formatDate = (dateString) => {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  };
+
+  const PastPredictions = () => (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="bg-white rounded-2xl shadow-lg p-6 mt-10"
+    >
+      <h2 className="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+        <BarChart3 className="w-6 h-6 text-green-600" />
+        Previous Yield Predictions
+      </h2>
+      {previousPredictions.length === 0 ? (
+        <p className="text-gray-500">No previous predictions found.</p>
+      ) : (
+        <div className="space-y-4">
+          {previousPredictions.map((pred, index) => (
+            <motion.div
+              key={pred.id}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.05 }}
+              className="border border-gray-200 rounded-xl p-4 hover:shadow-md transition-all bg-gray-50"
+            >
+              <div className="flex justify-between items-center">
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
+                    <Package className="w-5 h-5 text-green-600" />
+                    {pred.predicted_crop} - {pred.item}
+                  </h3>
+                  <p className="text-sm text-gray-500">
+                    {formatDate(pred.created_at)} | {pred.area} | {pred.year}
+                  </p>
+                </div>
+                <div className="text-right">
+                  <div className="text-lg font-bold text-emerald-700">
+                    {pred.predicted_yield} {pred.unit}
+                  </div>
+                  <div className="text-sm text-gray-600">
+                    Suitability: {pred.suitability_score}
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-3">
+                <button
+                  onClick={() => toggleSection(`pred-${pred.id}`)}
+                  className="flex items-center gap-1 text-sm text-green-600 hover:underline"
+                >
+                  {expandedSections[`pred-${pred.id}`]
+                    ? "Hide Details"
+                    : "View Details"}
+                  {expandedSections[`pred-${pred.id}`] ? (
+                    <ChevronUp className="w-4 h-4" />
+                  ) : (
+                    <ChevronDown className="w-4 h-4" />
+                  )}
+                </button>
+              </div>
+
+              <AnimatePresence>
+                {expandedSections[`pred-${pred.id}`] && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    exit={{ opacity: 0, height: 0 }}
+                    className="mt-3 space-y-2 text-sm text-gray-600"
+                  >
+                    <p>
+                      <Calendar className="inline w-4 h-4 mr-1" />
+                      Planting: {pred.best_planting_time}
+                    </p>
+                    <p>
+                      <Calendar className="inline w-4 h-4 mr-1" />
+                      Harvest: {pred.harvest_period}
+                    </p>
+                    <p>
+                      <Droplets className="inline w-4 h-4 mr-1" />
+                      Water: {pred.water_requirements}
+                    </p>
+                    <p>
+                      <Sprout className="inline w-4 h-4 mr-1" />
+                      Fertilizer: {pred.fertilizer_recommendations}
+                    </p>
+                    <p>
+                      <Leaf className="inline w-4 h-4 mr-1" />
+                      Soil: {pred.soil_condition}
+                    </p>
+                    <p>
+                      <IndianRupee className="inline w-4 h-4 mr-1" />
+                      Expected Price: {pred.expected_market_price}
+                    </p>
+                    <p>
+                      <BarChart3 className="inline w-4 h-4 mr-1" />
+                      Expected Yield: {pred.expected_yield}
+                    </p>
+                    {pred.summary && (
+                      <p>
+                        <span className="font-medium">Summary:</span> {pred.summary}
+                      </p>
+                    )}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.div>
+          ))}
+        </div>
+      )}
+    </motion.div>
+  );
 
   if (!predictionData) {
     return (
@@ -261,6 +437,9 @@ const YieldPrediction = () => {
               </motion.button>
             </motion.div>
           </motion.form>
+
+          {/* Display previous predictions below the form */}
+          {previousPredictions.length > 0 && <PastPredictions />}
         </motion.div>
       </div>
     );
@@ -457,6 +636,8 @@ const YieldPrediction = () => {
             </p>
           </motion.div>
         )}
+
+        {previousPredictions.length > 0 && <PastPredictions />}
 
         <motion.div
           initial={{ opacity: 0 }}
