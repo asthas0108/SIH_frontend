@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import TranslateButton from "./Translate";
 
 const Navbar = () => {
   const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
@@ -322,6 +323,13 @@ const Navbar = () => {
             <MessageSquare className="w-4 h-4 lg:w-5 lg:h-5" />
             <span className="font-medium">Feedback</span>
           </motion.button>
+
+          <motion.button className={`flex items-center cursor-pointer gap-1 lg:gap-2 px-3 py-1.5 lg:px-4 lg:py-2 rounded-lg ${scrolled
+              ? "bg-green-100 text-green-800 hover:bg-green-200"
+              : "bg-white/20 text-white hover:bg-white/30"
+              } transition text-sm lg:text-base`}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}><TranslateButton /></motion.button>
 
           <motion.button
             className={`flex items-center justify-center w-10 h-10 rounded-lg ${scrolled
