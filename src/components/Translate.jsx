@@ -20,7 +20,7 @@ export default function TranslateButton() {
   return (
     <button
       onClick={toggleLanguage}
-      className="rounded-lg text-white font-medium cursor-pointer"
+      className="rounded-lg font-medium cursor-pointer"
     >
       {lang === "en" ? "Hindi" : "English"}
     </button>
