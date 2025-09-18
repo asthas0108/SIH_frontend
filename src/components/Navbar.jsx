@@ -17,13 +17,17 @@ import {
   LogIn,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const Navbar = () => {
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
-  const [hasUnreadNotifications, setHasUnreadNotifications] = useState(true);
+  const [latestNotifications, setLatestNotifications] = useState([]);
+  const [unreadCount, setUnreadCount] = useState(0);
   const [scrolled, setScrolled] = useState(false);
   const [currentDate, setCurrentDate] = useState("");
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
@@ -32,68 +36,48 @@ const Navbar = () => {
   const profileRef = useRef(null);
   const notificationsRef = useRef(null);
 
-  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
-  const toggleProfile = () => setIsProfileOpen(!isProfileOpen);
-  const toggleNotifications = () =>
-    setIsNotificationsOpen(!isNotificationsOpen);
-  const toggleDarkMode = () => setIsDarkMode(!isDarkMode);
-
   const navigate = useNavigate();
 
-  const handleMobileMenuItemClick = () => {
-    setIsMenuOpen(false);
-  };
+  useEffect(() => {
+    const fetchNotifications = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        if (!token) return;
 
-  const handleHome = () => {
-    navigate("/");
-  };
+        const res = await fetch(
+          "http://localhost:8000/notifications/my_notifications",
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
 
-  const handleCalendar = () => {
-    navigate("/calendar");
-  };
+        if (!res.ok) throw new Error("Failed to fetch notifications");
 
-  const handleProfile = () => {
-    navigate("/profile");
-  };
+        const data = await res.json();
+        const sorted = data.sort(
+          (a, b) => new Date(b.created_at) - new Date(a.created_at)
+        );
+        setLatestNotifications(sorted.slice(0, 2));
+        setUnreadCount(sorted.filter((n) => !n.is_read).length);
+      } catch (error) {
+        console.error("Error fetching notifications:", error);
+      }
+    };
 
-  const handleFeedback = () => {
-    navigate("/feedback");
-  };
-
-  const handleSettings = () => {
-    navigate("/settings");
-  };
-
-  const handleHelp = () => {
-    navigate("/help");
-  };
-
-  const handleNotifications = () => {
-    navigate("/notifications");
-  }
-
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('userId');
-    localStorage.removeItem('user_id');
-    localStorage.removeItem('access_token');
-    window.location.href = "/";
-    setShowLogoutConfirm(false);
-  };
-
+    fetchNotifications();
+  }, []);
 
   useEffect(() => {
     const date = new Date();
-    const formattedDate = date.toLocaleDateString("en-US", {
-      weekday: "short",
-      month: "short",
-      day: "numeric",
-    });
-    setCurrentDate(formattedDate);
+    setCurrentDate(
+      date.toLocaleDateString("en-US", {
+        weekday: "short",
+        month: "short",
+        day: "numeric",
+      })
+    );
 
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 10);
-    };
+    const handleScroll = () => setScrolled(window.scrollY > 10);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -109,41 +93,88 @@ const Navbar = () => {
       ) {
         setIsNotificationsOpen(false);
       }
-      if (
-        menuRef.current &&
-        !menuRef.current.contains(event.target) &&
-        isMenuOpen
-      ) {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
         setIsMenuOpen(false);
       }
     };
-
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [isMenuOpen]);
+  }, []);
 
-  const notifications = [
-    {
-      id: 1,
-      text: "Your soil analysis report is ready",
-      time: "10 mins ago",
-      read: false,
-    },
-    {
-      id: 2,
-      text: "New crop recommendations available",
-      time: "1 hour ago",
-      read: false,
-    },
-    {
-      id: 3,
-      text: "Weather alert: Rain expected tomorrow",
-      time: "2 hours ago",
-      read: true,
-    },
-  ];
+  const handleHome = () => navigate("/");
+  const handleCalendar = () => navigate("/calendar");
+  const handleProfile = () => navigate("/profile");
+  const handleFeedback = () => navigate("/feedback");
+  const handleSettings = () => navigate("/settings");
+  const handleHelp = () => navigate("/help");
+  const handleNotifications = () => navigate("/notifications");
 
-  const unreadCount = notifications.filter((n) => !n.read).length;
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("userId");
+    localStorage.removeItem("user_id");
+    localStorage.removeItem("access_token");
+    window.location.href = "/";
+    setShowLogoutConfirm(false);
+  };
+
+  const token = localStorage.getItem('token');
+
+  const [farmerData, setFarmerData] = useState({
+    name: "------ ------",
+    logo: "--",
+    role: "farmer",
+    email: "xyz@email",
+    language: "हिंदी (Hindi)",
+  });
+
+  const get_Profile = async (userId, token) => {
+    try {
+      const response = await axios.get(`${API_BASE_URL}/users/get_profile/${userId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching profile:", error.response?.data || error.message);
+      throw error;
+    }
+  };
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const userId = localStorage.getItem("userId");
+        const data = await get_Profile(userId, token);
+
+        setFarmerData(prev => ({
+          name: data.full_name || prev.name,
+          logo: data.full_name[0],
+          role: data.role,
+          email: data.email,
+          language: data.preferred_language
+        }));
+
+        console.log("Mapped farmer data:", data);
+        console.log(data.isPhoneVerified);
+      } catch (err) {
+        console.error("Failed to load profile", err);
+      }
+    };
+
+    fetchProfile();
+  }, []);
+
+  const handleMobileMenuItemClick = () => { setIsMenuOpen(false) };
+
+  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+  const toggleProfile = () => setIsProfileOpen(!isProfileOpen);
+  const toggleNotifications = () =>
+    setIsNotificationsOpen(!isNotificationsOpen);
+  const toggleDarkMode = () => setIsDarkMode(!isDarkMode);
 
   const menuVariants = {
     closed: { opacity: 0, height: 0, transition: { duration: 0.3 } },
@@ -172,15 +203,14 @@ const Navbar = () => {
         animate="animate"
       >
         <motion.div
-          className="flex items-cewhileHover={{ scale: 1.02 }}nter gap-2 md:gap-3 cursor-pointer items-center"
-
+          className="flex items-center gap-2 md:gap-3 cursor-pointer"
           whileTap={{ scale: 0.98 }}
           onClick={handleHome}
         >
-          <div className="w-10 h-10 md:w-10 md:h-10 rounded-full bg-green-800 flex items-center justify-center shadow-sm">
-            <img src="/logo-no-background.png" alt="" />
+          <div className="w-10 h-10 md:w-10 md:h-10 rounded-full bg-green-800 flex items-center justify-center shadow-sm cursor-pointer">
+            <img src="/logo-no-background.png" alt="Logo" />
           </div>
-          <h1 className="text-lg md:text-xl font-bold tracking-wide text-white">
+          <h1 className="text-lg md:text-xl font-bold tracking-wide text-white cursor-pointer">
             KisanMitra
           </h1>
         </motion.div>
@@ -190,12 +220,9 @@ const Navbar = () => {
           onClick={handleCalendar}
         >
           <Calendar className="w-4 h-4 text-green-700" />
-          <span className="text-sm font-medium text-green-800">
-            {currentDate}
-          </span>
+          <span className="text-sm font-medium text-green-800 cursor-pointer">{currentDate}</span>
         </div>
 
-        {/* Search */}
         <motion.div
           className="hidden md:flex flex-1 max-w-md mx-4 lg:mx-8"
           initial={{ opacity: 0 }}
@@ -210,7 +237,7 @@ const Navbar = () => {
               className={`w-full pl-10 pr-4 py-2 rounded-lg ${scrolled
                 ? "bg-green-50 text-green-800 placeholder-green-600 border border-green-200 focus:ring-2 focus:ring-green-400"
                 : "bg-white/20 text-white placeholder-green-100 border border-green-300/30 focus:ring-2 focus:ring-green-200"
-                } focus:outline-none focus:border-transparent`}
+                } focus:outline-none focus:border-transparent cursor-pointer`}
             />
           </div>
         </motion.div>
@@ -223,11 +250,9 @@ const Navbar = () => {
                 : "bg-white/20 text-white hover:bg-white/30"
                 } transition`}
               onClick={toggleNotifications}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
             >
               <Bell className="w-5 h-5" />
-              {hasUnreadNotifications && (
+              {unreadCount > 0 && (
                 <motion.span
                   className="absolute -top-1 -right-1 w-4 h-4 bg-amber-500 text-xs text-white rounded-full flex items-center justify-center"
                   initial={{ scale: 0 }}
@@ -249,30 +274,36 @@ const Navbar = () => {
                   exit="closed"
                 >
                   <div className="px-4 py-2 border-b border-green-200">
-                    <h3 className="font-semibold text-green-800">
-                      Notifications
-                    </h3>
+                    <h3 className="font-semibold text-green-800">Notifications</h3>
                   </div>
                   <div className="max-h-96 overflow-y-auto">
-                    {notifications.map((notification) => (
+                    {latestNotifications.length === 0 && (
+                      <p className="text-center text-gray-500 py-4 cursor-pointer">
+                        No notifications
+                      </p>
+                    )}
+                    {latestNotifications.map((notification) => (
                       <motion.div
                         key={notification.id}
-                        className={`px-4 py-3 hover:bg-green-50 transition ${!notification.read ? "bg-green-50" : ""
-                          }`}
+                        className={`px-4 py-3 hover:bg-green-50 transition ${!notification.is_read ? "bg-green-50" : ""
+                          } cursor-pointer`}
                         whileHover={{ x: 5 }}
                       >
-                        <p className="text-sm text-gray-800">
-                          {notification.text}
-                        </p>
+                        <p className="text-sm text-gray-800">{notification.title}</p>
                         <p className="text-xs text-green-600 mt-1">
-                          {notification.time}
+                          {new Date(notification.created_at).toLocaleTimeString([], {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })}
                         </p>
                       </motion.div>
                     ))}
                   </div>
                   <div className="px-4 py-2 border-t border-green-200">
-                    <button className="text-sm text-green-600 font-medium w-full text-center hover:text-green-800 transition cursor-pointer"
-                      onClick={() => window.location.href = "/notifications"}>
+                    <button
+                      className="text-sm text-green-600 font-medium w-full text-center hover:text-green-800 transition cursor-pointer"
+                      onClick={handleNotifications}
+                    >
                       View All Notifications
                     </button>
                   </div>
@@ -281,14 +312,11 @@ const Navbar = () => {
             </AnimatePresence>
           </div>
 
-          {/* Feedback */}
           <motion.button
-            className={`flex items-center cursor-pointer gap-1 lg:gap-2 px-3 py-1.5 lg:px-4 lg:py-2 rounded-lg ${scrolled
+            className={`flex items-center gap-1 lg:gap-2 px-3 py-1.5 lg:px-4 lg:py-2 rounded-lg ${scrolled
               ? "bg-green-100 text-green-800 hover:bg-green-200"
               : "bg-white/20 text-white hover:bg-white/30"
-              } transition text-sm lg:text-base`}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+              } transition text-sm lg:text-base cursor-pointer`}
             onClick={handleFeedback}
           >
             <MessageSquare className="w-4 h-4 lg:w-5 lg:h-5" />
@@ -296,48 +324,52 @@ const Navbar = () => {
           </motion.button>
 
           <motion.button
-            className={`flex cursor-pointer items-center justify-center w-10 h-10 rounded-lg ${scrolled
+            className={`flex items-center justify-center w-10 h-10 rounded-lg ${scrolled
               ? "bg-green-100 text-green-700 hover:bg-green-200"
               : "bg-white/20 text-white hover:bg-white/30"
-              } transition`}
+              } transition cursor-pointer`}
             onClick={toggleDarkMode}
-            whileHover={{ scale: 1.1, rotate: 180 }}
-            whileTap={{ scale: 0.9 }}
-            transition={{ type: "spring", stiffness: 300 }}
           >
-            {isDarkMode ? (
-              <Sun className="w-5 h-5" />
-            ) : (
-              <Moon className="w-5 h-5" />
-            )}
+            {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
           </motion.button>
 
           <div className="relative" ref={profileRef}>
-            <motion.button
-              className={`flex cursor-pointer items-center gap-2 px-3 py-1.5 rounded-lg ${scrolled
+            {token ? <motion.button
+              className={`flex items-center gap-2 px-3 py-1.5 rounded-lg ${scrolled
                 ? "bg-green-100 text-green-800 hover:bg-green-200"
                 : "bg-white/20 text-white hover:bg-white/30"
-                } transition`}
+                } transition cursor-pointer`}
               onClick={toggleProfile}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
             >
               <div
-                className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${scrolled
-                  ? "bg-green-600 text-white"
-                  : "bg-white text-green-700"
+                className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${scrolled ? "bg-green-600 text-white" : "bg-white text-green-700"
                   }`}
               >
-                JD
+                {farmerData.logo}
               </div>
-              <span className="font-medium text-sm">John Doe</span>
+              <span className="font-medium text-sm cursor-pointer">{farmerData.name}</span>
               <motion.div
                 animate={{ rotate: isProfileOpen ? 180 : 0 }}
                 transition={{ duration: 0.2 }}
               >
-                <ChevronDown className="w-4 h-4" />
+                <ChevronDown className="w-4 h-4 cursor-pointer" />
               </motion.div>
             </motion.button>
+              :
+              <motion.button
+                className={`flex items-center justify-center gap-2 px-4 py-2 rounded-full font-medium text-white shadow-md cursor-pointer
+    bg-gradient-to-r from-green-500 to-green-600
+    hover:from-green-600 hover:to-green-700
+    active:scale-95
+    transition-all duration-300`}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={toggleProfile}
+              >
+                <span>Get Started</span>
+              </motion.button>
+
+            }
 
             <AnimatePresence>
               {isProfileOpen && (
@@ -348,30 +380,23 @@ const Navbar = () => {
                   animate="open"
                   exit="closed"
                 >
-                  <div className="px-5 py-4 border-b border-green-100 bg-gradient-to-r from-green-50 to-blue-50">
+                  {token && <div className="px-5 py-4 border-b border-green-100 bg-gradient-to-r from-green-50 to-blue-50 cursor-pointer">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-lg">
-                        JD
+                      <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-lg cursor-pointer">
+                        {farmerData.logo}
                       </div>
                       <div>
-                        <p className="text-xs text-green-600 font-medium">
-                          Signed in as
-                        </p>
-                        <p className="font-semibold text-gray-800 text-sm">
-                          John Doe
-                        </p>
-                        <p className="text-xs text-gray-500">
-                          john.doe@example.com
-                        </p>
+                        <p className="text-xs text-green-600 font-medium cursor-pointer">Signed in as</p>
+                        <p className="font-semibold text-gray-800 text-sm cursor-pointer">{farmerData.name}</p>
+                        <p className="text-xs text-gray-500 cursor-pointer">{farmerData.email}</p>
                       </div>
                     </div>
                   </div>
+                  }
 
                   <div className="py-2">
-                    <motion.button
+                    {token && <motion.button
                       className="flex items-center gap-3 w-full px-5 py-3 text-sm text-gray-700 hover:bg-gradient-to-r hover:from-green-50 hover:to-green-100 transition-all duration-200 group cursor-pointer"
-                      whileHover={{ x: 5 }}
-                      whileTap={{ scale: 0.98 }}
                       onClick={handleProfile}
                     >
                       <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center group-hover:bg-green-200 transition-colors">
@@ -379,16 +404,13 @@ const Navbar = () => {
                       </div>
                       <div className="flex-1 text-left">
                         <span className="font-medium">Profile</span>
-                        <p className="text-xs text-gray-500">
-                          Manage your account
-                        </p>
+                        <p className="text-xs text-gray-500">Manage your account</p>
                       </div>
-                    </motion.button>
+                    </motion.button>}
 
-                    <motion.button
+
+                    {token && <motion.button
                       className="flex items-center gap-3 w-full px-5 py-3 text-sm text-gray-700 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 transition-all duration-200 group cursor-pointer"
-                      whileHover={{ x: 5 }}
-                      whileTap={{ scale: 0.98 }}
                       onClick={handleSettings}
                     >
                       <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center group-hover:bg-blue-200 transition-colors">
@@ -396,36 +418,25 @@ const Navbar = () => {
                       </div>
                       <div className="flex-1 text-left">
                         <span className="font-medium">Settings</span>
-                        <p className="text-xs text-gray-500">
-                          Preferences & privacy
-                        </p>
+                        <p className="text-xs text-gray-500">Application preferences</p>
                       </div>
-                    </motion.button>
+                    </motion.button>}
 
                     <motion.button
-                      className="flex items-center gap-3 w-full px-5 py-3 text-sm text-gray-700 hover:bg-gradient-to-r hover:from-purple-50 hover:to-purple-100 transition-all duration-200 group cursor-pointer"
-                      whileHover={{ x: 5 }}
-                      whileTap={{ scale: 0.98 }}
+                      className="flex items-center gap-3 w-full px-5 py-3 text-sm text-gray-700 hover:bg-gradient-to-r hover:from-amber-50 hover:to-amber-100 transition-all duration-200 group cursor-pointer"
                       onClick={handleHelp}
                     >
-                      <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center group-hover:bg-purple-200 transition-colors">
-                        <HelpCircle className="w-4 h-4 text-purple-600" />
+                      <div className="w-8 h-8 bg-amber-100 rounded-lg flex items-center justify-center group-hover:bg-amber-200 transition-colors">
+                        <HelpCircle className="w-4 h-4 text-amber-600" />
                       </div>
                       <div className="flex-1 text-left">
-                        <span className="font-medium">Help & Support</span>
-                        <p className="text-xs text-gray-500">
-                          Get help & contact us
-                        </p>
+                        <span className="font-medium">Help</span>
+                        <p className="text-xs text-gray-500">FAQ & support</p>
                       </div>
                     </motion.button>
-                  </div>
 
-                  {localStorage.getItem('token') && <div className="px-2 pb-2">
-                    <div className="border-t border-gray-200 my-2"></div>
-                    <motion.button
-                      className="flex items-center gap-3 w-full px-3 py-2 text-sm text-red-600 hover:bg-gradient-to-r hover:from-red-50 hover:to-red-100 rounded-lg transition-all duration-200 group cursor-pointer"
-                      whileHover={{ x: 5 }}
-                      whileTap={{ scale: 0.98 }}
+                    {token ? <motion.button
+                      className="flex items-center gap-3 w-full px-5 py-3 text-sm text-gray-700 hover:bg-gradient-to-r hover:from-red-50 hover:to-red-100 transition-all duration-200 group cursor-pointer"
                       onClick={() => setShowLogoutConfirm(true)}
                     >
                       <div className="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center group-hover:bg-red-200 transition-colors">
@@ -433,32 +444,23 @@ const Navbar = () => {
                       </div>
                       <div className="flex-1 text-left">
                         <span className="font-medium">Logout</span>
-                        <p className="text-xs text-red-400">
-                          Sign out of your account
-                        </p>
+                        <p className="text-xs text-gray-500">Sign out of your account</p>
                       </div>
-                    </motion.button>
-                  </div>}
+                    </motion.button> :
+                      <motion.button
+                        className="flex items-center gap-3 w-full px-5 py-3 text-sm text-gray-700 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 transition-all duration-200 group cursor-pointer" onClick={() => window.location.href = '/signup'}
+                      >
+                        <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center group-hover:bg-red-200 transition-colors">
+                          <LogIn className="w-4 h-4 text-blue-600" />
+                        </div>
+                        <div className="flex-1 text-left">
+                          <span className="font-medium">LogIn</span>
+                          <p className="text-xs text-gray-500">Sign in to your account</p>
+                        </div>
+                      </motion.button>
+                    }
 
-                  {!localStorage.getItem('token') && <div className="px-2 pb-2">
-                    <div className="border-t border-gray-200 my-2"></div>
-                    <motion.button
-                      className="flex items-center gap-3 w-full px-3 py-2 text-sm text-blue-600 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 rounded-lg transition-all duration-200 group cursor-pointer"
-                      whileHover={{ x: 5 }}
-                      whileTap={{ scale: 0.98 }}
-                      onClick={() => window.location.href = "/signup"}
-                    >
-                      <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center group-hover:bg-blue-200 transition-colors">
-                        <LogIn className="w-4 h-4 text-blue-800" />
-                      </div>
-                      <div className="flex-1 text-left">
-                        <span className="font-medium">LogIn</span>
-                        <p className="text-xs text-blue-400">
-                          Sign in to your account
-                        </p>
-                      </div>
-                    </motion.button>
-                  </div>}
+                  </div>
                 </motion.div>
               )}
             </AnimatePresence>
@@ -515,13 +517,21 @@ const Navbar = () => {
           >
             <div className="flex flex-col divide-y divide-gray-100">
               {[
-                { label: "Home", onClick: handleHome },
-                { label: "Profile", onClick: handleProfile },
-                { label: "Settings", onClick: handleSettings },
-                { label: "Notifications", onClick: handleNotifications },
-                { label: "Help & Support", onClick: handleHelp },
-                { label: "Calendar", onClick: handleCalendar },
-                { label: "Feedback", onClick: handleFeedback },
+                ...(localStorage.getItem("token")
+                  ? [
+                    { label: "Home", onClick: handleHome },
+                    { label: "Profile", onClick: handleProfile },
+                    { label: "Settings", onClick: handleSettings },
+                    { label: "Notifications", onClick: handleNotifications },
+                    { label: "Help & Support", onClick: handleHelp },
+                    { label: "Calendar", onClick: handleCalendar },
+                    { label: "Feedback", onClick: handleFeedback },
+                  ]
+                  : [
+                    { label: "Home", onClick: handleHome },
+                    { label: "Help & Support", onClick: handleHelp },
+                  ]
+                ),
               ].map((item, idx) => (
                 <motion.button
                   key={idx}
@@ -530,12 +540,12 @@ const Navbar = () => {
                     handleMobileMenuItemClick();
                   }}
                   className="px-6 py-4 text-left 
-                       text-gray-700 font-medium 
-                       hover:bg-gradient-to-r 
-                       hover:from-green-50 hover:to-green-100 
-                       hover:text-green-700 
-                       transition-all duration-300
-                       flex items-center gap-3"
+                 text-gray-700 font-medium 
+                 hover:bg-gradient-to-r 
+                 hover:from-green-50 hover:to-green-100 
+                 hover:text-green-700 
+                 transition-all duration-300
+                 flex items-center gap-3"
                   whileHover={{ x: 8 }}
                   whileTap={{ scale: 0.96 }}
                 >
@@ -563,9 +573,9 @@ const Navbar = () => {
               {!localStorage.getItem('token') && <motion.button
                 onClick={
                   () => {
-                  handleMobileMenuItemClick();
-                  navigate("/signup");
-                }}
+                    handleMobileMenuItemClick();
+                    navigate("/signup");
+                  }}
                 className="px-6 py-4 text-left 
                      text-blue-600 font-semibold
                      hover:bg-gradient-to-r 
