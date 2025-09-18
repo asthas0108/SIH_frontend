@@ -10,7 +10,7 @@ import OrganicFarming from "./components/OrganicFarming/index";
 import PlantDiseaseDetection from "./components/PlantDisease";
 import SoilHealthAnalysis from "./components/SoilHealth";
 import ChatBot from "./components/ChatBot";
-
+import CropPriceTracker from "./components/MarketPriceTracker";
 function Home() {
   return (
     <>
@@ -44,6 +44,7 @@ function App() {
             <Route path="/organicFarming" element={<OrganicFarming />} />
             <Route path="/weatherCheck" element={<WeatherCheck />} />
             <Route path="/soilHealth" element={<SoilHealthAnalysis />} />
+            <Route path="/marketPrices" element={<CropPriceTracker />} />
             <Route path="/chatbot" element={<ChatBot />} />
           </Routes>
         </main>
