@@ -11,6 +11,7 @@
     "setup-weather": "node setup-weather.js"
   },
   "dependencies": {
+    "@google/generative-ai": "^0.24.1",
     "@tailwindcss/vite": "^4.1.12",
     "axios": "^1.11.0",
     "dompurify": "^3.2.6",
