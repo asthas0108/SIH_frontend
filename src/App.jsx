@@ -29,6 +29,7 @@ import SmartFarming from "./components/SmartFarming/SmartFarmingEnhanced";
 import FarmerAuth from "./components/FarmerAuth";
 import CropForm from "./components/Planner";
 import PlannerIntro from "./components/PlannerIntro";
+import KisanMitraDashboard from "./components/Dashboard";
 
 function Home() {
   return (
@@ -86,6 +87,7 @@ function App() {
             <Route path="/signup" element={<FarmerAuth />} />
             <Route path="/planner" element={<CropForm />} />
             <Route path="/plannerIntro" element={<PlannerIntro />} />
+            <Route path="/dashboard" element={<KisanMitraDashboard />} />
           </Routes>
         </main>
         <FooterConditional />
