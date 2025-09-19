@@ -30,6 +30,7 @@ import FarmerAuth from "./components/FarmerAuth";
 import CropForm from "./components/Planner";
 import PlannerIntro from "./components/PlannerIntro";
 import KisanMitraDashboard from "./components/Dashboard";
+import Chatbot1 from "./components/FarmerChatbot";
 
 function Home() {
   return (
@@ -65,6 +66,7 @@ function App() {
     <Router>
       <div className="min-h-screen flex flex-col">
         <NavBarConditional />
+        <Chatbot1 />
         <main className="flex-grow">
           <Routes>
             <Route path="/" element={<Home />} />
