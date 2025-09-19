@@ -29,6 +29,8 @@ import SmartFarming from "./components/SmartFarming/SmartFarmingEnhanced";
 import FarmerAuth from "./components/FarmerAuth";
 import CropForm from "./components/Planner";
 import PlannerIntro from "./components/PlannerIntro";
+import KisanMitraDashboard from "./components/Dashboard";
+import Chatbot1 from "./components/FarmerChatbot";
 
 function Home() {
   return (
@@ -64,6 +66,7 @@ function App() {
     <Router>
       <div className="min-h-screen flex flex-col">
         <NavBarConditional />
+        <Chatbot1 />
         <main className="flex-grow">
           <Routes>
             <Route path="/" element={<Home />} />
@@ -86,6 +89,7 @@ function App() {
             <Route path="/signup" element={<FarmerAuth />} />
             <Route path="/planner" element={<CropForm />} />
             <Route path="/plannerIntro" element={<PlannerIntro />} />
+            <Route path="/dashboard" element={<KisanMitraDashboard />} />
           </Routes>
         </main>
         <FooterConditional />

@@ -87,7 +87,7 @@ const CropRecommendationSystem = () => {
       setResults(data);
 
       // Refresh recommendations after new prediction
-      const recRes = await fetch("http://localhost:8000/recommendations", {
+      const recRes = await fetch("http://localhost:8000/crop_recommendation/recommendations", {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (recRes.ok) {
@@ -657,7 +657,7 @@ const CropRecommendationSystem = () => {
               Risk Factors
             </h2>
             <ul className="list-disc pl-6 text-gray-700 space-y-1">
-              {results.risk_factors.map((risk, idx) => (
+              {results.risk_factors.length > 0 && results.risk_factors.map((risk, idx) => (
                 <li key={idx}>{risk}</li>
               ))}
             </ul>
