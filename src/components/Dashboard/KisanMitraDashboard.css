@@ -1,0 +1,682 @@
+
+/* Kisan Mitra Dashboard Styles - Scoped with km- prefix */
+.kisan-mitra-dashboard {
+  max-width: 1400px;
+  margin: 20px auto;
+  padding: 20px;
+  background: #f8f9fa;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.km-dashboard-header {
+  text-align: center;
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.km-dashboard-header h1 {
+  color: #2e7d32;
+  font-size: 2.2rem;
+  margin-bottom: 10px;
+}
+
+.km-dashboard-header p {
+  color: #666;
+  font-size: 1.1rem;
+}
+
+.km-dashboard-nav {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.km-dashboard-nav button {
+  padding: 12px 24px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.km-dashboard-nav button:hover {
+  background-color: #f0f0f0;
+}
+
+.km-dashboard-nav button.km-active {
+  background-color: #2e7d32;
+  color: white;
+  border-color: #2e7d32;
+}
+
+.km-dashboard-content {
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+/* Overview Grid */
+.km-overview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.km-overview-card {
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.km-overview-card h3 {
+  margin-bottom: 15px;
+  color: #2e7d32;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Weather Widget */
+.km-weather-widget {
+  background: linear-gradient(135deg, #64b5f6, #1976d2);
+  color: white;
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.km-weather-widget h3 {
+  color: white;
+  margin-bottom: 15px;
+}
+
+.km-current-weather {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.km-weather-icon {
+  margin-bottom: 10px;
+  font-size: 2rem;
+}
+
+.km-weather-temp {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.km-weather-condition {
+  margin-bottom: 15px;
+  font-size: 1.1rem;
+}
+
+.km-weather-details {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.km-detail {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.km-weather-forecast {
+  display: flex;
+  justify-content: space-between;
+}
+
+.km-forecast-day {
+  text-align: center;
+}
+
+.km-day-name {
+  font-weight: 500;
+  margin-bottom: 5px;
+}
+
+.km-day-temp {
+  display: flex;
+  flex-direction: column;
+}
+
+.km-high {
+  font-weight: bold;
+}
+
+.km-low {
+  color: #e3f2fd;
+}
+
+/* Sensor Dashboard */
+.km-sensor-dashboard h3 {
+  color: #2e7d32;
+  margin-bottom: 15px;
+}
+
+.km-sensor-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.km-sensor-card {
+  background-color: white;
+  border-radius: 8px;
+  padding: 15px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  text-align: center;
+}
+
+.km-sensor-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  font-weight: 500;
+}
+
+.km-sensor-value {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #2e7d32;
+}
+
+.km-sensor-status {
+  font-size: 0.9rem;
+  padding: 3px 8px;
+  border-radius: 12px;
+  display: inline-block;
+}
+
+.km-sensor-status.km-optimal {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.km-sensor-status.km-low {
+  background-color: #ffebee;
+  color: #f44336;
+}
+
+.km-sensor-status.km-high {
+  background-color: #fff8e1;
+  color: #ffa000;
+}
+
+.km-sensor-status.km-needed {
+  background-color: #e3f2fd;
+  color: #1976d2;
+}
+
+.km-sensor-status.km-adequate {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.km-sensor-status.km-excessive {
+  background-color: #ffebee;
+  color: #f44336;
+}
+
+.km-sensor-status.km-acidic, .km-sensor-status.km-slightly-acidic {
+  background-color: #ffebee;
+  color: #f44336;
+}
+
+.km-sensor-status.km-neutral {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.km-sensor-status.km-alkaline {
+  background-color: #fff8e1;
+  color: #ffa000;
+}
+
+.km-nutrient-chart {
+  margin-top: 20px;
+}
+
+.km-nutrient-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.km-nutrient-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.km-nutrient-label {
+  width: 100px;
+  font-weight: 500;
+}
+
+.km-nutrient-container {
+  flex-grow: 1;
+  height: 20px;
+  background-color: #eee;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.km-nutrient-fill {
+  height: 100%;
+  border-radius: 10px;
+}
+
+.km-nitrogen {
+  background-color: #4caf50;
+}
+
+.km-phosphorus {
+  background-color: #ff9800;
+}
+
+.km-potassium {
+  background-color: #f44336;
+}
+
+.km-nutrient-value {
+  width: 50px;
+  text-align: right;
+  font-weight: bold;
+}
+
+.km-drone-data {
+  margin-top: 20px;
+}
+
+.km-drone-stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+}
+
+.km-drone-stat {
+  background-color: white;
+  border-radius: 8px;
+  padding: 15px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  text-align: center;
+}
+
+.km-drone-stat .km-value {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #2e7d32;
+}
+
+/* Government Schemes */
+.km-schemes-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.km-scheme-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.km-scheme-info h4 {
+  color: #2e7d32;
+  margin-bottom: 5px;
+}
+
+.km-scheme-info p {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.km-status {
+  padding: 5px 10px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.km-status.km-active {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+/* Quick Stats */
+.km-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+}
+
+.km-stat {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 15px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.km-stat-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: #e8f5e9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #2e7d32;
+  font-size: 1.2rem;
+}
+
+.km-stat-value {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #2e7d32;
+}
+
+.km-stat-label {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+/* Predictions View */
+.km-predictions-view h2, .km-recommendations-view h2, 
+.km-guidance-view h2, .km-calendar-view h2 {
+  color: #2e7d32;
+  margin-bottom: 20px;
+}
+
+.km-prediction-card, .km-recommendation-card, .km-guidance-card {
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.km-prediction-header, .km-recommendation-header, .km-guidance-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #eee;
+}
+
+.km-prediction-header h3, .km-recommendation-header h3, .km-guidance-header h3 {
+  color: #2e7d32;
+}
+
+.km-date {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.km-score {
+  background-color: #2e7d32;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 12px;
+  font-weight: bold;
+}
+
+.km-prediction-details, .km-recommendation-details {
+  margin-bottom: 15px;
+}
+
+.km-detail {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.km-detail-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.km-label {
+  font-weight: 500;
+  color: #555;
+}
+
+.km-value {
+  font-weight: 500;
+  color: #2e7d32;
+}
+
+.km-prediction-summary, .km-recommendation-summary, .km-guidance-section {
+  margin-top: 15px;
+}
+
+.km-prediction-summary h4, .km-recommendation-summary h4, .km-guidance-section h4 {
+  color: #2e7d32;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.km-risk-factors {
+  background-color: #ffebee;
+  border-left: 4px solid #f44336;
+  padding: 15px;
+  border-radius: 4px;
+  margin: 15px 0;
+}
+
+.km-risk-factors h4 {
+  color: #f44336;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.km-risk-factors ul {
+  padding-left: 20px;
+}
+
+.km-risk-factors li {
+  margin-bottom: 5px;
+}
+
+/* Guidance View */
+.km-suitability {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.km-tooltip {
+  position: relative;
+  cursor: pointer;
+}
+
+.km-tooltip-text {
+  visibility: hidden;
+  width: 200px;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.km-tooltip:hover .km-tooltip-text {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* Calendar View */
+.km-calendar-container {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 30px;
+}
+
+.km-calendar-chart {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.km-chart-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  height: 300px;
+  padding: 20px 0;
+}
+
+.km-chart-bar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+}
+
+.km-bar-label {
+  margin-bottom: 10px;
+  font-weight: 500;
+}
+
+.km-bar-container {
+  width: 30px;
+  height: 100%;
+  background-color: #eee;
+  border-radius: 15px;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+}
+
+.km-bar-fill {
+  width: 100%;
+  background-color: #4caf50;
+  transition: height 0.5s ease;
+}
+
+.km-bar-value {
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+.km-activities-list {
+  margin-top: 20px;
+}
+
+.km-activity-item {
+  display: grid;
+  grid-template-columns: 40px 1fr 60px 40px;
+  align-items: center;
+  gap: 15px;
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.km-month {
+  font-weight: bold;
+  color: #2e7d32;
+}
+
+.km-progress-bar {
+  width: 100%;
+  height: 8px;
+  background-color: #eee;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.km-progress-fill {
+  height: 100%;
+  background-color: #2e7d32;
+  border-radius: 4px;
+}
+
+.km-progress-value {
+  text-align: right;
+  font-weight: 500;
+  color: #2e7d32;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .km-overview-grid {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  }
+  
+  .km-calendar-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .km-dashboard-nav {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .km-sensor-grid, .km-drone-stats, .km-stats-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .km-detail-row {
+    grid-template-columns: 1fr;
+  }
+  
+  .km-weather-forecast {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+  }
+  
+  .km-activity-item {
+    grid-template-columns: 1fr;
+    text-align: center;
+    gap: 5px;
+  }
+  
+  .km-chart-container {
+    flex-wrap: wrap;
+    height: auto;
+    gap: 15px;
+  }
+  
+  .km-chart-bar {
+    height: 150px;
+  }
+}
